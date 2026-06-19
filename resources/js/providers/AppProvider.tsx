@@ -1,4 +1,4 @@
-import type { ReactNode } from 'react';
+import type { ReactElement, ReactNode } from 'react';
 
 import { ColorModeProvider } from '@/providers/ColorModeProvider';
 import { MotionProvider } from '@/providers/MotionProvider';
@@ -8,7 +8,7 @@ type AppProviderProps = {
     children: ReactNode;
 };
 
-export function AppProvider({ children }: AppProviderProps) {
+export function AppProvider({ children }: AppProviderProps): ReactElement {
     return (
         <MotionProvider>
             <NotificationProvider>

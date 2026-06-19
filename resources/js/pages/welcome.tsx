@@ -1,64 +1,88 @@
 import { Head } from '@inertiajs/react';
+import type { ReactElement } from 'react';
 
+import { Button } from '@/components/Button';
 import { ColorModeToggle, ColorModeTransition } from '@/components/ColorMode';
+import { ExperienceSection } from '@/components/sections/ExperienceSection';
+import { HeroSection } from '@/components/sections/HeroSection';
+import { LocationSection } from '@/components/sections/LocationSection';
+import { PolaroidWallSection } from '@/components/sections/PolaroidWallSection';
+import { SpeakersSection } from '@/components/sections/SpeakersSection';
+import { SponsorsSection } from '@/components/sections/SponsorsSection';
+import { TicketsSection } from '@/components/sections/TicketsSection';
+import { UpdatesSection } from '@/components/sections/UpdatesSection';
 import { TopNavigation } from '@/components/TopNavigation';
+import type { TopNavigationItem } from '@/components/TopNavigation';
+import { WordMark } from '@/components/WordMark';
+import { useActiveHash } from '@/hooks/useActiveHash';
+import { useSmoothAnchorNavigation } from '@/hooks/useSmoothAnchorNavigation';
 
-const navigationItems = [
+const laraconNavigationItems: readonly TopNavigationItem[] = [
     { href: '#about', label: 'Experience' },
-    { href: '#speakers', label: 'Speakers' },
     { href: '#location', label: 'Location' },
-    { href: '#schedule', label: 'Schedule' },
+    { href: '#speakers', label: 'Speakers' },
     { href: '#sponsors', label: 'Sponsors' },
 ] as const;
 
-function renderNavigationItems(
-    LinkComponent: typeof TopNavigation.Link | typeof TopNavigation.MobileLink,
-) {
-    return navigationItems.map((item) => (
-        <LinkComponent href={item.href} key={item.href}>
-            {item.label}
-        </LinkComponent>
-    ));
-}
+function LaraconTopNavigation(): ReactElement {
+    const activeHref = useActiveHash();
+    const handleAnchorNavigation = useSmoothAnchorNavigation();
 
-function WelcomeTopNavigation() {
     return (
         <TopNavigation>
             <TopNavigation.Start>
                 <TopNavigation.MenuButton />
-                <TopNavigation.Brand />
+                <TopNavigation.Brand aria-label="Laracon EU home">
+                    <WordMark size="medium" />
+                </TopNavigation.Brand>
             </TopNavigation.Start>
 
-            <TopNavigation.Center>
-                {renderNavigationItems(TopNavigation.Link)}
-            </TopNavigation.Center>
+            <TopNavigation.Primary>
+                <TopNavigation.Items
+                    activeHref={activeHref}
+                    items={laraconNavigationItems}
+                />
+            </TopNavigation.Primary>
 
             <TopNavigation.End>
                 <ColorModeToggle />
-                <TopNavigation.TicketLink href="#tickets">
-                    Tickets
-                </TopNavigation.TicketLink>
+                <Button asChild size="medium" variant="primary">
+                    <a href="#tickets" onClick={handleAnchorNavigation}>
+                        Tickets
+                    </a>
+                </Button>
             </TopNavigation.End>
 
             <TopNavigation.MobileMenu>
-                {renderNavigationItems(TopNavigation.MobileLink)}
+                <TopNavigation.MobileItems
+                    activeHref={activeHref}
+                    items={laraconNavigationItems}
+                />
             </TopNavigation.MobileMenu>
         </TopNavigation>
     );
 }
 
-function WelcomeContent() {
+function WelcomeContent(): ReactElement {
     return (
         <>
             <Head title="Welcome" />
-            <main className="relative flex min-h-screen min-w-[480px] flex-col overflow-hidden bg-(--welcome-bg) text-(--welcome-fg)">
+            <main className="relative flex min-h-screen flex-col bg-(--welcome-bg) text-(--welcome-fg)">
                 <ColorModeTransition />
-                <WelcomeTopNavigation />
+                <LaraconTopNavigation />
+                <HeroSection />
+                <ExperienceSection />
+                <PolaroidWallSection />
+                <LocationSection />
+                <SpeakersSection />
+                <SponsorsSection />
+                <UpdatesSection />
+                <TicketsSection />
             </main>
         </>
     );
 }
 
-export default function Welcome() {
+export default function Welcome(): ReactElement {
     return <WelcomeContent />;
 }

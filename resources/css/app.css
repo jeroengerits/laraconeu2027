@@ -56,6 +56,8 @@
         'CommitMono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
         'Liberation Mono', 'Courier New', monospace;
 
+    --breakpoint-section: 72rem;
+
     --color-cream-50: #fffdf0;
     --color-cream-100: #fff8df;
     --color-cream-200: #f8efd1;
@@ -232,6 +234,11 @@
 }
 
 @layer base {
+    html,
+    body {
+        overflow-x: clip;
+    }
+
     :root {
         --welcome-bg: var(--pair-canvas-bg);
         --welcome-fg: var(--pair-canvas-text);

@@ -1,11 +1,16 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 
-import { useNotificationDispatcher } from '@/hooks/useNotifications';
+import { useNotificationDispatcher } from '@/providers/context/NotificationContext';
 
 type UseCopyToClipboardOptions = {
     errorTitle?: string;
     resetDelay?: number;
     successTitle?: string;
+};
+
+type UseCopyToClipboardValue = {
+    copiedText: string | null;
+    copy: (text: string) => Promise<boolean>;
 };
 
 const COPY_RESET_DELAY = 1400;
@@ -37,7 +42,7 @@ export function useCopyToClipboard({
     errorTitle = 'Copy Failed',
     resetDelay = COPY_RESET_DELAY,
     successTitle = 'Copied',
-}: UseCopyToClipboardOptions = {}) {
+}: UseCopyToClipboardOptions = {}): UseCopyToClipboardValue {
     const { notify } = useNotificationDispatcher();
     const [copiedText, setCopiedText] = useState<string | null>(null);
     const resetTimerRef = useRef(0);

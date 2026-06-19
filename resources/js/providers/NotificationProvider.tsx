@@ -1,20 +1,20 @@
 import { Toast } from 'radix-ui';
 import { useMemo } from 'react';
-import type { ReactNode } from 'react';
+import type { ReactElement, ReactNode } from 'react';
 
 import { Notifications } from '@/components/Notifications';
-import {
-    NotificationContext,
-    useNotifications,
-} from '@/hooks/useNotifications';
-import type { NotificationContextValue } from '@/hooks/useNotifications';
+import { NotificationContext } from '@/providers/context/NotificationContext';
+import type { NotificationContextValue } from '@/providers/context/NotificationContext';
+import { useNotificationState } from '@/providers/hooks/useNotificationState';
 
 type NotificationProviderProps = {
     children: ReactNode;
 };
 
-export function NotificationProvider({ children }: NotificationProviderProps) {
-    const { notification, notify, open, setOpen } = useNotifications();
+export function NotificationProvider({
+    children,
+}: NotificationProviderProps): ReactElement {
+    const { notification, notify, open, setOpen } = useNotificationState();
     const contextValue = useMemo<NotificationContextValue>(
         () => ({
             notify,

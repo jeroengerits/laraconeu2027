@@ -1,6 +1,6 @@
 import type { HTMLMotionProps, Transition } from 'motion/react';
 import { m } from 'motion/react';
-import type { ComponentPropsWithoutRef } from 'react';
+import type { ComponentPropsWithoutRef, ReactElement } from 'react';
 
 import { cn } from '@/lib/utils';
 
@@ -60,7 +60,7 @@ function WordMarkSvg({
     className,
     role = 'img',
     ...props
-}: WordMarkSvgProps) {
+}: WordMarkSvgProps): ReactElement {
     return (
         <svg
             aria-label={ariaLabel}
@@ -82,7 +82,7 @@ export function WordMark({
     size = 'medium',
     style,
     ...props
-}: WordMarkProps) {
+}: WordMarkProps): ReactElement {
     const wordMarkStyle: WordMarkProps['style'] = {
         height: wordMarkSizeHeights[size],
         maxHeight: fit ? wordMarkFitMaxHeight : undefined,

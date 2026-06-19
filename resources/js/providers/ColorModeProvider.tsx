@@ -1,15 +1,15 @@
 import { useCallback, useMemo, useSyncExternalStore } from 'react';
-import type { ReactNode } from 'react';
+import type { ReactElement, ReactNode } from 'react';
 
 import {
     ColorModeDispatcherContext,
     ColorModeStateContext,
-} from '@/hooks/useColorMode';
+} from '@/providers/context/ColorModeContext';
 import type {
     ColorModeDispatcherContextValue,
     ColorModeStateContextValue,
-} from '@/hooks/useColorMode';
-import { useNotificationDispatcher } from '@/hooks/useNotifications';
+} from '@/providers/context/ColorModeContext';
+import { useNotificationDispatcher } from '@/providers/context/NotificationContext';
 
 type ColorMode = 'dark' | 'light';
 
@@ -129,7 +129,9 @@ function serverColorModeSnapshot(): ColorMode {
     return 'light';
 }
 
-export function ColorModeProvider({ children }: ColorModeProviderProps) {
+export function ColorModeProvider({
+    children,
+}: ColorModeProviderProps): ReactElement {
     const { notify } = useNotificationDispatcher();
     const colorMode = useSyncExternalStore(
         subscribeToColorMode,

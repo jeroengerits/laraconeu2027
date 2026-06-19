@@ -1,5 +1,6 @@
 import { m } from 'motion/react';
 import { Toast } from 'radix-ui';
+import type { ReactElement } from 'react';
 
 export type Notification = {
     description?: string;
@@ -44,7 +45,7 @@ export function Notifications({
     notification,
     onOpenChange,
     open,
-}: NotificationsProps) {
+}: NotificationsProps): ReactElement {
     return (
         <>
             <Toast.Root

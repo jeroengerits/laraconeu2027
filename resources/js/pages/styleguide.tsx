@@ -1,9 +1,10 @@
 import { Head } from '@inertiajs/react';
 import { CheckIcon, CopyIcon } from '@radix-ui/react-icons';
-import type { ReactNode } from 'react';
+import type { ReactElement, ReactNode } from 'react';
 
 import { useCopyToClipboard } from '@/hooks/useCopyToClipboard';
-import { cn, focusVisibleClassName } from '@/lib/utils';
+import { useFocusVisible } from '@/hooks/useFocusVisible';
+import { cn } from '@/lib/utils';
 
 type Shade = {
     name: string;
@@ -703,7 +704,7 @@ type SectionHeaderProps = {
     title: string;
 };
 
-function Panel({ children, className = '' }: PanelProps) {
+function Panel({ children, className = '' }: PanelProps): ReactElement {
     return (
         <article
             className={`rounded-lg border border-canvas-foreground/10 bg-surface shadow-sm ${className}`}
@@ -713,9 +714,10 @@ function Panel({ children, className = '' }: PanelProps) {
     );
 }
 
-function TokenCode({ children }: { children: ReactNode }) {
+function TokenCode({ children }: { children: ReactNode }): ReactElement {
     const copyText = textFromReactNode(children);
     const { copiedText, copy } = useCopyToClipboard();
+    const focusVisibleClassName = useFocusVisible();
     const isCopied = copiedText === copyText;
 
     return (
@@ -740,7 +742,12 @@ function TokenCode({ children }: { children: ReactNode }) {
     );
 }
 
-function SectionHeader({ children, eyebrow, id, title }: SectionHeaderProps) {
+function SectionHeader({
+    children,
+    eyebrow,
+    id,
+    title,
+}: SectionHeaderProps): ReactElement {
     return (
         <div className="grid gap-2">
             <p className="text-xs font-semibold tracking-[0.16em] text-link uppercase">
@@ -759,7 +766,7 @@ function SectionHeader({ children, eyebrow, id, title }: SectionHeaderProps) {
     );
 }
 
-function ContrastBadge({ ratio }: { ratio: number }) {
+function ContrastBadge({ ratio }: { ratio: number }): ReactElement {
     return (
         <div className="flex flex-wrap items-center gap-1.5">
             <span className="rounded-full bg-inverse px-2 py-1 text-xs font-semibold text-inverse-foreground">
@@ -772,7 +779,7 @@ function ContrastBadge({ ratio }: { ratio: number }) {
     );
 }
 
-export default function Styleguide() {
+export default function Styleguide(): ReactElement {
     return (
         <>
             <Head title="Laracon EU 2027 Styleguide" />

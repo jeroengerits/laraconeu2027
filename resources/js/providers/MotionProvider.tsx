@@ -1,6 +1,6 @@
 import type { Transition } from 'motion/react';
 import { LazyMotion, MotionConfig, domAnimation } from 'motion/react';
-import type { ReactNode } from 'react';
+import type { ReactElement, ReactNode } from 'react';
 
 type MotionProviderProps = {
     children: ReactNode;
@@ -12,7 +12,9 @@ const motionDefaultTransition: Transition = {
     type: 'tween',
 };
 
-export function MotionProvider({ children }: MotionProviderProps) {
+export function MotionProvider({
+    children,
+}: MotionProviderProps): ReactElement {
     return (
         <LazyMotion features={domAnimation}>
             <MotionConfig
