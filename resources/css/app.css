@@ -3,9 +3,339 @@
 @source '../views';
 @source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
 
+@custom-variant dark (&:where(.dark, .dark *));
+
+@font-face {
+    font-family: 'Inter';
+    src: url('../fonts/InterVariable.woff2') format('woff2');
+    font-weight: 100 900;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Inter';
+    src: url('../fonts/InterVariable-Italic.woff2') format('woff2');
+    font-weight: 100 900;
+    font-style: italic;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'CommitMono';
+    src: url('../fonts/CommitMonoV143-VF.woff2') format('woff2');
+    font-weight: 400 700;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Instrument Sans';
+    src: url('../fonts/instrument-sans/InstrumentSans-Variable.ttf')
+        format('truetype');
+    font-weight: 400 700;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Instrument Sans';
+    src: url('../fonts/instrument-sans/InstrumentSans-Italic-Variable.ttf')
+        format('truetype');
+    font-weight: 400 700;
+    font-style: italic;
+    font-display: swap;
+}
+
 @theme {
+    --font-display: 'Instrument Sans', var(--font-sans);
     --font-sans:
-        'Instrument Sans', ui-sans-serif, system-ui, sans-serif,
-        'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol',
-        'Noto Color Emoji';
+        'Inter', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji',
+        'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+    --font-mono:
+        'CommitMono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+        'Liberation Mono', 'Courier New', monospace;
+
+    --color-cream-50: #fffdf0;
+    --color-cream-100: #fff8df;
+    --color-cream-200: #f8efd1;
+    --color-cream-300: #ead9ad;
+    --color-cream-400: #d9bd80;
+    --color-cream-500: #c59c4f;
+    --color-cream-600: #9f7835;
+    --color-cream-700: #765525;
+    --color-cream-800: #4f3718;
+    --color-cream-900: #2b1c0c;
+    --color-cream-950: #1d1207;
+
+    --color-orange-50: #fff0e6;
+    --color-orange-100: #ffdcc2;
+    --color-orange-200: #ffb783;
+    --color-orange-300: #ff8d45;
+    --color-orange-400: #ff620f;
+    --color-orange-500: #ff4b00;
+    --color-orange-600: #cc3900;
+    --color-orange-700: #992900;
+    --color-orange-800: #661a00;
+    --color-orange-900: #330c00;
+    --color-orange-950: #220800;
+
+    --color-gold-50: #fff8dc;
+    --color-gold-100: #ffefb3;
+    --color-gold-200: #ffde75;
+    --color-gold-300: #ffca3d;
+    --color-gold-400: #f6b915;
+    --color-gold-500: #d89608;
+    --color-gold-600: #ad7304;
+    --color-gold-700: #7f5103;
+    --color-gold-800: #543302;
+    --color-gold-900: #2f1b01;
+    --color-gold-950: #201100;
+
+    --color-blue-50: #e6f5ff;
+    --color-blue-100: #ccebff;
+    --color-blue-200: #99d6ff;
+    --color-blue-300: #66bdff;
+    --color-blue-400: #2fa3f4;
+    --color-blue-500: #0a83d8;
+    --color-blue-600: #0069ad;
+    --color-blue-700: #005082;
+    --color-blue-800: #003757;
+    --color-blue-900: #001d2e;
+    --color-blue-950: #001421;
+
+    --color-teal-50: #eef8f5;
+    --color-teal-100: #d7ebe5;
+    --color-teal-200: #acd4cb;
+    --color-teal-300: #82bdb2;
+    --color-teal-400: #5c9f93;
+    --color-teal-500: #4f837a;
+    --color-teal-600: #3f685f;
+    --color-teal-700: #304d47;
+    --color-teal-800: #21332f;
+    --color-teal-900: #111c1a;
+    --color-teal-950: #0b1211;
+
+    --color-olive-50: #f5f4dc;
+    --color-olive-100: #e8e5b8;
+    --color-olive-200: #d3cc78;
+    --color-olive-300: #b7b33f;
+    --color-olive-400: #8d9722;
+    --color-olive-500: #687a14;
+    --color-olive-600: #4f5d0f;
+    --color-olive-700: #38430a;
+    --color-olive-800: #252d06;
+    --color-olive-900: #141904;
+    --color-olive-950: #0d1102;
+
+    --color-violet-50: #f3edff;
+    --color-violet-100: #e4d6ff;
+    --color-violet-200: #c9adff;
+    --color-violet-300: #ad86ff;
+    --color-violet-400: #936dff;
+    --color-violet-500: #7f5cf2;
+    --color-violet-600: #6444c5;
+    --color-violet-700: #4b3293;
+    --color-violet-800: #332161;
+    --color-violet-900: #1c1032;
+    --color-violet-950: #130b23;
+
+    --color-walnut-50: #fff0e0;
+    --color-walnut-100: #ffd9b8;
+    --color-walnut-200: #ffb57a;
+    --color-walnut-300: #f1843f;
+    --color-walnut-400: #c65a16;
+    --color-walnut-500: #8c3503;
+    --color-walnut-600: #6a2502;
+    --color-walnut-700: #4a1701;
+    --color-walnut-800: #2c0c00;
+    --color-walnut-900: #170500;
+    --color-walnut-950: #0d0300;
+
+    --color-black-50: #f4f1df;
+    --color-black-100: #e8dfc4;
+    --color-black-200: #c9bd96;
+    --color-black-300: #9d916e;
+    --color-black-400: #726749;
+    --color-black-500: #4b422d;
+    --color-black-600: #302817;
+    --color-black-700: #1b160b;
+    --color-black-800: #0f0c05;
+    --color-black-900: #050402;
+    --color-black-950: #000000;
+}
+
+@theme inline {
+    /* Semantic color roles */
+    --color-canvas: var(--color-cream-50);
+    --color-canvas-foreground: var(--color-black-950);
+    --color-surface: var(--color-cream-100);
+    --color-surface-foreground: var(--color-black-900);
+    --color-muted: var(--color-black-50);
+    --color-muted-foreground: var(--color-black-600);
+    --color-inverse: var(--color-black-950);
+    --color-inverse-foreground: var(--color-cream-50);
+    --color-link: var(--color-blue-700);
+    --color-link-foreground: var(--color-cream-50);
+    --color-accent: var(--color-orange-600);
+    --color-accent-foreground: var(--color-cream-50);
+    --color-highlight: var(--color-gold-300);
+    --color-highlight-foreground: var(--color-black-950);
+    --color-info: var(--color-blue-800);
+    --color-info-foreground: var(--color-cream-50);
+    --color-support: var(--color-teal-700);
+    --color-support-foreground: var(--color-cream-50);
+    --color-earth: var(--color-olive-700);
+    --color-earth-foreground: var(--color-cream-50);
+    --color-emphasis: var(--color-violet-600);
+    --color-emphasis-foreground: var(--color-cream-50);
+    --color-warmth: var(--color-walnut-600);
+    --color-warmth-foreground: var(--color-cream-50);
+
+    /* Semantic pair variables */
+    --pair-canvas: var(--pair-canvas-bg) var(--pair-canvas-text);
+    --pair-canvas-bg: var(--color-canvas);
+    --pair-canvas-text: var(--color-canvas-foreground);
+    --pair-surface: var(--pair-surface-bg) var(--pair-surface-text);
+    --pair-surface-bg: var(--color-surface);
+    --pair-surface-text: var(--color-surface-foreground);
+    --pair-muted: var(--pair-muted-bg) var(--pair-muted-text);
+    --pair-muted-bg: var(--color-muted);
+    --pair-muted-text: var(--color-muted-foreground);
+    --pair-inverse: var(--pair-inverse-bg) var(--pair-inverse-text);
+    --pair-inverse-bg: var(--color-inverse);
+    --pair-inverse-text: var(--color-inverse-foreground);
+    --pair-link: var(--pair-link-bg) var(--pair-link-text);
+    --pair-link-bg: var(--color-link);
+    --pair-link-text: var(--color-link-foreground);
+    --pair-accent: var(--pair-accent-bg) var(--pair-accent-text);
+    --pair-accent-bg: var(--color-accent);
+    --pair-accent-text: var(--color-accent-foreground);
+    --pair-highlight: var(--pair-highlight-bg) var(--pair-highlight-text);
+    --pair-highlight-bg: var(--color-highlight);
+    --pair-highlight-text: var(--color-highlight-foreground);
+    --pair-info: var(--pair-info-bg) var(--pair-info-text);
+    --pair-info-bg: var(--color-info);
+    --pair-info-text: var(--color-info-foreground);
+    --pair-support: var(--pair-support-bg) var(--pair-support-text);
+    --pair-support-bg: var(--color-support);
+    --pair-support-text: var(--color-support-foreground);
+    --pair-earth: var(--pair-earth-bg) var(--pair-earth-text);
+    --pair-earth-bg: var(--color-earth);
+    --pair-earth-text: var(--color-earth-foreground);
+    --pair-emphasis: var(--pair-emphasis-bg) var(--pair-emphasis-text);
+    --pair-emphasis-bg: var(--color-emphasis);
+    --pair-emphasis-text: var(--color-emphasis-foreground);
+    --pair-warmth: var(--pair-warmth-bg) var(--pair-warmth-text);
+    --pair-warmth-bg: var(--color-warmth);
+    --pair-warmth-text: var(--color-warmth-foreground);
+}
+
+@layer base {
+    :root {
+        --welcome-bg: var(--pair-canvas-bg);
+        --welcome-fg: var(--pair-canvas-text);
+        --welcome-flash-bg: linear-gradient(
+            105deg,
+            transparent 0%,
+            rgba(230, 104, 196, 0.28) 34%,
+            rgba(255, 202, 61, 0.92) 50%,
+            rgba(10, 131, 216, 0.42) 64%,
+            transparent 82%
+        );
+        transition:
+            background-color 0.68s cubic-bezier(0.16, 1, 0.3, 1),
+            color 0.52s linear;
+    }
+
+    :root.dark {
+        --welcome-bg: var(--pair-inverse-bg);
+        --welcome-fg: var(--pair-inverse-text);
+        --welcome-flash-bg: linear-gradient(
+            105deg,
+            transparent 0%,
+            rgba(10, 131, 216, 0.28) 34%,
+            rgba(255, 202, 61, 0.95) 50%,
+            rgba(230, 104, 196, 0.36) 64%,
+            transparent 82%
+        );
+    }
+}
+
+@utility font-display {
+    font-family: var(--font-display);
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+}
+
+@utility pair-canvas {
+    --pair-current: var(--pair-canvas);
+    background-color: var(--pair-canvas-bg);
+    color: var(--pair-canvas-text);
+}
+
+@utility pair-surface {
+    --pair-current: var(--pair-surface);
+    background-color: var(--pair-surface-bg);
+    color: var(--pair-surface-text);
+}
+
+@utility pair-muted {
+    --pair-current: var(--pair-muted);
+    background-color: var(--pair-muted-bg);
+    color: var(--pair-muted-text);
+}
+
+@utility pair-inverse {
+    --pair-current: var(--pair-inverse);
+    background-color: var(--pair-inverse-bg);
+    color: var(--pair-inverse-text);
+}
+
+@utility pair-link {
+    --pair-current: var(--pair-link);
+    background-color: var(--pair-link-bg);
+    color: var(--pair-link-text);
+}
+
+@utility pair-accent {
+    --pair-current: var(--pair-accent);
+    background-color: var(--pair-accent-bg);
+    color: var(--pair-accent-text);
+}
+
+@utility pair-highlight {
+    --pair-current: var(--pair-highlight);
+    background-color: var(--pair-highlight-bg);
+    color: var(--pair-highlight-text);
+}
+
+@utility pair-info {
+    --pair-current: var(--pair-info);
+    background-color: var(--pair-info-bg);
+    color: var(--pair-info-text);
+}
+
+@utility pair-support {
+    --pair-current: var(--pair-support);
+    background-color: var(--pair-support-bg);
+    color: var(--pair-support-text);
+}
+
+@utility pair-earth {
+    --pair-current: var(--pair-earth);
+    background-color: var(--pair-earth-bg);
+    color: var(--pair-earth-text);
+}
+
+@utility pair-emphasis {
+    --pair-current: var(--pair-emphasis);
+    background-color: var(--pair-emphasis-bg);
+    color: var(--pair-emphasis-text);
+}
+
+@utility pair-warmth {
+    --pair-current: var(--pair-warmth);
+    background-color: var(--pair-warmth-bg);
+    color: var(--pair-warmth-text);
 }

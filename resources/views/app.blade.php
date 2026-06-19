@@ -8,7 +8,27 @@
         <link rel="icon" href="/favicon.svg" type="image/svg+xml">
         <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 
-        @fonts
+        <script>
+            (() => {
+                try {
+                    const colorMode =
+                        window.localStorage.getItem('laraconeu-color-mode:v1') ??
+                        window.localStorage.getItem('laraconeu-color-mode');
+
+                    if (colorMode === 'dark' || colorMode === 'light') {
+                        document.documentElement.classList.toggle('dark', colorMode === 'dark');
+
+                        return;
+                    }
+
+                    if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+                        document.documentElement.classList.add('dark');
+                    }
+                } catch {
+                    //
+                }
+            })();
+        </script>
 
         @viteReactRefresh
         @vite(['resources/css/app.css', 'resources/js/app.tsx', "resources/js/pages/{$page['component']}.tsx"])
