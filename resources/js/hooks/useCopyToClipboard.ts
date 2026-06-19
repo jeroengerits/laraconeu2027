@@ -20,9 +20,7 @@ async function writeClipboardText(text: string): Promise<void> {
     const textarea = document.createElement('textarea');
     textarea.value = text;
     textarea.setAttribute('readonly', '');
-    textarea.style.position = 'fixed';
-    textarea.style.top = '-9999px';
-    textarea.style.opacity = '0';
+    textarea.style.cssText = 'position:fixed;top:-9999px;opacity:0';
 
     document.body.append(textarea);
     textarea.select();

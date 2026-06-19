@@ -47,6 +47,13 @@ type ThemeModeExample = {
     name: string;
 };
 
+type ThemeModeKey = 'dark' | 'light';
+
+type SummaryMetric = {
+    label: string;
+    value: () => number;
+};
+
 type TypeRole = {
     className: string;
     description: string;
@@ -569,6 +576,18 @@ const themeModeExamples: ThemeModeExample[] = [
     },
 ];
 
+const summaryMetrics: SummaryMetric[] = [
+    { label: 'Families', value: () => colorFamilies.length },
+    { label: 'Raw tokens', value: () => colorByToken.size },
+    { label: 'Semantic', value: () => semanticColorTokens.length },
+    { label: 'Pairs', value: () => semanticColorRoles.length },
+];
+
+const themeModeKeys: { key: ThemeModeKey; name: string }[] = [
+    { key: 'light', name: 'Light' },
+    { key: 'dark', name: 'Dark' },
+];
+
 function colorFor(token: string): Shade {
     const color = colorByToken.get(token);
 
@@ -777,21 +796,16 @@ export default function Styleguide() {
                         </div>
 
                         <div className="grid grid-cols-2 gap-2 sm:grid-cols-4 lg:grid-cols-2">
-                            {[
-                                ['Families', colorFamilies.length],
-                                ['Raw tokens', colorByToken.size],
-                                ['Semantic', semanticColorTokens.length],
-                                ['Pairs', semanticColorRoles.length],
-                            ].map(([label, value]) => (
+                            {summaryMetrics.map((metric) => (
                                 <div
                                     className="rounded-lg border border-canvas-foreground/10 bg-surface p-3"
-                                    key={label}
+                                    key={metric.label}
                                 >
                                     <div className="font-mono text-2xl font-semibold">
-                                        {value}
+                                        {metric.value()}
                                     </div>
                                     <div className="text-xs font-medium text-muted-foreground">
-                                        {label}
+                                        {metric.label}
                                     </div>
                                 </div>
                             ))}
@@ -1082,12 +1096,8 @@ export default function Styleguide() {
                                     </div>
 
                                     <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-1 2xl:grid-cols-2">
-                                        {(
-                                            [
-                                                ['Light', example.light],
-                                                ['Dark', example.dark],
-                                            ] as const
-                                        ).map(([modeName, mode]) => {
+                                        {themeModeKeys.map((themeMode) => {
+                                            const mode = example[themeMode.key];
                                             const foreground = colorFor(
                                                 mode.foreground,
                                             );
@@ -1118,7 +1128,7 @@ export default function Styleguide() {
                                             return (
                                                 <div
                                                     className="flex min-h-56 flex-col gap-3 rounded-md border border-canvas-foreground/10 p-3 shadow-sm"
-                                                    key={modeName}
+                                                    key={themeMode.key}
                                                     style={{
                                                         backgroundColor:
                                                             background.value,
@@ -1127,7 +1137,7 @@ export default function Styleguide() {
                                                 >
                                                     <div className="flex items-center justify-between gap-3">
                                                         <span className="text-xs font-semibold tracking-[0.14em] uppercase">
-                                                            {modeName}
+                                                            {themeMode.name}
                                                         </span>
                                                         <span
                                                             className="rounded-full px-2.5 py-1 text-xs font-semibold"

@@ -1,12 +1,20 @@
-import { useContext, useMemo } from 'react';
+import { createContext, useContext } from 'react';
 
-import { ColorModeContext } from '@/providers/ColorModeProvider';
-import type { ColorModeContextValue } from '@/providers/ColorModeProvider';
+export type ColorModeStateContextValue = {
+    isDarkMode: boolean;
+};
 
-type ColorModeDispatcherValue = Pick<ColorModeContextValue, 'setIsDarkMode'>;
+export type ColorModeDispatcherContextValue = {
+    setIsDarkMode: (isDarkMode: boolean) => void;
+};
 
-export function useColorMode(): ColorModeContextValue {
-    const context = useContext(ColorModeContext);
+export const ColorModeStateContext =
+    createContext<ColorModeStateContextValue | null>(null);
+export const ColorModeDispatcherContext =
+    createContext<ColorModeDispatcherContextValue | null>(null);
+
+export function useColorMode(): ColorModeStateContextValue {
+    const context = useContext(ColorModeStateContext);
 
     if (!context) {
         throw new Error(
@@ -17,13 +25,14 @@ export function useColorMode(): ColorModeContextValue {
     return context;
 }
 
-export function useColorModeDispatcher(): ColorModeDispatcherValue {
-    const { setIsDarkMode } = useColorMode();
+export function useColorModeDispatcher(): ColorModeDispatcherContextValue {
+    const context = useContext(ColorModeDispatcherContext);
 
-    return useMemo(
-        () => ({
-            setIsDarkMode,
-        }),
-        [setIsDarkMode],
-    );
+    if (!context) {
+        throw new Error(
+            'useColorModeDispatcher must be used within a ColorModeProvider.',
+        );
+    }
+
+    return context;
 }

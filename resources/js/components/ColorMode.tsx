@@ -1,7 +1,8 @@
 import type { Transition } from 'motion/react';
 import { m } from 'motion/react';
 
-import { useColorMode } from '@/hooks/useColorMode';
+import { ToggleColorMode } from '@/components/ToggleColorMode';
+import { useColorMode, useColorModeDispatcher } from '@/hooks/useColorMode';
 
 const flashTransition: Transition = {
     duration: 0.68,
@@ -23,6 +24,18 @@ export function ColorModeTransition() {
             initial={{ opacity: 0, x: '-120%' }}
             key={isDarkMode ? 'dark-flash' : 'light-flash'}
             transition={flashTransition}
+        />
+    );
+}
+
+export function ColorModeToggle() {
+    const { isDarkMode } = useColorMode();
+    const { setIsDarkMode } = useColorModeDispatcher();
+
+    return (
+        <ToggleColorMode
+            isDarkMode={isDarkMode}
+            onDarkModeChange={setIsDarkMode}
         />
     );
 }

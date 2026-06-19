@@ -1,4 +1,5 @@
 import {
+    createContext,
     useCallback,
     useContext,
     useEffect,
@@ -9,8 +10,13 @@ import {
 
 import { EMPTY_NOTIFICATION } from '@/components/Notifications';
 import type { Notification } from '@/components/Notifications';
-import { NotificationContext } from '@/providers/NotificationProvider';
-import type { NotificationContextValue } from '@/providers/NotificationProvider';
+
+export type NotificationContextValue = {
+    notify: (notification: Notification) => void;
+};
+
+export const NotificationContext =
+    createContext<NotificationContextValue | null>(null);
 
 const NOTIFICATION_REOPEN_DELAY = 100;
 

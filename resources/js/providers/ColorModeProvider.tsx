@@ -1,10 +1,15 @@
-import {
-    createContext,
-    useCallback,
-    useMemo,
-    useSyncExternalStore,
-} from 'react';
+import { useCallback, useMemo, useSyncExternalStore } from 'react';
 import type { ReactNode } from 'react';
+
+import {
+    ColorModeDispatcherContext,
+    ColorModeStateContext,
+} from '@/hooks/useColorMode';
+import type {
+    ColorModeDispatcherContextValue,
+    ColorModeStateContextValue,
+} from '@/hooks/useColorMode';
+import { useNotificationDispatcher } from '@/hooks/useNotifications';
 
 type ColorMode = 'dark' | 'light';
 
@@ -12,18 +17,18 @@ type ColorModeProviderProps = {
     children: ReactNode;
 };
 
-export type ColorModeContextValue = {
-    isDarkMode: boolean;
-    setIsDarkMode: (isDarkMode: boolean) => void;
-};
-
 const COLOR_MODE_STORAGE_KEY = 'laraconeu-color-mode:v1';
 const LEGACY_COLOR_MODE_STORAGE_KEY = 'laraconeu-color-mode';
 const COLOR_MODE_VALUES = new Set<ColorMode>(['dark', 'light']);
+const colorModeNotifications = {
+    dark: {
+        title: 'Dark Mode On',
+    },
+    light: {
+        title: 'Light Mode On',
+    },
+} as const;
 
-export const ColorModeContext = createContext<ColorModeContextValue | null>(
-    null,
-);
 const colorModeListeners = new Set<() => void>();
 
 function isColorMode(value: string | null): value is ColorMode {
@@ -125,6 +130,7 @@ function serverColorModeSnapshot(): ColorMode {
 }
 
 export function ColorModeProvider({ children }: ColorModeProviderProps) {
+    const { notify } = useNotificationDispatcher();
     const colorMode = useSyncExternalStore(
         subscribeToColorMode,
         readInitialColorMode,
@@ -132,11 +138,15 @@ export function ColorModeProvider({ children }: ColorModeProviderProps) {
     );
     const isDarkMode = colorMode === 'dark';
 
-    const setColorMode = useCallback((nextColorMode: ColorMode): void => {
-        applyColorMode(nextColorMode);
-        writeStoredColorMode(nextColorMode);
-        emitColorModeChange();
-    }, []);
+    const setColorMode = useCallback(
+        (nextColorMode: ColorMode): void => {
+            applyColorMode(nextColorMode);
+            writeStoredColorMode(nextColorMode);
+            emitColorModeChange();
+            notify(colorModeNotifications[nextColorMode]);
+        },
+        [notify],
+    );
 
     const setIsDarkMode = useCallback(
         (nextIsDarkMode: boolean) => {
@@ -145,17 +155,25 @@ export function ColorModeProvider({ children }: ColorModeProviderProps) {
         [setColorMode],
     );
 
-    const contextValue = useMemo<ColorModeContextValue>(
+    const stateContextValue = useMemo<ColorModeStateContextValue>(
         () => ({
             isDarkMode,
+        }),
+        [isDarkMode],
+    );
+
+    const dispatcherContextValue = useMemo<ColorModeDispatcherContextValue>(
+        () => ({
             setIsDarkMode,
         }),
-        [isDarkMode, setIsDarkMode],
+        [setIsDarkMode],
     );
 
     return (
-        <ColorModeContext.Provider value={contextValue}>
-            {children}
-        </ColorModeContext.Provider>
+        <ColorModeDispatcherContext.Provider value={dispatcherContextValue}>
+            <ColorModeStateContext.Provider value={stateContextValue}>
+                {children}
+            </ColorModeStateContext.Provider>
+        </ColorModeDispatcherContext.Provider>
     );
 }
