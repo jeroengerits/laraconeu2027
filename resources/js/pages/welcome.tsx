@@ -1,20 +1,49 @@
-import { Head, Link } from '@inertiajs/react';
+import { Head } from '@inertiajs/react';
 
 import { ColorModeToggle, ColorModeTransition } from '@/components/ColorMode';
-import { WordMark } from '@/components/WordMark';
-import { focusVisibleClassName } from '@/lib/utils';
+import { TopNavigation } from '@/components/TopNavigation';
 
-function WelcomeToolbar() {
+const navigationItems = [
+    { href: '#about', label: 'Experience' },
+    { href: '#speakers', label: 'Speakers' },
+    { href: '#location', label: 'Location' },
+    { href: '#schedule', label: 'Schedule' },
+    { href: '#sponsors', label: 'Sponsors' },
+] as const;
+
+function renderNavigationItems(
+    LinkComponent: typeof TopNavigation.Link | typeof TopNavigation.MobileLink,
+) {
+    return navigationItems.map((item) => (
+        <LinkComponent href={item.href} key={item.href}>
+            {item.label}
+        </LinkComponent>
+    ));
+}
+
+function WelcomeTopNavigation() {
     return (
-        <header className="relative z-10 flex w-full flex-wrap items-center justify-between gap-4 px-4 py-4 sm:px-6 lg:px-8">
-            <Link
-                href="/"
-                className={`inline-flex rounded-sm py-1 ${focusVisibleClassName}`}
-            >
-                <WordMark size="medium" />
-            </Link>
-            <ColorModeToggle />
-        </header>
+        <TopNavigation>
+            <TopNavigation.Start>
+                <TopNavigation.MenuButton />
+                <TopNavigation.Brand />
+            </TopNavigation.Start>
+
+            <TopNavigation.Center>
+                {renderNavigationItems(TopNavigation.Link)}
+            </TopNavigation.Center>
+
+            <TopNavigation.End>
+                <ColorModeToggle />
+                <TopNavigation.TicketLink href="#tickets">
+                    Tickets
+                </TopNavigation.TicketLink>
+            </TopNavigation.End>
+
+            <TopNavigation.MobileMenu>
+                {renderNavigationItems(TopNavigation.MobileLink)}
+            </TopNavigation.MobileMenu>
+        </TopNavigation>
     );
 }
 
@@ -22,9 +51,9 @@ function WelcomeContent() {
     return (
         <>
             <Head title="Welcome" />
-            <main className="relative flex min-h-screen flex-col overflow-hidden bg-(--welcome-bg) text-(--welcome-fg)">
+            <main className="relative flex min-h-screen min-w-[480px] flex-col overflow-hidden bg-(--welcome-bg) text-(--welcome-fg)">
                 <ColorModeTransition />
-                <WelcomeToolbar />
+                <WelcomeTopNavigation />
             </main>
         </>
     );

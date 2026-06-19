@@ -1,8 +1,14 @@
 import type { Transition } from 'motion/react';
 import { m } from 'motion/react';
+import type { ComponentPropsWithoutRef } from 'react';
 
 import { ToggleColorMode } from '@/components/ToggleColorMode';
 import { useColorMode, useColorModeDispatcher } from '@/hooks/useColorMode';
+
+type ColorModeToggleProps = Pick<
+    ComponentPropsWithoutRef<typeof ToggleColorMode>,
+    'className'
+>;
 
 const flashTransition: Transition = {
     duration: 0.68,
@@ -28,12 +34,13 @@ export function ColorModeTransition() {
     );
 }
 
-export function ColorModeToggle() {
+export function ColorModeToggle({ className }: ColorModeToggleProps) {
     const { isDarkMode } = useColorMode();
     const { setIsDarkMode } = useColorModeDispatcher();
 
     return (
         <ToggleColorMode
+            className={className}
             isDarkMode={isDarkMode}
             onDarkModeChange={setIsDarkMode}
         />
