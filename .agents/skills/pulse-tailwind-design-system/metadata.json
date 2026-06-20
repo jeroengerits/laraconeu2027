@@ -1,0 +1,51 @@
+{
+  "version": "1.0.0",
+  "organization": "Pulse Component Workflow",
+  "date": "June 2026",
+  "canonical_architecture": "vercel-react-best-practices",
+  "name": "pulse-tailwind-design-system",
+  "description": "Applies Tailwind CSS 4 design-system rules to React components in this Laravel app. Use when styling components, variants, typography, spacing, colors, dark mode, shadows, responsive layout, tokens, or theme utilities.",
+  "purpose": "Prevent one-off styling, token drift, inaccessible colour choices, and responsive layout instability.",
+  "scope": "Pulse Tailwind Design System",
+  "inputs": "Required: - Target component or section. - Existing styling conventions. Optional: - Design reference. - Current CSS tokens. - Supported breakpoints.",
+  "outputs": "- Styling plan. - Variant and size map. - Responsive layout notes. - Dark mode and token decisions.",
+  "related_skills": [
+    "pulse-docs-research",
+    "pulse-workflow-orchestrator"
+  ],
+  "rule_files": [
+    "rules/responsibilities.md",
+    "rules/non-responsibilities.md",
+    "rules/workflow.md",
+    "rules/decision-points.md",
+    "rules/checklists.md",
+    "rules/documentation-discipline.md"
+  ],
+  "responsibilities": [
+    "Use semantic tokens and existing utilities.",
+    "Keep variants finite and typed.",
+    "Maintain typography, spacing, radius, shadow, border, and focus consistency.",
+    "Support dark mode where relevant.",
+    "Ensure responsive layout and text wrapping hold.",
+    "Use Tailwind `dark:` and responsive variants intentionally together when both states must be supported."
+  ],
+  "non_responsibilities": [
+    "Component API design beyond variant naming.",
+    "Motion animation logic.",
+    "Accessibility semantics, though contrast and focus are shared concerns."
+  ],
+  "success_criteria": [
+    "The skill stays within its focused responsibility.",
+    "The workflow and decision points are followed.",
+    "Validation checklist items are satisfied or skipped checks are reported.",
+    "Cross-skill handoffs are explicit when another skill owns the next concern."
+  ],
+  "validation_criteria": [
+    "SKILL.md loads as the entry point.",
+    "README.md summarizes usage for humans.",
+    "AGENTS.md provides the compiled agent guide.",
+    "metadata.json exposes machine-readable discovery metadata.",
+    "rules/_sections.md indexes rule files.",
+    "rules/_template.md defines the rule-file standard."
+  ]
+}

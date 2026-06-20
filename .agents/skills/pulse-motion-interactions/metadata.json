@@ -1,0 +1,52 @@
+{
+  "version": "1.0.0",
+  "organization": "Pulse Component Workflow",
+  "date": "June 2026",
+  "canonical_architecture": "vercel-react-best-practices",
+  "name": "pulse-motion-interactions",
+  "description": "Designs Motion React animations and gestures for components in this Laravel app. Use for micro-interactions, variants, hover, focus, tap, drag, scroll effects, autoplay, marquee behaviour, reduced motion, animation performance, and gesture support.",
+  "purpose": "Make animation clarify state or interaction while preserving accessibility, performance, and browser gestures.",
+  "scope": "Pulse Motion Interactions",
+  "inputs": "Required: - Interaction goal. - Component architecture. Optional: - Motion docs findings. - Gesture requirements. - Performance constraints.",
+  "outputs": "- Animation plan. - Gesture model. - Reduced-motion behaviour. - Performance notes. - Verification scenarios.",
+  "related_skills": [
+    "pulse-docs-research",
+    "pulse-workflow-orchestrator"
+  ],
+  "rule_files": [
+    "rules/responsibilities.md",
+    "rules/non-responsibilities.md",
+    "rules/workflow.md",
+    "rules/decision-points.md",
+    "rules/checklists.md",
+    "rules/documentation-discipline.md"
+  ],
+  "responsibilities": [
+    "Define animation intent and trigger.",
+    "Use `motion/react` APIs correctly.",
+    "Respect reduced motion.",
+    "Keep variants and transitions stable.",
+    "Avoid blocking native vertical scroll.",
+    "Stop or adapt long-running animations during direct user interaction when appropriate.",
+    "Replace large transform, parallax, and autoplay motion with opacity or static states when reduced motion is preferred."
+  ],
+  "non_responsibilities": [
+    "Tailwind styling decisions.",
+    "General React state not tied to animation.",
+    "Browser verification execution."
+  ],
+  "success_criteria": [
+    "The skill stays within its focused responsibility.",
+    "The workflow and decision points are followed.",
+    "Validation checklist items are satisfied or skipped checks are reported.",
+    "Cross-skill handoffs are explicit when another skill owns the next concern."
+  ],
+  "validation_criteria": [
+    "SKILL.md loads as the entry point.",
+    "README.md summarizes usage for humans.",
+    "AGENTS.md provides the compiled agent guide.",
+    "metadata.json exposes machine-readable discovery metadata.",
+    "rules/_sections.md indexes rule files.",
+    "rules/_template.md defines the rule-file standard."
+  ]
+}

@@ -1,0 +1,52 @@
+{
+  "version": "1.0.0",
+  "organization": "Pulse Component Workflow",
+  "date": "June 2026",
+  "canonical_architecture": "vercel-react-best-practices",
+  "name": "pulse-documentation-dx",
+  "description": "Documents reusable React components in this Laravel app. Use when a component API, behaviour, accessibility model, variants, integration pattern, or limitation should be explained for future developers or AI agents.",
+  "purpose": "Make component APIs and behaviour understandable for future maintainers and AI agents.",
+  "scope": "Pulse Documentation DX",
+  "inputs": "Required: - Component API and usage. - Reusability scope. Optional: - Existing docs location. - Design-system conventions. - Source docs used.",
+  "outputs": "- Inline documentation or doc section. - Usage examples. - Accessibility and behaviour notes. - Known limitations.",
+  "related_skills": [
+    "pulse-docs-research",
+    "pulse-workflow-orchestrator"
+  ],
+  "rule_files": [
+    "rules/responsibilities.md",
+    "rules/non-responsibilities.md",
+    "rules/workflow.md",
+    "rules/decision-points.md",
+    "rules/checklists.md",
+    "rules/documentation-discipline.md"
+  ],
+  "responsibilities": [
+    "Document purpose and intended use.",
+    "Provide usage examples.",
+    "Explain props, variants, callbacks, and defaults.",
+    "Note accessibility, keyboard, responsive, and motion behaviour.",
+    "Note Inertia, Radix, form, or route integration.",
+    "Note limitations.",
+    "Record source-sensitive usage notes when behaviour depends on Inertia, React, Radix, Motion, Tailwind, or Testing Library APIs."
+  ],
+  "non_responsibilities": [
+    "Creating new documentation files without an explicit user request.",
+    "Repeating obvious implementation details.",
+    "Replacing tests."
+  ],
+  "success_criteria": [
+    "The skill stays within its focused responsibility.",
+    "The workflow and decision points are followed.",
+    "Validation checklist items are satisfied or skipped checks are reported.",
+    "Cross-skill handoffs are explicit when another skill owns the next concern."
+  ],
+  "validation_criteria": [
+    "SKILL.md loads as the entry point.",
+    "README.md summarizes usage for humans.",
+    "AGENTS.md provides the compiled agent guide.",
+    "metadata.json exposes machine-readable discovery metadata.",
+    "rules/_sections.md indexes rule files.",
+    "rules/_template.md defines the rule-file standard."
+  ]
+}

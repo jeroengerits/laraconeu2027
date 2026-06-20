@@ -1,0 +1,51 @@
+{
+  "version": "1.0.0",
+  "organization": "Pulse Component Workflow",
+  "date": "June 2026",
+  "canonical_architecture": "vercel-react-best-practices",
+  "name": "pulse-tdd-planning",
+  "description": "Plans behaviour-driven TDD for React components in this Laravel app. Use before implementing meaningful component behaviour to define user scenarios, accessibility expectations, public API contracts, red/green/refactor scope, and test coverage boundaries.",
+  "purpose": "Make tests protect user-observable behaviour and public contracts rather than implementation details.",
+  "scope": "Pulse TDD Planning",
+  "inputs": "Required: - Acceptance criteria. - Component API contract. Optional: - Existing tests. - Bug reproduction steps. - Accessibility plan.",
+  "outputs": "- Behaviour scenarios. - Test plan. - Red/green/refactor workflow. - Out-of-scope test list.",
+  "related_skills": [
+    "pulse-docs-research",
+    "pulse-workflow-orchestrator"
+  ],
+  "rule_files": [
+    "rules/responsibilities.md",
+    "rules/non-responsibilities.md",
+    "rules/workflow.md",
+    "rules/decision-points.md",
+    "rules/checklists.md",
+    "rules/documentation-discipline.md"
+  ],
+  "responsibilities": [
+    "Write behaviour scenarios.",
+    "Define test scope.",
+    "Identify accessibility and keyboard expectations.",
+    "Separate public API testing from internals.",
+    "Decide which behaviours do not need tests.",
+    "Prefer Testing Library role/name queries and `user-event` interactions in every scenario that maps to user input."
+  ],
+  "non_responsibilities": [
+    "Writing the actual test code.",
+    "Configuring Jest from scratch unless requested.",
+    "Testing CSS classes or exact DOM structure."
+  ],
+  "success_criteria": [
+    "The skill stays within its focused responsibility.",
+    "The workflow and decision points are followed.",
+    "Validation checklist items are satisfied or skipped checks are reported.",
+    "Cross-skill handoffs are explicit when another skill owns the next concern."
+  ],
+  "validation_criteria": [
+    "SKILL.md loads as the entry point.",
+    "README.md summarizes usage for humans.",
+    "AGENTS.md provides the compiled agent guide.",
+    "metadata.json exposes machine-readable discovery metadata.",
+    "rules/_sections.md indexes rule files.",
+    "rules/_template.md defines the rule-file standard."
+  ]
+}

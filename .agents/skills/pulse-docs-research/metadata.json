@@ -1,0 +1,51 @@
+{
+  "version": "1.0.0",
+  "organization": "Pulse Component Workflow",
+  "date": "June 2026",
+  "canonical_architecture": "vercel-react-best-practices",
+  "name": "pulse-docs-research",
+  "description": "Researches current documentation for Laravel React component work. Use when implementation depends on Inertia React, Wayfinder, React 19, Motion React, Radix UI, Tailwind CSS 4, Jest, React Testing Library, Vite, or other library APIs that may change.",
+  "purpose": "Provide current, version-aware documentation context for component implementation and review.",
+  "scope": "Pulse Docs Research",
+  "inputs": "Required: - Library or API question. - Package or framework area. Optional: - Installed package versions. - Error message or failing code.",
+  "outputs": "- Documentation findings. - Source of truth used. - Version-specific caveats. - Implementation guidance.",
+  "related_skills": [
+    "context7",
+    "pulse-workflow-orchestrator"
+  ],
+  "rule_files": [
+    "rules/responsibilities.md",
+    "rules/non-responsibilities.md",
+    "rules/workflow.md",
+    "rules/decision-points.md",
+    "rules/checklists.md",
+    "rules/documentation-discipline.md"
+  ],
+  "responsibilities": [
+    "Use Laravel Boost `search-docs` before code changes.",
+    "Use local project code and installed supporting skills to understand existing conventions.",
+    "Use `$context7` for non-Laravel library APIs.",
+    "Use web search only when local code, installed skills, Boost, and Context7 cannot answer the question.",
+    "Capture only documentation relevant to the current task.",
+    "Distinguish source facts from local inference."
+  ],
+  "non_responsibilities": [
+    "Replacing local code audit.",
+    "Fetching broad unrelated docs.",
+    "Making architecture decisions alone."
+  ],
+  "success_criteria": [
+    "The skill stays within its focused responsibility.",
+    "The workflow and decision points are followed.",
+    "Validation checklist items are satisfied or skipped checks are reported.",
+    "Cross-skill handoffs are explicit when another skill owns the next concern."
+  ],
+  "validation_criteria": [
+    "SKILL.md loads as the entry point.",
+    "README.md summarizes usage for humans.",
+    "AGENTS.md provides the compiled agent guide.",
+    "metadata.json exposes machine-readable discovery metadata.",
+    "rules/_sections.md indexes rule files.",
+    "rules/_template.md defines the rule-file standard."
+  ]
+}

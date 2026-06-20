@@ -1,0 +1,52 @@
+{
+  "version": "1.0.0",
+  "organization": "Pulse Component Workflow",
+  "date": "June 2026",
+  "canonical_architecture": "vercel-react-best-practices",
+  "name": "pulse-state-effects",
+  "description": "Designs React state, effects, refs, memoization, subscriptions, cleanup, and hydration-safe render logic for components in this Laravel Inertia React 19 app. Use when local state, effects, subscriptions, browser stores, refs, memoization, or hydration-safe rendering decisions are needed.",
+  "purpose": "Avoid derived state bugs, effect misuse, stale closures, hydration mismatches, and unnecessary renders.",
+  "scope": "Pulse State Effects",
+  "inputs": "Required: - Component architecture. - Behaviour requirements. Optional: - Hydration warnings. - Performance symptoms. - Existing hook code.",
+  "outputs": "- State model. - Effect plan. - Ref and cleanup plan. - Hydration safety notes. - Hook extraction guidance.",
+  "related_skills": [
+    "pulse-docs-research",
+    "pulse-workflow-orchestrator"
+  ],
+  "rule_files": [
+    "rules/responsibilities.md",
+    "rules/non-responsibilities.md",
+    "rules/workflow.md",
+    "rules/decision-points.md",
+    "rules/checklists.md",
+    "rules/documentation-discipline.md"
+  ],
+  "responsibilities": [
+    "Decide state shape and ownership.",
+    "Keep render deterministic.",
+    "Design effect dependencies and cleanup.",
+    "Use refs for transient values.",
+    "Decide when memoization is meaningful.",
+    "Use `useSyncExternalStore` for external browser stores when needed.",
+    "Treat React `memo`, `useMemo`, and `useCallback` as targeted tools for real cost or identity boundaries."
+  ],
+  "non_responsibilities": [
+    "Public API design.",
+    "Motion-specific animation values.",
+    "Performance review beyond state/effect mechanics."
+  ],
+  "success_criteria": [
+    "The skill stays within its focused responsibility.",
+    "The workflow and decision points are followed.",
+    "Validation checklist items are satisfied or skipped checks are reported.",
+    "Cross-skill handoffs are explicit when another skill owns the next concern."
+  ],
+  "validation_criteria": [
+    "SKILL.md loads as the entry point.",
+    "README.md summarizes usage for humans.",
+    "AGENTS.md provides the compiled agent guide.",
+    "metadata.json exposes machine-readable discovery metadata.",
+    "rules/_sections.md indexes rule files.",
+    "rules/_template.md defines the rule-file standard."
+  ]
+}

@@ -1,0 +1,51 @@
+{
+  "version": "1.0.0",
+  "organization": "Pulse Component Workflow",
+  "date": "June 2026",
+  "canonical_architecture": "vercel-react-best-practices",
+  "name": "pulse-architecture-boundaries",
+  "description": "Defines React component architecture boundaries in this Laravel Inertia app. Use when choosing component type, file placement, state ownership, composition shape, hook extraction, helper extraction, or page-section boundaries.",
+  "purpose": "Keep components coherent, reusable only when justified, and aligned with project structure.",
+  "scope": "Pulse Architecture Boundaries",
+  "inputs": "Required: - Requirements. - Existing audit or target files. - Reuse decision. Optional: - Current component size and consumers. - Known performance constraints.",
+  "outputs": "- Component type. - File boundary plan. - State ownership plan. - Hook/helper extraction decisions. - Implementation sequence.",
+  "related_skills": [
+    "pulse-docs-research",
+    "pulse-workflow-orchestrator"
+  ],
+  "rule_files": [
+    "rules/responsibilities.md",
+    "rules/non-responsibilities.md",
+    "rules/workflow.md",
+    "rules/decision-points.md",
+    "rules/checklists.md",
+    "rules/documentation-discipline.md"
+  ],
+  "responsibilities": [
+    "Choose component type.",
+    "Define file placement.",
+    "Define state ownership.",
+    "Decide hook/helper extraction.",
+    "Keep boundaries aligned with Inertia and project conventions.",
+    "Keep server/page boundaries, client-only effects, and shared primitives explicit enough to avoid hydration drift."
+  ],
+  "non_responsibilities": [
+    "Detailed prop contract design.",
+    "Visual token decisions.",
+    "Test implementation."
+  ],
+  "success_criteria": [
+    "The skill stays within its focused responsibility.",
+    "The workflow and decision points are followed.",
+    "Validation checklist items are satisfied or skipped checks are reported.",
+    "Cross-skill handoffs are explicit when another skill owns the next concern."
+  ],
+  "validation_criteria": [
+    "SKILL.md loads as the entry point.",
+    "README.md summarizes usage for humans.",
+    "AGENTS.md provides the compiled agent guide.",
+    "metadata.json exposes machine-readable discovery metadata.",
+    "rules/_sections.md indexes rule files.",
+    "rules/_template.md defines the rule-file standard."
+  ]
+}

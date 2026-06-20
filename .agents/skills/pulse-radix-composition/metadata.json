@@ -1,0 +1,51 @@
+{
+  "version": "1.0.0",
+  "organization": "Pulse Component Workflow",
+  "date": "June 2026",
+  "canonical_architecture": "vercel-react-best-practices",
+  "name": "pulse-radix-composition",
+  "description": "Designs Radix-inspired React component composition in this Laravel app. Use when building dialogs, menus, popovers, tabs, accordions, selects, switches, compound components, slots, asChild APIs, portals, or controlled/uncontrolled primitives.",
+  "purpose": "Avoid reimplementing complex accessibility behaviour and keep component APIs flexible without leaking DOM internals.",
+  "scope": "Pulse Radix Composition",
+  "inputs": "Required: - Interaction type. - API contract or composition need. Optional: - Radix docs findings. - Existing local wrapper patterns. - Accessibility requirements.",
+  "outputs": "- Primitive/composition choice. - Compound part list. - Slot and `asChild` guidance. - Portal/layering notes.",
+  "related_skills": [
+    "pulse-docs-research",
+    "pulse-workflow-orchestrator"
+  ],
+  "rule_files": [
+    "rules/responsibilities.md",
+    "rules/non-responsibilities.md",
+    "rules/workflow.md",
+    "rules/decision-points.md",
+    "rules/checklists.md",
+    "rules/documentation-discipline.md"
+  ],
+  "responsibilities": [
+    "Prefer Radix primitives for complex accessible interactions.",
+    "Preserve Radix focus, keyboard, ARIA, disabled, and portal behaviour.",
+    "Design compound parts and slots.",
+    "Style public data attributes, not private DOM structure.",
+    "Document controlled/uncontrolled usage when exposed.",
+    "Ensure custom components used with `asChild` spread props and accept/pass refs so Radix behaviour and accessibility remain intact; use `forwardRef` only when a library contract still requires it."
+  ],
+  "non_responsibilities": [
+    "Tailwind token selection.",
+    "Business logic.",
+    "Testing implementation."
+  ],
+  "success_criteria": [
+    "The skill stays within its focused responsibility.",
+    "The workflow and decision points are followed.",
+    "Validation checklist items are satisfied or skipped checks are reported.",
+    "Cross-skill handoffs are explicit when another skill owns the next concern."
+  ],
+  "validation_criteria": [
+    "SKILL.md loads as the entry point.",
+    "README.md summarizes usage for humans.",
+    "AGENTS.md provides the compiled agent guide.",
+    "metadata.json exposes machine-readable discovery metadata.",
+    "rules/_sections.md indexes rule files.",
+    "rules/_template.md defines the rule-file standard."
+  ]
+}

@@ -1,0 +1,52 @@
+{
+  "version": "1.0.0",
+  "organization": "Pulse Component Workflow",
+  "date": "June 2026",
+  "canonical_architecture": "vercel-react-best-practices",
+  "name": "pulse-existing-audit",
+  "description": "Audits existing React components, hooks, utilities, tests, pages, styles, and conventions before Laravel Inertia component work. Use before creating new components, extracting hooks, adding variants, or changing shared UI.",
+  "purpose": "Prevent duplicate components, inconsistent APIs, and design drift by checking local code and conventions first.",
+  "scope": "Pulse Existing Audit",
+  "inputs": "Required: - Component goal or target file. - Project root. Optional: - Known component names. - Related routes, pages, or screenshots.",
+  "outputs": "- Relevant existing files. - Conventions to follow. - Similar APIs and patterns. - Gaps or duplication risks.",
+  "related_skills": [
+    "pulse-api-contract",
+    "pulse-docs-research",
+    "pulse-reuse-decision",
+    "pulse-workflow-orchestrator"
+  ],
+  "rule_files": [
+    "rules/responsibilities.md",
+    "rules/non-responsibilities.md",
+    "rules/workflow.md",
+    "rules/decision-points.md",
+    "rules/checklists.md",
+    "rules/documentation-discipline.md"
+  ],
+  "responsibilities": [
+    "Search existing components, sections, pages, hooks, libraries, styles, and tests.",
+    "Identify sibling file conventions.",
+    "Identify reusable primitives and local design patterns.",
+    "Note existing verification commands.",
+    "Identify installed supporting skills and docs that already govern the touched domain."
+  ],
+  "non_responsibilities": [
+    "Final reuse decision.",
+    "Designing a new API.",
+    "Running broad refactors."
+  ],
+  "success_criteria": [
+    "The skill stays within its focused responsibility.",
+    "The workflow and decision points are followed.",
+    "Validation checklist items are satisfied or skipped checks are reported.",
+    "Cross-skill handoffs are explicit when another skill owns the next concern."
+  ],
+  "validation_criteria": [
+    "SKILL.md loads as the entry point.",
+    "README.md summarizes usage for humans.",
+    "AGENTS.md provides the compiled agent guide.",
+    "metadata.json exposes machine-readable discovery metadata.",
+    "rules/_sections.md indexes rule files.",
+    "rules/_template.md defines the rule-file standard."
+  ]
+}

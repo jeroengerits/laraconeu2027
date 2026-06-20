@@ -1,0 +1,54 @@
+{
+  "version": "1.0.0",
+  "organization": "Pulse Component Workflow",
+  "date": "June 2026",
+  "canonical_architecture": "vercel-react-best-practices",
+  "name": "pulse-workflow-orchestrator",
+  "description": "Orchestrates complete React component development in this Laravel Inertia app. Use whenever a user asks to create, refactor, review, test, document, or optimize a reusable React component or page section, especially when multiple component skills should be coordinated.",
+  "purpose": "Turn a component task into a clear sequence of specialized skill work. Keep the process lightweight for small changes and explicit for reusable or risky components.",
+  "scope": "Pulse Workflow Orchestrator",
+  "inputs": "Required: - User request. - Current codebase context. - Project constraints from `AGENTS.md`. Optional: - Existing design references. - Prior component decisions. - Test failures or browser logs.",
+  "outputs": "- Skill execution order. - Component lifecycle checklist. - Implementation sequence. - Verification plan. - Open questions only when needed.",
+  "related_skills": [
+    "pulse-api-contract",
+    "pulse-docs-research",
+    "pulse-existing-audit",
+    "pulse-requirements-analysis",
+    "pulse-reuse-decision",
+    "pulse-review-quality-gate"
+  ],
+  "rule_files": [
+    "rules/responsibilities.md",
+    "rules/non-responsibilities.md",
+    "rules/workflow.md",
+    "rules/decision-points.md",
+    "rules/checklists.md",
+    "rules/documentation-discipline.md"
+  ],
+  "responsibilities": [
+    "Own the end-to-end workflow.",
+    "Select the next relevant skill.",
+    "Preserve phase outputs and decisions.",
+    "Keep scope tied to the user request.",
+    "Ensure verification is planned before finalization."
+  ],
+  "non_responsibilities": [
+    "Writing implementation details owned by focused skills.",
+    "Replacing Laravel Boost, Context7, or project-specific documentation lookup.",
+    "Creating documentation files unless the user explicitly requested them."
+  ],
+  "success_criteria": [
+    "The skill stays within its focused responsibility.",
+    "The workflow and decision points are followed.",
+    "Validation checklist items are satisfied or skipped checks are reported.",
+    "Cross-skill handoffs are explicit when another skill owns the next concern."
+  ],
+  "validation_criteria": [
+    "SKILL.md loads as the entry point.",
+    "README.md summarizes usage for humans.",
+    "AGENTS.md provides the compiled agent guide.",
+    "metadata.json exposes machine-readable discovery metadata.",
+    "rules/_sections.md indexes rule files.",
+    "rules/_template.md defines the rule-file standard."
+  ]
+}

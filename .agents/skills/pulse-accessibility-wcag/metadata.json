@@ -1,0 +1,52 @@
+{
+  "version": "1.0.0",
+  "organization": "Pulse Component Workflow",
+  "date": "June 2026",
+  "canonical_architecture": "vercel-react-best-practices",
+  "name": "pulse-accessibility-wcag",
+  "description": "Plans, implements, and reviews accessibility for React components in this Laravel Inertia app. Use for WCAG 2.2, semantic HTML, ARIA, keyboard navigation, focus management, screen readers, touch targets, reduced motion, and accessible interaction alternatives.",
+  "purpose": "Ensure components are usable with keyboard, screen readers, touch, reduced motion, and native browser behaviours.",
+  "scope": "Pulse Accessibility WCAG",
+  "inputs": "Required: - Component behaviour and UI structure. - Interaction requirements. Optional: - Radix primitive docs. - Known accessibility issue. - Browser or assistive tech target.",
+  "outputs": "- Accessibility plan. - Keyboard and focus model. - ARIA and semantic decisions. - Reduced-motion and touch requirements. - Test scenarios.",
+  "related_skills": [
+    "pulse-docs-research",
+    "pulse-workflow-orchestrator"
+  ],
+  "rule_files": [
+    "rules/responsibilities.md",
+    "rules/non-responsibilities.md",
+    "rules/workflow.md",
+    "rules/decision-points.md",
+    "rules/checklists.md",
+    "rules/documentation-discipline.md"
+  ],
+  "responsibilities": [
+    "Target WCAG 2.2 AA.",
+    "Choose semantic HTML before ARIA.",
+    "Define keyboard model and focus behaviour.",
+    "Ensure names, descriptions, errors, alerts, and live regions are correct.",
+    "Preserve native scrolling and gestures.",
+    "Check reduced motion and touch target needs.",
+    "Verify accessible names and visible state with behaviour tests when interactions matter."
+  ],
+  "non_responsibilities": [
+    "Visual styling beyond focus visibility, contrast, and target size.",
+    "Radix internals.",
+    "Test implementation, though tests should validate accessible outcomes."
+  ],
+  "success_criteria": [
+    "The skill stays within its focused responsibility.",
+    "The workflow and decision points are followed.",
+    "Validation checklist items are satisfied or skipped checks are reported.",
+    "Cross-skill handoffs are explicit when another skill owns the next concern."
+  ],
+  "validation_criteria": [
+    "SKILL.md loads as the entry point.",
+    "README.md summarizes usage for humans.",
+    "AGENTS.md provides the compiled agent guide.",
+    "metadata.json exposes machine-readable discovery metadata.",
+    "rules/_sections.md indexes rule files.",
+    "rules/_template.md defines the rule-file standard."
+  ]
+}

@@ -1,0 +1,53 @@
+{
+  "version": "1.0.0",
+  "organization": "Pulse Component Workflow",
+  "date": "June 2026",
+  "canonical_architecture": "vercel-react-best-practices",
+  "name": "pulse-browser-verification",
+  "description": "Verifies React component behaviour in the browser for this Laravel Herd/Inertia app. Use for interaction-heavy components, responsive UI, trackpad/mouse/touch gestures, keyboard flows, reduced motion, light/dark modes, image loading, hydration warnings, and visual regressions.",
+  "purpose": "Validate real browser behaviour across input modes, viewports, and rendering states.",
+  "scope": "Pulse Browser Verification",
+  "inputs": "Required: - URL or route/path. - Behaviour to verify. Optional: - Browser logs. - Viewport targets. - Known device issue.",
+  "outputs": "- Browser verification checklist. - Recent browser errors if any. - Behaviour findings. - Follow-up fixes if needed.",
+  "related_skills": [
+    "pulse-docs-research",
+    "pulse-workflow-orchestrator"
+  ],
+  "rule_files": [
+    "rules/responsibilities.md",
+    "rules/non-responsibilities.md",
+    "rules/workflow.md",
+    "rules/decision-points.md",
+    "rules/checklists.md",
+    "rules/documentation-discipline.md"
+  ],
+  "responsibilities": [
+    "Use Laravel Boost `get-absolute-url` before sharing URLs.",
+    "Assume Laravel Herd serves the app; do not start a separate dev server.",
+    "Use browser logs for recent client-side errors.",
+    "Prefer Pest Browser tests for browser behaviour verification.",
+    "Verify mouse, keyboard, trackpad, touch, reduced motion, and viewport behaviour when relevant.",
+    "Check light and dark modes when component appears in both.",
+    "Report what was and was not verified.",
+    "Verify hydration and console warnings for components with SSR-sensitive render output."
+  ],
+  "non_responsibilities": [
+    "Replacing automated tests.",
+    "Running Herd serve commands; Herd already serves the app.",
+    "Pixel-perfect visual QA."
+  ],
+  "success_criteria": [
+    "The skill stays within its focused responsibility.",
+    "The workflow and decision points are followed.",
+    "Validation checklist items are satisfied or skipped checks are reported.",
+    "Cross-skill handoffs are explicit when another skill owns the next concern."
+  ],
+  "validation_criteria": [
+    "SKILL.md loads as the entry point.",
+    "README.md summarizes usage for humans.",
+    "AGENTS.md provides the compiled agent guide.",
+    "metadata.json exposes machine-readable discovery metadata.",
+    "rules/_sections.md indexes rule files.",
+    "rules/_template.md defines the rule-file standard."
+  ]
+}

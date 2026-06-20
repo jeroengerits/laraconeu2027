@@ -1,0 +1,51 @@
+{
+  "version": "1.0.0",
+  "organization": "Pulse Component Workflow",
+  "date": "June 2026",
+  "canonical_architecture": "vercel-react-best-practices",
+  "name": "pulse-media-assets",
+  "description": "Optimizes media and asset handling for React components in this Laravel Vite app. Use for responsive images, lazy loading, import.meta.glob, asset request counts, alt text, image sizing, viewport loading, video, and below-the-fold media.",
+  "purpose": "Reduce pageload requests, avoid layout shift, and keep image/video rendering accessible and responsive.",
+  "scope": "Pulse Media Assets",
+  "inputs": "Required: - Media source and usage context. - Existing image/rendering utilities. Optional: - Asset folder structure. - Performance symptoms. - Viewport loading requirements.",
+  "outputs": "- Media loading strategy. - Responsive sizing plan. - Accessibility notes. - Request-count risks. - Verification plan.",
+  "related_skills": [
+    "pulse-docs-research",
+    "pulse-workflow-orchestrator"
+  ],
+  "rule_files": [
+    "rules/responsibilities.md",
+    "rules/non-responsibilities.md",
+    "rules/workflow.md",
+    "rules/decision-points.md",
+    "rules/checklists.md",
+    "rules/documentation-discipline.md"
+  ],
+  "responsibilities": [
+    "Choose eager vs lazy media loading.",
+    "Use responsive image components when available.",
+    "Preserve width, height, aspect ratio, and alt text.",
+    "Reduce below-the-fold request count.",
+    "Avoid eager imports of large asset sets unless needed for first paint.",
+    "Avoid creating responsive `srcSet` or image requests for offscreen gallery items until they are near the viewport."
+  ],
+  "non_responsibilities": [
+    "Generic bundle optimization outside media.",
+    "Visual art direction beyond media fit and cropping.",
+    "Creating new image assets unless requested."
+  ],
+  "success_criteria": [
+    "The skill stays within its focused responsibility.",
+    "The workflow and decision points are followed.",
+    "Validation checklist items are satisfied or skipped checks are reported.",
+    "Cross-skill handoffs are explicit when another skill owns the next concern."
+  ],
+  "validation_criteria": [
+    "SKILL.md loads as the entry point.",
+    "README.md summarizes usage for humans.",
+    "AGENTS.md provides the compiled agent guide.",
+    "metadata.json exposes machine-readable discovery metadata.",
+    "rules/_sections.md indexes rule files.",
+    "rules/_template.md defines the rule-file standard."
+  ]
+}

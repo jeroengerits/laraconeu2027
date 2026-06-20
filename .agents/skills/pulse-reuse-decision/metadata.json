@@ -1,0 +1,51 @@
+{
+  "version": "1.0.0",
+  "organization": "Pulse Component Workflow",
+  "date": "June 2026",
+  "canonical_architecture": "vercel-react-best-practices",
+  "name": "pulse-reuse-decision",
+  "description": "Decides whether to reuse, extend, refactor, or create a React component in this Laravel Inertia app. Use after auditing existing components and before introducing new abstractions or shared APIs.",
+  "purpose": "Avoid speculative abstractions while still extracting reusable components when they reduce real complexity.",
+  "scope": "Pulse Reuse Decision",
+  "inputs": "Required: - Existing audit findings. - Requirements and acceptance criteria. Optional: - Known future reuse. - Current consumers of the component.",
+  "outputs": "- Reuse decision. - Rationale. - Affected consumers. - Follow-up skill recommendations.",
+  "related_skills": [
+    "pulse-api-contract",
+    "pulse-docs-research",
+    "pulse-workflow-orchestrator"
+  ],
+  "rule_files": [
+    "rules/responsibilities.md",
+    "rules/non-responsibilities.md",
+    "rules/workflow.md",
+    "rules/decision-points.md",
+    "rules/checklists.md",
+    "rules/documentation-discipline.md"
+  ],
+  "responsibilities": [
+    "Evaluate reuse candidates.",
+    "Decide whether to keep behaviour local.",
+    "Decide whether to extend, refactor, or create.",
+    "Document tradeoffs and blast radius.",
+    "Reject reuse based only on visual similarity when behaviour, accessibility, or API responsibility differs."
+  ],
+  "non_responsibilities": [
+    "Designing detailed props.",
+    "Implementing the decision.",
+    "Running tests."
+  ],
+  "success_criteria": [
+    "The skill stays within its focused responsibility.",
+    "The workflow and decision points are followed.",
+    "Validation checklist items are satisfied or skipped checks are reported.",
+    "Cross-skill handoffs are explicit when another skill owns the next concern."
+  ],
+  "validation_criteria": [
+    "SKILL.md loads as the entry point.",
+    "README.md summarizes usage for humans.",
+    "AGENTS.md provides the compiled agent guide.",
+    "metadata.json exposes machine-readable discovery metadata.",
+    "rules/_sections.md indexes rule files.",
+    "rules/_template.md defines the rule-file standard."
+  ]
+}

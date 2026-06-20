@@ -1,0 +1,53 @@
+{
+  "version": "1.0.0",
+  "organization": "Pulse Component Workflow",
+  "date": "June 2026",
+  "canonical_architecture": "vercel-react-best-practices",
+  "name": "pulse-behavior-testing",
+  "description": "Writes and maintains behaviour-driven React component tests in this Laravel app using Jest, React Testing Library, user-event, and jest-dom. Use for user interactions, keyboard accessibility, focus, async states, callbacks, validation, public API contracts, and regression tests.",
+  "purpose": "Implement tests that protect visible behaviour, accessibility, and public API contracts while allowing internals to change.",
+  "scope": "Pulse Behavior Testing",
+  "inputs": "Required: - Behaviour scenarios. - Component or hook under test. Optional: - Existing test utilities. - Mocking requirements. - Async or network boundary details.",
+  "outputs": "- Behaviour tests. - Test utilities only when justified. - Test command results or skipped-test explanation.",
+  "related_skills": [
+    "jest-react-testing",
+    "pulse-docs-research",
+    "pulse-workflow-orchestrator"
+  ],
+  "rule_files": [
+    "rules/responsibilities.md",
+    "rules/non-responsibilities.md",
+    "rules/workflow.md",
+    "rules/decision-points.md",
+    "rules/checklists.md",
+    "rules/documentation-discipline.md"
+  ],
+  "responsibilities": [
+    "Write Jest and React Testing Library tests.",
+    "Use `@testing-library/user-event`.",
+    "Use `jest-dom` matchers.",
+    "Prefer accessible queries.",
+    "Mock boundaries, not component internals.",
+    "Report missing test tooling honestly.",
+    "Use `jest-react-testing` and Context7 Testing Library docs when test setup, async queries, or interaction APIs are uncertain."
+  ],
+  "non_responsibilities": [
+    "Snapshot testing large components.",
+    "Testing Tailwind classes, private state, Motion configuration, or Radix internals.",
+    "Browser/manual verification."
+  ],
+  "success_criteria": [
+    "The skill stays within its focused responsibility.",
+    "The workflow and decision points are followed.",
+    "Validation checklist items are satisfied or skipped checks are reported.",
+    "Cross-skill handoffs are explicit when another skill owns the next concern."
+  ],
+  "validation_criteria": [
+    "SKILL.md loads as the entry point.",
+    "README.md summarizes usage for humans.",
+    "AGENTS.md provides the compiled agent guide.",
+    "metadata.json exposes machine-readable discovery metadata.",
+    "rules/_sections.md indexes rule files.",
+    "rules/_template.md defines the rule-file standard."
+  ]
+}

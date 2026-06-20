@@ -1,0 +1,54 @@
+{
+  "version": "1.0.0",
+  "organization": "Pulse Component Workflow",
+  "date": "June 2026",
+  "canonical_architecture": "vercel-react-best-practices",
+  "name": "pulse-requirements-analysis",
+  "description": "Analyzes requirements for React component work in this Laravel Inertia app. Use when a component request needs goals, non-goals, constraints, user workflows, acceptance criteria, edge cases, or behaviour scenarios before implementation.",
+  "purpose": "Convert the user request into actionable component requirements that can drive architecture, API design, tests, and review.",
+  "scope": "Pulse Requirements Analysis",
+  "inputs": "Required: - User request. - Relevant existing UI behaviour. Optional: - Design references. - Bug reports, logs, screenshots, or failing tests. - Browser/device constraints.",
+  "outputs": "- Goals and non-goals. - User workflows. - Acceptance criteria. - Behaviour scenarios. - Known edge cases.",
+  "related_skills": [
+    "pulse-api-contract",
+    "pulse-browser-verification",
+    "pulse-docs-research",
+    "pulse-tdd-planning",
+    "pulse-workflow-orchestrator"
+  ],
+  "rule_files": [
+    "rules/responsibilities.md",
+    "rules/non-responsibilities.md",
+    "rules/workflow.md",
+    "rules/decision-points.md",
+    "rules/checklists.md",
+    "rules/documentation-discipline.md"
+  ],
+  "responsibilities": [
+    "Identify user goals and target workflows.",
+    "Define non-goals and constraints.",
+    "Write acceptance criteria in user-observable terms.",
+    "Identify edge cases and failure states.",
+    "Define which behaviours need tests.",
+    "Capture explicit device, input, accessibility, and reduced-motion expectations when relevant."
+  ],
+  "non_responsibilities": [
+    "Choosing implementation files.",
+    "Designing props or variants.",
+    "Writing tests or code."
+  ],
+  "success_criteria": [
+    "The skill stays within its focused responsibility.",
+    "The workflow and decision points are followed.",
+    "Validation checklist items are satisfied or skipped checks are reported.",
+    "Cross-skill handoffs are explicit when another skill owns the next concern."
+  ],
+  "validation_criteria": [
+    "SKILL.md loads as the entry point.",
+    "README.md summarizes usage for humans.",
+    "AGENTS.md provides the compiled agent guide.",
+    "metadata.json exposes machine-readable discovery metadata.",
+    "rules/_sections.md indexes rule files.",
+    "rules/_template.md defines the rule-file standard."
+  ]
+}
