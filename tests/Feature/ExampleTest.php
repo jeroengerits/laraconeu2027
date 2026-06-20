@@ -14,12 +14,13 @@ test('shares the conference schedule with the welcome page', function () {
 
     $response->assertInertia(fn ($page) => $page
         ->component('welcome')
-        ->has('schedule.days', 2)
+        ->has('schedule.days', 3)
         ->where('schedule.days.0.id', 'day-1')
         ->where('schedule.days.1.id', 'day-2')
+        ->where('schedule.days.2.id', 'day-3')
     );
 
-    expect(Schedule::data()['days'])->toHaveCount(2);
+    expect(Schedule::data()['days'])->toHaveCount(3);
 });
 
 test('shares the conference speakers with the welcome page', function () {

@@ -22,9 +22,9 @@ type ColorModeToggleControlProps = {
 };
 
 const flashTransition: Transition = {
-    duration: 0.68,
-    ease: [0.16, 1, 0.3, 1],
-    times: [0, 0.2, 1],
+    duration: 0.4,
+    ease: [0.22, 1, 0.36, 1],
+    times: [0, 0.22, 1],
     type: 'tween',
 };
 
@@ -34,7 +34,7 @@ const flashInitialState = {
 } as const;
 
 const flashAnimationState = {
-    opacity: [0, 0.92, 0],
+    opacity: [0, 0.72, 0],
     x: ['-120%', '0%', '120%'],
 };
 
@@ -46,8 +46,8 @@ const colorModeLabels = {
 } as const;
 
 const iconTransition = {
-    duration: 0.48,
-    ease: 'easeOut',
+    duration: 0.28,
+    ease: [0.22, 1, 0.36, 1],
 } as const;
 
 const reducedMotionIconTransition = {

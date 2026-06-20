@@ -180,7 +180,7 @@ export function ImpressionSection(): ReactElement {
     return (
         <section
             aria-label="Impression"
-            className="relative isolate scroll-mt-24 overflow-hidden bg-cream-100 px-3 py-14 text-black-950 transition-colors duration-500 sm:px-5 md:py-16 lg:px-6 section:py-20 dark:bg-black-950 dark:text-cream-50"
+            className="relative isolate scroll-mt-24 overflow-hidden bg-cream-100 px-3 py-14 text-black-950 transition-color-mode sm:px-5 md:py-16 lg:px-6 section:py-20 dark:bg-black-950 dark:text-cream-50"
             id="impression"
         >
             <div className="pointer-events-none absolute inset-x-0 top-0 h-24 bg-linear-to-b from-(--welcome-bg) to-transparent" />

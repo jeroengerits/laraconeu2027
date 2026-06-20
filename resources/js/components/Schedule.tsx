@@ -1,5 +1,5 @@
 import type { Variants } from 'motion/react';
-import { m, useInView } from 'motion/react';
+import { m } from 'motion/react';
 import type { ComponentPropsWithoutRef, ReactElement, ReactNode } from 'react';
 import {
     Children,
@@ -8,14 +8,13 @@ import {
     memo,
     useContext,
     useMemo,
-    useRef,
 } from 'react';
 
-import {  AnimatedTabs } from '@/components/AnimatedTabs';
-import type {AnimatedTabItem} from '@/components/AnimatedTabs';
+import { AnimatedTabs } from '@/components/AnimatedTabs';
+import type { AnimatedTabItem } from '@/components/AnimatedTabs';
 import { Avatar } from '@/components/Avatar';
 import { TimeRange } from '@/components/TimeRange';
-import { scheduleItemViewport, useStaggerMotion } from '@/lib/motionVariants';
+import { useScheduleMotion } from '@/lib/motionVariants';
 import { cn } from '@/lib/utils';
 import type { ScheduleItemKind } from '@/types/schedule';
 
@@ -60,9 +59,11 @@ type ParsedScheduleDay = {
 
 type ScheduleMotionContextValue = {
     animate: boolean;
+    avatarVariants: Variants;
+    contentVariants: Variants;
     itemVariants: Variants;
+    rowVariants: Variants;
     shouldReduceMotion: boolean | null;
-    speakerItemVariants: Variants;
 };
 
 type ScheduleComponent = {
@@ -72,10 +73,10 @@ type ScheduleComponent = {
     List: (props: ScheduleListProps) => ReactElement;
 };
 
-const SCHEDULE_AGENDA_CLASS = 'grid divide-y divide-(--welcome-fg)/10';
+const SCHEDULE_AGENDA_CLASS = 'grid list-none divide-y divide-(--welcome-fg)/10 p-0';
 
 const SCHEDULE_ITEM_BASE_CLASS =
-    'grid gap-2 py-4 sm:grid-cols-[7.5rem_minmax(0,1fr)] sm:gap-6';
+    'grid gap-1 py-4 sm:grid-cols-[7.5rem_minmax(0,1fr)] sm:items-start sm:gap-x-6 sm:gap-y-0';
 
 const SCHEDULE_ITEM_CONTENT_CLASS =
     'min-w-0 text-sm leading-6 sm:text-base sm:leading-7';
@@ -96,10 +97,27 @@ const ScheduleRootContext = createContext<
 
 const ScheduleMotionContext = createContext<ScheduleMotionContextValue>({
     animate: false,
+    avatarVariants: {},
+    contentVariants: {},
     itemVariants: {},
+    rowVariants: {},
     shouldReduceMotion: null,
-    speakerItemVariants: {},
 });
+
+function scheduleTimeClassName(
+    kind: ScheduleItemKind,
+    showSpeakerRow: boolean,
+): string {
+    if (showSpeakerRow) {
+        return 'self-start sm:pt-2';
+    }
+
+    if (kind === 'social') {
+        return 'self-start sm:pt-1';
+    }
+
+    return 'self-start sm:pt-0.5';
+}
 
 function scheduleItemTitle(children: ReactNode): string {
     return typeof children === 'string' ? children : String(children ?? '');
@@ -132,56 +150,68 @@ function parseScheduleDays(children: ReactNode): ParsedScheduleDay[] {
     });
 }
 
-const ScheduleSessionContent = memo(function ScheduleSessionContent({
-    isVisible,
+function ScheduleSessionContent({
+    animate,
+    avatarVariants,
+    contentVariants,
+    rowVariants,
+    shouldReduceMotion,
     speaker,
     speakerName,
     speakerPhotoUrl,
     title,
 }: {
-    isVisible: boolean;
+    animate: boolean;
+    avatarVariants: Variants;
+    contentVariants: Variants;
+    rowVariants: Variants;
+    shouldReduceMotion: boolean | null;
     speaker: string;
     speakerName?: string;
     speakerPhotoUrl?: string;
     title: string;
 }): ReactElement {
-    const { animate, shouldReduceMotion, speakerItemVariants } = useContext(
-        ScheduleMotionContext,
-    );
-
     const content = (
         <>
-            <Avatar
-                className="mt-0.5 shrink-0"
-                name={speakerName}
-                size="sm"
-                src={speakerPhotoUrl}
-            />
-            <div className="min-w-0">
-                <span>{title}</span>
-                <span aria-hidden="true"> // </span>
-                <span className="font-mono text-xs tracking-[0.08em] text-(--welcome-fg)/70 uppercase sm:text-sm">
+            <m.div className="shrink-0" variants={avatarVariants}>
+                <Avatar name={speakerName} size="lg" src={speakerPhotoUrl} />
+            </m.div>
+            <m.div className="min-w-0 grid gap-1" variants={contentVariants}>
+                <p className="text-base leading-snug font-bold text-(--welcome-fg) sm:text-lg">
+                    {title}
+                </p>
+                <p className="font-mono text-xs tracking-[0.08em] text-(--welcome-fg)/70 uppercase sm:text-sm">
                     {speaker}
-                </span>
-            </div>
+                </p>
+            </m.div>
         </>
     );
 
-    if (shouldReduceMotion || !animate) {
-        return <div className="flex items-start gap-3">{content}</div>;
+    if (!animate || shouldReduceMotion) {
+        return (
+            <div className="flex items-start gap-3 sm:gap-4">
+                <Avatar name={speakerName} size="lg" src={speakerPhotoUrl} />
+                <div className="min-w-0 grid gap-1">
+                    <p className="text-base leading-snug font-bold text-(--welcome-fg) sm:text-lg">
+                        {title}
+                    </p>
+                    <p className="font-mono text-xs tracking-[0.08em] text-(--welcome-fg)/70 uppercase sm:text-sm">
+                        {speaker}
+                    </p>
+                </div>
+            </div>
+        );
     }
 
     return (
         <m.div
-            animate={isVisible ? 'visible' : 'hidden'}
-            className="flex items-start gap-3"
-            initial="hidden"
-            variants={speakerItemVariants}
+            className="flex items-start gap-3 sm:gap-4"
+            variants={rowVariants}
         >
             {content}
         </m.div>
     );
-});
+}
 
 function ScheduleAgenda({
     children,
@@ -192,22 +222,47 @@ function ScheduleAgenda({
     className?: string;
     stagger?: boolean;
 }): ReactElement {
-    const { itemVariants, shouldReduceMotion, speakerItemVariants } =
-        useStaggerMotion();
+    const {
+        avatarVariants,
+        contentVariants,
+        itemVariants,
+        listVariants,
+        rowVariants,
+        shouldReduceMotion,
+    } = useScheduleMotion();
     const motionContext = useMemo<ScheduleMotionContextValue>(
         () => ({
             animate: stagger,
+            avatarVariants,
+            contentVariants,
             itemVariants,
+            rowVariants,
             shouldReduceMotion,
-            speakerItemVariants,
         }),
-        [itemVariants, shouldReduceMotion, speakerItemVariants, stagger],
+        [
+            avatarVariants,
+            contentVariants,
+            itemVariants,
+            rowVariants,
+            shouldReduceMotion,
+            stagger,
+        ],
     );
     const agendaClassName = cn(SCHEDULE_AGENDA_CLASS, className);
 
+    if (!stagger || shouldReduceMotion) {
+        return (
+            <ScheduleMotionContext.Provider value={motionContext}>
+                <ol className={agendaClassName}>{children}</ol>
+            </ScheduleMotionContext.Provider>
+        );
+    }
+
     return (
         <ScheduleMotionContext.Provider value={motionContext}>
-            <ol className={agendaClassName}>{children}</ol>
+            <m.ol className={agendaClassName} variants={listVariants}>
+                {children}
+            </m.ol>
         </ScheduleMotionContext.Provider>
     );
 }
@@ -247,6 +302,7 @@ function ScheduleList({
             {...tabProps}
             aria-label={ariaLabel}
             listClassName={className}
+            showSubtitleOnTrigger={false}
             tabs={tabs}
         />
     );
@@ -271,21 +327,24 @@ const ScheduleItem = memo(function ScheduleItem({
     speakerPhotoUrl,
     start,
 }: ScheduleItemProps): ReactElement {
-    const { animate, itemVariants, shouldReduceMotion } = useContext(
-        ScheduleMotionContext,
-    );
-    const itemRef = useRef<HTMLLIElement>(null);
-    const isInView = useInView(itemRef, scheduleItemViewport);
+    const {
+        animate,
+        avatarVariants,
+        contentVariants,
+        itemVariants,
+        rowVariants,
+        shouldReduceMotion,
+    } = useContext(ScheduleMotionContext);
     const title = scheduleItemTitle(children);
     const showSpeakerRow = kind === 'session' && Boolean(speaker);
-    const itemClassName = cn(
-        SCHEDULE_ITEM_BASE_CLASS,
-        showSpeakerRow ? 'sm:items-start' : 'sm:items-baseline',
-        className,
-    );
+    const itemClassName = cn(SCHEDULE_ITEM_BASE_CLASS, className);
     const content = (
         <>
-            <TimeRange end={end} start={start} />
+            <TimeRange
+                className={scheduleTimeClassName(kind, showSpeakerRow)}
+                end={end}
+                start={start}
+            />
             <div
                 className={cn(
                     SCHEDULE_ITEM_CONTENT_CLASS,
@@ -295,7 +354,11 @@ const ScheduleItem = memo(function ScheduleItem({
             >
                 {showSpeakerRow && speaker ? (
                     <ScheduleSessionContent
-                        isVisible={shouldReduceMotion || isInView}
+                        animate={animate}
+                        avatarVariants={avatarVariants}
+                        contentVariants={contentVariants}
+                        rowVariants={rowVariants}
+                        shouldReduceMotion={shouldReduceMotion}
                         speaker={speaker}
                         speakerName={speakerName}
                         speakerPhotoUrl={speakerPhotoUrl}
@@ -308,22 +371,12 @@ const ScheduleItem = memo(function ScheduleItem({
         </>
     );
 
-    if (!animate || showSpeakerRow) {
-        return (
-            <li className={itemClassName} ref={itemRef}>
-                {content}
-            </li>
-        );
+    if (!animate || shouldReduceMotion) {
+        return <li className={itemClassName}>{content}</li>;
     }
 
     return (
-        <m.li
-            ref={itemRef}
-            animate={shouldReduceMotion || isInView ? 'visible' : 'hidden'}
-            className={itemClassName}
-            initial={shouldReduceMotion ? false : 'hidden'}
-            variants={itemVariants}
-        >
+        <m.li className={itemClassName} variants={itemVariants}>
             {content}
         </m.li>
     );

@@ -242,17 +242,19 @@
     :root {
         --welcome-bg: var(--pair-canvas-bg);
         --welcome-fg: var(--pair-canvas-text);
+        --color-mode-duration: 0.4s;
+        --color-mode-ease: cubic-bezier(0.22, 1, 0.36, 1);
         --welcome-flash-bg: linear-gradient(
             105deg,
             transparent 0%,
-            rgba(230, 104, 196, 0.28) 34%,
-            rgba(255, 202, 61, 0.92) 50%,
-            rgba(10, 131, 216, 0.42) 64%,
+            rgba(230, 104, 196, 0.22) 34%,
+            rgba(255, 202, 61, 0.78) 50%,
+            rgba(10, 131, 216, 0.32) 64%,
             transparent 82%
         );
         transition:
-            background-color 0.68s cubic-bezier(0.16, 1, 0.3, 1),
-            color 0.52s linear;
+            background-color var(--color-mode-duration) var(--color-mode-ease),
+            color var(--color-mode-duration) var(--color-mode-ease);
     }
 
     :root.dark {
@@ -261,12 +263,18 @@
         --welcome-flash-bg: linear-gradient(
             105deg,
             transparent 0%,
-            rgba(10, 131, 216, 0.28) 34%,
-            rgba(255, 202, 61, 0.95) 50%,
-            rgba(230, 104, 196, 0.36) 64%,
+            rgba(10, 131, 216, 0.22) 34%,
+            rgba(255, 202, 61, 0.8) 50%,
+            rgba(230, 104, 196, 0.28) 64%,
             transparent 82%
         );
     }
+}
+
+@utility transition-color-mode {
+    transition-duration: var(--color-mode-duration);
+    transition-property: background-color, border-color, color, fill, filter, stroke;
+    transition-timing-function: var(--color-mode-ease);
 }
 
 @utility font-display {

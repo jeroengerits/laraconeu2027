@@ -31,7 +31,7 @@ const SpeakerCard = memo(function SpeakerCard({
         <>
             <Avatar name={speaker.name} size="lg" src={speaker.photoUrl} />
             <div className="grid gap-1">
-                <p className="text-sm leading-6 font-semibold text-(--welcome-fg) sm:text-base">
+                <p className="text-base leading-snug font-bold text-(--welcome-fg) sm:text-lg">
                     {speaker.name}
                 </p>
                 {speaker.title ? (

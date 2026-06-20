@@ -20,7 +20,7 @@ export function ScheduleSection({
 
     return (
         <Section id="schedule" title="Schedule">
-            <div className="mt-8 max-w-4xl">
+            <div className="mt-8">
                 <Schedule defaultValue={defaultDay}>
                     <Schedule.List aria-label="Conference schedule">
                         {days.map((day) => (
