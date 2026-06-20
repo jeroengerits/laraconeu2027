@@ -8,9 +8,8 @@ import { Tabs } from 'radix-ui';
 import { useMemo, useRef, useState } from 'react';
 import type { ComponentPropsWithoutRef, ReactElement, ReactNode } from 'react';
 
-import { focusVisibleClassName } from '@/lib/focusVisible';
+import { Button } from '@/components/Button';
 import {
-    createTabHeaderSubtitleVariants,
     createTabPanelVariants,
     tabIndicatorTransition,
     tabLabelTransition,
@@ -43,28 +42,24 @@ const TAB_INDICATOR_LAYOUT_ID = 'animated-tabs-indicator';
 const animatedTabsRootClassName = 'grid gap-8';
 
 const animatedTabsHeaderClassName =
-    'flex flex-col gap-4 bg-canvas transition-color-mode sm:flex-row sm:items-center sm:justify-between';
+    'grid justify-items-center gap-4 bg-canvas transition-color-mode';
 
 const animatedTabsStickyHeaderClassName =
     'animated-tabs-sticky-header -mx-4 px-4 py-3 sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8';
 
 const animatedTabsListClassName =
-    'flex flex-wrap gap-1 rounded-lg p-1 animated-tabs-track';
+    'animated-tabs-track animated-tabs-editorial-track grid w-full max-w-3xl grid-flow-col auto-cols-fr overflow-hidden border-y-2 border-canvas-foreground bg-canvas';
 
 const animatedTabsTriggerClassName =
-    'group relative isolate inline-flex min-h-10 items-center gap-2 rounded-md px-3 py-2 font-display text-sm font-bold tracking-wide uppercase transition-color-mode sm:px-4 sm:text-base';
+    'group relative isolate h-auto min-h-16 w-full gap-2 rounded-none border-r border-canvas-foreground/15 px-4 py-4 font-display text-xl leading-none font-bold tracking-normal normal-case transition-color-mode last:border-r-0 sm:min-h-20 sm:px-8 sm:text-2xl';
 
-const animatedTabsTriggerLabelClassName =
-    'relative z-10 text-canvas-foreground';
+const animatedTabsTriggerLabelClassName = 'relative z-10 text-current';
 
 const animatedTabsTriggerSubtitleClassName =
-    'relative z-10 font-mono text-xs tracking-[0.12em] text-muted-foreground uppercase sm:text-sm';
+    'relative z-10 font-mono text-xs tracking-[0.12em] text-current/70 uppercase sm:text-sm';
 
 const animatedTabsTriggerSeparatorClassName =
-    'relative z-10 text-canvas-foreground/25 group-data-[state=active]:text-canvas-foreground/40';
-
-const animatedTabsMetaClassName =
-    'animated-tabs-meta shrink-0 pl-4 text-xs sm:text-sm';
+    'relative z-10 text-current/35 group-data-[state=active]:text-current/45';
 
 const animatedTabsPanelClassName =
     'grid outline-none focus-visible:outline-none';
@@ -96,7 +91,7 @@ function AnimatedTabTriggerSurface({
         return (
             <span
                 aria-hidden="true"
-                className="absolute inset-0 rounded-md animated-tabs-trigger-surface"
+                className="absolute inset-0 pair-inverse animated-tabs-trigger-surface"
             />
         );
     }
@@ -104,7 +99,7 @@ function AnimatedTabTriggerSurface({
     return (
         <m.span
             aria-hidden="true"
-            className="absolute inset-0 rounded-md animated-tabs-trigger-surface"
+            className="absolute inset-0 pair-inverse animated-tabs-trigger-surface"
             layoutId={layoutId}
             transition={tabIndicatorTransition}
         />
@@ -122,21 +117,21 @@ function AnimatedTabTrigger({
 }: AnimatedTabTriggerProps): ReactElement {
     return (
         <Tabs.Trigger asChild value={tab.value}>
-            <m.button
+            <Button
                 className={cn(
                     animatedTabsTriggerClassName,
-                    'text-muted-foreground data-[state=active]:text-canvas-foreground',
-                    focusVisibleClassName,
+                    'text-muted-foreground data-[state=active]:text-inverse-foreground',
                     triggerClassName,
                 )}
-                type="button"
+                size="medium"
+                transition={tabTapTransition}
+                variant="ghost"
                 whileHover={
                     shouldReduceMotion || isActive
                         ? undefined
-                        : { opacity: 0.82, y: -1 }
+                        : { opacity: 0.9 }
                 }
-                whileTap={shouldReduceMotion ? undefined : { scale: 0.98 }}
-                transition={tabTapTransition}
+                whileTap={shouldReduceMotion ? undefined : { scale: 0.998 }}
             >
                 <AnimatedTabTriggerSurface
                     isActive={isActive}
@@ -144,7 +139,7 @@ function AnimatedTabTrigger({
                     shouldReduceMotion={shouldReduceMotion}
                 />
                 <m.span
-                    animate={{ opacity: isActive ? 1 : 0.72 }}
+                    animate={{ opacity: isActive ? 1 : 0.82 }}
                     className={animatedTabsTriggerLabelClassName}
                     transition={tabLabelTransition}
                 >
@@ -159,7 +154,7 @@ function AnimatedTabTrigger({
                             //
                         </span>
                         <m.span
-                            animate={{ opacity: isActive ? 0.85 : 0.55 }}
+                            animate={{ opacity: isActive ? 0.82 : 0.68 }}
                             className={animatedTabsTriggerSubtitleClassName}
                             transition={tabLabelTransition}
                         >
@@ -167,16 +162,14 @@ function AnimatedTabTrigger({
                         </m.span>
                     </>
                 ) : null}
-            </m.button>
+            </Button>
         </Tabs.Trigger>
     );
 }
 
 type AnimatedTabsHeaderProps = {
-    activeTabItem?: AnimatedTabItem;
     ariaLabel: string;
     headerClassName?: string;
-    headerSubtitleVariants: ReturnType<typeof createTabHeaderSubtitleVariants>;
     layoutId: string;
     listClassName?: string;
     resolvedActiveTab: string;
@@ -184,15 +177,12 @@ type AnimatedTabsHeaderProps = {
     showSubtitleOnTrigger: boolean;
     stickyHeader: boolean;
     tabs: AnimatedTabItem[];
-    transitionDirection: number;
     triggerClassName?: string;
 };
 
 function AnimatedTabsHeader({
-    activeTabItem,
     ariaLabel,
     headerClassName,
-    headerSubtitleVariants,
     layoutId,
     listClassName,
     resolvedActiveTab,
@@ -200,7 +190,6 @@ function AnimatedTabsHeader({
     showSubtitleOnTrigger,
     stickyHeader,
     tabs,
-    transitionDirection,
     triggerClassName,
 }: AnimatedTabsHeaderProps): ReactElement {
     return (
@@ -230,26 +219,6 @@ function AnimatedTabsHeader({
                     ))}
                 </Tabs.List>
             </LayoutGroup>
-
-            <AnimatePresence
-                custom={transitionDirection}
-                initial={false}
-                mode="wait"
-            >
-                {!showSubtitleOnTrigger && activeTabItem?.subtitle ? (
-                    <m.p
-                        animate="visible"
-                        className={animatedTabsMetaClassName}
-                        custom={transitionDirection}
-                        exit="exit"
-                        initial="hidden"
-                        key={activeTabItem.value}
-                        variants={headerSubtitleVariants}
-                    >
-                        {activeTabItem.subtitle}
-                    </m.p>
-                ) : null}
-            </AnimatePresence>
         </div>
     );
 }
@@ -324,15 +293,10 @@ export function AnimatedTabs({
         () => createTabPanelVariants(shouldReduceMotion),
         [shouldReduceMotion],
     );
-    const headerSubtitleVariants = useMemo(
-        () => createTabHeaderSubtitleVariants(shouldReduceMotion),
-        [shouldReduceMotion],
-    );
     const isControlled = value !== undefined;
     const [enablePanelEnterAnimation, setEnablePanelEnterAnimation] =
         useState(false);
     const resolvedActiveTab = isControlled ? (value ?? '') : activeTab;
-    const activeTabItem = tabs.find((tab) => tab.value === resolvedActiveTab);
     const activeIndexRef = useRef(
         tabs.findIndex((tab) => tab.value === defaultActiveTab),
     );
@@ -367,10 +331,8 @@ export function AnimatedTabs({
             value={resolvedActiveTab}
         >
             <AnimatedTabsHeader
-                activeTabItem={activeTabItem}
                 ariaLabel={ariaLabel}
                 headerClassName={headerClassName}
-                headerSubtitleVariants={headerSubtitleVariants}
                 layoutId={indicatorLayoutId}
                 listClassName={listClassName}
                 resolvedActiveTab={resolvedActiveTab}
@@ -378,7 +340,6 @@ export function AnimatedTabs({
                 showSubtitleOnTrigger={showSubtitleOnTrigger}
                 stickyHeader={stickyHeader}
                 tabs={tabs}
-                transitionDirection={transitionDirection}
                 triggerClassName={triggerClassName}
             />
 

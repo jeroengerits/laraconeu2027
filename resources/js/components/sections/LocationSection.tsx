@@ -1,7 +1,11 @@
 import type { ReactElement } from 'react';
 
-import { Section } from '@/components/sections/Section';
+import { Section, SectionHeading } from '@/components/sections/Section';
 
 export function LocationSection(): ReactElement {
-    return <Section id="location" title="Location" />;
+    return (
+        <Section id="location">
+            <SectionHeading>Location</SectionHeading>
+        </Section>
+    );
 }

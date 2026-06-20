@@ -12,7 +12,6 @@ import { ScheduleSection } from '@/components/sections/ScheduleSection';
 import { SpeakersSection } from '@/components/sections/SpeakersSection';
 import { SponsorsSection } from '@/components/sections/SponsorsSection';
 import { TicketsSection } from '@/components/sections/TicketsSection';
-import { UpdatesSection } from '@/components/sections/UpdatesSection';
 import { SocialLinkBar } from '@/components/SocialLinkBar';
 import type { TopNavigationItem } from '@/components/TopNavigation';
 import { TopNavigation } from '@/components/TopNavigation';
@@ -57,7 +56,7 @@ function LaraconTopNavigation(): ReactElement {
 
             <TopNavigation.End>
                 <ColorModeToggle />
-                <Button asChild size="medium" variant="primary">
+                <Button asChild size="medium" variant="highlight">
                     <a href="#tickets" onClick={handleAnchorNavigation}>
                         Tickets
                     </a>
@@ -86,15 +85,15 @@ function WelcomeContent({
                 <LaraconTopNavigation />
                 <HeroSection />
                 <ExperienceSection />
-                <PolaroidWallSection />
                 <LocationSection />
                 <SpeakersSection speakers={speakers.speakers} />
                 <ScheduleSection
                     days={schedule.days}
                     speakers={speakers.speakers}
                 />
+                <PolaroidWallSection />
                 <SponsorsSection />
-                <UpdatesSection />
+                {/*<UpdatesSection />*/}
                 <TicketsSection />
                 <SocialLinkBar className="mt-auto pt-10" />
                 <LegalFooter />

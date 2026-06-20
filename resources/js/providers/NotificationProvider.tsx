@@ -3,9 +3,9 @@ import type { ReactElement, ReactNode } from 'react';
 import { useMemo } from 'react';
 
 import { Notifications } from '@/components/Notifications';
+import { useNotificationState } from '@/hooks/useNotificationState';
 import type { NotificationContextValue } from '@/providers/context/NotificationContext';
 import { NotificationContext } from '@/providers/context/NotificationContext';
-import { useNotificationState } from '@/hooks/useNotificationState';
 
 type NotificationProviderProps = {
     children: ReactNode;

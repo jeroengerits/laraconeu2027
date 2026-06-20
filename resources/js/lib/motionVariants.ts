@@ -3,12 +3,12 @@ import type { Variants } from 'motion/react';
 const motionEase = [0.22, 1, 0.36, 1] as const;
 
 const panelTransition = {
-    duration: 0.3,
+    duration: 0.22,
     ease: motionEase,
 } as const;
 
 const tabPanelExitTransition = {
-    duration: 0.2,
+    duration: 0.16,
     ease: [0.4, 0, 1, 1],
 } as const;
 
@@ -30,52 +30,19 @@ const itemTransition = {
 } as const;
 
 export const tabTapTransition = {
-    duration: 0.2,
+    duration: 0.14,
     ease: motionEase,
 } as const;
 
 export const tabIndicatorTransition = {
-    duration: 0.32,
+    duration: 0.22,
     ease: motionEase,
 } as const;
 
 export const tabLabelTransition = {
-    duration: 0.24,
+    duration: 0.18,
     ease: motionEase,
 } as const;
-
-export const tabHeaderSubtitleTransition = {
-    duration: 0.26,
-    ease: motionEase,
-} as const;
-
-export function createTabHeaderSubtitleVariants(
-    shouldReduceMotion: boolean | null,
-): Variants {
-    return {
-        exit: (direction: number) => ({
-            opacity: shouldReduceMotion ? 1 : 0,
-            transition: shouldReduceMotion
-                ? { duration: 0 }
-                : tabHeaderSubtitleTransition,
-            x: shouldReduceMotion ? 0 : direction * -10,
-            y: shouldReduceMotion ? 0 : -3,
-        }),
-        hidden: (direction: number) => ({
-            opacity: shouldReduceMotion ? 1 : 0,
-            x: shouldReduceMotion ? 0 : direction * 10,
-            y: shouldReduceMotion ? 0 : 3,
-        }),
-        visible: {
-            opacity: 1,
-            transition: shouldReduceMotion
-                ? { duration: 0 }
-                : tabHeaderSubtitleTransition,
-            x: 0,
-            y: 0,
-        },
-    };
-}
 
 export function createTabPanelVariants(
     shouldReduceMotion: boolean | null,
@@ -86,12 +53,12 @@ export function createTabPanelVariants(
             transition: shouldReduceMotion
                 ? { duration: 0 }
                 : tabPanelExitTransition,
-            x: shouldReduceMotion ? 0 : direction * -16,
+            x: shouldReduceMotion ? 0 : direction * -8,
         }),
         hidden: (direction: number) => ({
             opacity: shouldReduceMotion ? 1 : 0,
-            x: shouldReduceMotion ? 0 : direction * 20,
-            y: shouldReduceMotion ? 0 : 6,
+            x: shouldReduceMotion ? 0 : direction * 10,
+            y: shouldReduceMotion ? 0 : 2,
         }),
         visible: {
             opacity: 1,
@@ -99,8 +66,8 @@ export function createTabPanelVariants(
                 ? { duration: 0 }
                 : {
                       ...panelTransition,
-                      delayChildren: 0.06,
-                      staggerChildren: 0.045,
+                      delayChildren: 0.03,
+                      staggerChildren: 0.025,
                   },
             x: 0,
             y: 0,

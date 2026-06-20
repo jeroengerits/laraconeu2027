@@ -7,7 +7,26 @@ import { forwardRef } from 'react';
 import { focusVisibleClassName } from '@/lib/focusVisible';
 import { cn } from '@/lib/utils';
 
-export type ButtonVariant = 'ghost' | 'outline' | 'primary' | 'secondary';
+export type ButtonPairVariant =
+    | 'accent'
+    | 'canvas'
+    | 'earth'
+    | 'emphasis'
+    | 'highlight'
+    | 'info'
+    | 'inverse'
+    | 'link'
+    | 'muted'
+    | 'support'
+    | 'surface'
+    | 'warmth';
+
+export type ButtonVariant =
+    | 'ghost'
+    | 'outline'
+    | 'primary'
+    | 'secondary'
+    | ButtonPairVariant;
 
 export type ButtonSize =
     | 'huge'
@@ -30,11 +49,23 @@ const buttonBaseClassName =
     'inline-flex shrink-0 items-center justify-center rounded-sm font-sans font-semibold transition-colors disabled:pointer-events-none disabled:opacity-50';
 
 const buttonVariantClassNames: Record<ButtonVariant, string> = {
+    accent: 'pair-accent hover:brightness-95',
+    canvas: 'pair-canvas hover:brightness-95',
+    earth: 'pair-earth hover:brightness-95',
+    emphasis: 'pair-emphasis hover:brightness-95',
     ghost: 'text-current hover:bg-current/10',
+    highlight: 'pair-highlight hover:brightness-95',
+    info: 'pair-info hover:brightness-95',
+    inverse: 'pair-inverse hover:brightness-110',
+    link: 'pair-link hover:brightness-95',
+    muted: 'pair-muted hover:brightness-95',
     outline:
         'border border-current/20 text-current hover:border-current/35 hover:bg-current/10',
     primary: 'pair-accent hover:brightness-95',
     secondary: 'pair-inverse hover:brightness-110',
+    support: 'pair-support hover:brightness-95',
+    surface: 'pair-surface hover:brightness-95',
+    warmth: 'pair-warmth hover:brightness-95',
 };
 
 const buttonSizeClassNames: Record<ButtonSize, string> = {

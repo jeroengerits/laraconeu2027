@@ -45,8 +45,8 @@ describe('motionVariants', () => {
             )(1),
         ).toEqual({
             opacity: 0,
-            x: 20,
-            y: 6,
+            x: 10,
+            y: 2,
         });
     });
 

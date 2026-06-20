@@ -72,22 +72,31 @@ type ScheduleComponent = {
 };
 
 const SCHEDULE_AGENDA_CLASS =
-    'grid list-none divide-y divide-canvas-foreground/10 p-0';
+    'schedule-agenda-grid grid list-none border-t-2 border-canvas-foreground p-0';
 
 const SCHEDULE_ITEM_BASE_CLASS =
-    'grid gap-1 py-4 sm:grid-cols-[7.5rem_minmax(0,1fr)] sm:items-start sm:gap-x-6 sm:gap-y-0';
+    'schedule-agenda-row grid gap-3 border-b border-canvas-foreground/15 py-5 sm:grid-cols-[8.5rem_minmax(0,1fr)] sm:gap-0 sm:py-0';
+
+const SCHEDULE_ITEM_TIME_CLASS =
+    'schedule-agenda-time self-start border-canvas-foreground/15 sm:border-r sm:px-0 sm:py-6';
 
 const SCHEDULE_ITEM_CONTENT_CLASS =
-    'min-w-0 text-sm leading-6 sm:text-base sm:leading-7';
+    'schedule-agenda-content min-w-0 text-base leading-6 sm:px-6 sm:py-6 sm:text-lg sm:leading-7';
+
+const SCHEDULE_TABS_HEADER_CLASS = 'items-center sm:justify-center';
+
+const SCHEDULE_TABS_LIST_CLASS = 'justify-center';
+
+const SCHEDULE_TABS_TRIGGER_CLASS = 'normal-case';
 
 const scheduleDayDisplayName = 'ScheduleDay';
 
 const scheduleItemKindClassNames: Record<ScheduleItemKind, string> = {
-    break: 'text-muted-foreground italic',
-    lunch: 'text-muted-foreground italic',
+    break: 'bg-surface text-muted-foreground italic',
+    lunch: 'bg-surface text-muted-foreground italic',
     registration: 'text-canvas-foreground',
     session: 'text-canvas-foreground',
-    social: 'font-display text-lg font-bold tracking-wide text-accent uppercase',
+    social: 'font-display text-xl font-bold tracking-wide text-accent uppercase sm:text-2xl',
 };
 
 const scheduleItemEnterVariants = createSpeakerItemEnterVariants(false);
@@ -96,19 +105,8 @@ const ScheduleRootContext = createContext<
     Omit<ScheduleRootProps, 'children' | 'className'>
 >({});
 
-function scheduleTimeClassName(
-    kind: ScheduleItemKind,
-    showSpeakerRow: boolean,
-): string {
-    if (showSpeakerRow) {
-        return 'self-start sm:pt-2';
-    }
-
-    if (kind === 'social') {
-        return 'self-start sm:pt-1';
-    }
-
-    return 'self-start sm:pt-0.5';
+function scheduleTimeClassName(): string {
+    return SCHEDULE_ITEM_TIME_CLASS;
 }
 
 function scheduleItemTitle(children: ReactNode): string {
@@ -156,14 +154,17 @@ function ScheduleSessionContent({
     title: string;
 }): ReactElement {
     const shouldReduceMotion = useReducedMotion();
-    const sessionClassName = cn('flex items-start gap-3 sm:gap-4', className);
+    const sessionClassName = cn(
+        'grid items-start gap-4 sm:grid-cols-[4rem_minmax(0,1fr)]',
+        className,
+    );
 
     if (shouldReduceMotion) {
         return (
             <div className={sessionClassName}>
                 <Avatar name={speakerName} size="lg" src={speakerPhotoUrl} />
                 <div className="grid min-w-0 gap-1">
-                    <p className="text-base leading-snug font-bold text-canvas-foreground sm:text-lg">
+                    <p className="font-display text-2xl leading-none font-bold text-balance text-canvas-foreground sm:text-3xl lg:text-4xl">
                         {title}
                     </p>
                     <p className="font-mono text-xs tracking-[0.08em] text-muted-foreground uppercase sm:text-sm">
@@ -186,7 +187,7 @@ function ScheduleSessionContent({
                 <Avatar name={speakerName} size="lg" src={speakerPhotoUrl} />
             </m.div>
             <m.div className="grid min-w-0 gap-1" variants={contentVariants}>
-                <p className="text-base leading-snug font-bold text-canvas-foreground sm:text-lg">
+                <p className="font-display text-2xl leading-none font-bold text-balance text-canvas-foreground sm:text-3xl lg:text-4xl">
                     {title}
                 </p>
                 <p className="font-mono text-xs tracking-[0.08em] text-muted-foreground uppercase sm:text-sm">
@@ -234,14 +235,13 @@ function ScheduleList({
     children,
     className,
 }: ScheduleListProps): ReactElement {
-    const tabProps = useContext(ScheduleRootContext);
+    const { headerClassName, ...tabProps } = useContext(ScheduleRootContext);
     const days = useMemo(() => parseScheduleDays(children), [children]);
     const tabs = useMemo<AnimatedTabItem[]>(
         () =>
             days.map((day) => ({
                 value: day.value,
                 label: day.label,
-                subtitle: day.date,
                 content: (
                     <ol className={SCHEDULE_AGENDA_CLASS}>{day.children}</ol>
                 ),
@@ -253,10 +253,11 @@ function ScheduleList({
         <AnimatedTabs
             {...tabProps}
             aria-label={ariaLabel}
-            listClassName={className}
-            showSubtitleOnTrigger={false}
+            headerClassName={cn(SCHEDULE_TABS_HEADER_CLASS, headerClassName)}
+            listClassName={cn(SCHEDULE_TABS_LIST_CLASS, className)}
             stickyHeader
             tabs={tabs}
+            triggerClassName={SCHEDULE_TABS_TRIGGER_CLASS}
         />
     );
 }
@@ -282,16 +283,16 @@ function ScheduleItem({
 }: ScheduleItemProps): ReactElement {
     const title = scheduleItemTitle(children);
     const showSpeakerRow = kind === 'session' && Boolean(speaker);
-    const itemClassName = cn(SCHEDULE_ITEM_BASE_CLASS, className);
-    const contentClassNames = cn(
-        SCHEDULE_ITEM_CONTENT_CLASS,
+    const itemClassName = cn(
+        SCHEDULE_ITEM_BASE_CLASS,
         scheduleItemKindClassNames[kind],
-        contentClassName,
+        className,
     );
+    const contentClassNames = cn(SCHEDULE_ITEM_CONTENT_CLASS, contentClassName);
     const content = (
         <>
             <TimeRange
-                className={scheduleTimeClassName(kind, showSpeakerRow)}
+                className={scheduleTimeClassName()}
                 end={end}
                 start={start}
             />

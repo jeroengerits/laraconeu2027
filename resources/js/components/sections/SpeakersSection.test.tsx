@@ -50,4 +50,20 @@ describe('SpeakersSection', () => {
             within(guestCard as HTMLElement).queryByText(/founder/i),
         ).not.toBeInTheDocument();
     });
+
+    it('renders the speakers in an editorial Swiss grid', () => {
+        const { container } = render(
+            <SpeakersSection speakers={sampleSpeakers} />,
+        );
+
+        expect(
+            container.querySelector('.speakers-editorial-grid'),
+        ).toBeInTheDocument();
+        expect(
+            container.querySelectorAll('.speaker-editorial-card'),
+        ).toHaveLength(3);
+        expect(
+            container.querySelector('.speakers-editorial-meta'),
+        ).toHaveTextContent('Community voices');
+    });
 });

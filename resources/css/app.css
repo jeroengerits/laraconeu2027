@@ -289,6 +289,8 @@
         --semantic-surface-foreground: var(--color-cream-100);
         --semantic-muted: var(--color-black-700);
         --semantic-muted-foreground: var(--color-black-300);
+        --semantic-inverse: var(--color-cream-50);
+        --semantic-inverse-foreground: var(--color-black-950);
         --semantic-accent: var(--color-orange-500);
         --semantic-accent-foreground: var(--color-black-950);
         --welcome-bg: var(--semantic-canvas);
@@ -330,21 +332,11 @@
 }
 
 @utility animated-tabs-trigger-surface {
-    background-color: var(--color-surface);
     box-shadow: 0 1px 2px
         color-mix(in oklch, var(--color-canvas-foreground) 8%, transparent);
     outline: 1px solid
         color-mix(in oklch, var(--color-canvas-foreground) 10%, transparent);
     outline-offset: -1px;
-}
-
-@utility animated-tabs-meta {
-    border-left: 1px solid
-        color-mix(in oklch, var(--color-canvas-foreground) 10%, transparent);
-    color: color-mix(in oklch, var(--color-muted-foreground) 100%, transparent);
-    font-family: var(--font-mono);
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
 }
 
 @utility font-display {

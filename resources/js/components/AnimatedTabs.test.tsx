@@ -96,4 +96,22 @@ describe('AnimatedTabs', () => {
             container.querySelector('.animated-tabs-sticky-header'),
         ).toBeInTheDocument();
     });
+
+    it('uses the editorial grid tab treatment', () => {
+        const { container } = render(
+            <AnimatedTabs
+                aria-label="Example tabs"
+                defaultValue="day-1"
+                tabs={[...tabs]}
+            />,
+        );
+
+        expect(
+            container.querySelector('.animated-tabs-editorial-track'),
+        ).toBeInTheDocument();
+        expect(screen.getByRole('tab', { name: /DAY 1/i })).toHaveClass(
+            'font-display',
+            'rounded-none',
+        );
+    });
 });

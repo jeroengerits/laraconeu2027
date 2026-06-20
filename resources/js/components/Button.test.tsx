@@ -93,4 +93,12 @@ describe('Button', () => {
             'custom-class',
         );
     });
+
+    it('supports semantic color pair variants', () => {
+        render(<Button variant="surface">Filter</Button>);
+
+        expect(screen.getByRole('button', { name: 'Filter' })).toHaveClass(
+            'pair-surface',
+        );
+    });
 });

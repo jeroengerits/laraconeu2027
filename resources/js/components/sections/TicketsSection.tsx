@@ -1,7 +1,11 @@
 import type { ReactElement } from 'react';
 
-import { Section } from '@/components/sections/Section';
+import { Section, SectionHeading } from '@/components/sections/Section';
 
 export function TicketsSection(): ReactElement {
-    return <Section id="tickets" title="Tickets" />;
+    return (
+        <Section id="tickets">
+            <SectionHeading>Tickets</SectionHeading>
+        </Section>
+    );
 }

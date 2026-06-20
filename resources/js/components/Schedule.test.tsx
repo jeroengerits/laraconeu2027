@@ -248,4 +248,21 @@ describe('Schedule', () => {
             within(tabPanel).getByLabelText('08:30 to 09:15'),
         ).toHaveTextContent('08:30 – 09:15');
     });
+
+    it('renders schedule rows as an editorial timetable grid', () => {
+        const { container } = renderSchedule();
+
+        expect(
+            container.querySelector('.schedule-agenda-grid'),
+        ).toBeInTheDocument();
+        expect(container.querySelectorAll('.schedule-agenda-row')).toHaveLength(
+            3,
+        );
+        expect(
+            container.querySelector('.schedule-agenda-time'),
+        ).toHaveTextContent('08:30');
+        expect(
+            container.querySelector('.schedule-agenda-content'),
+        ).toHaveTextContent('Registration');
+    });
 });
