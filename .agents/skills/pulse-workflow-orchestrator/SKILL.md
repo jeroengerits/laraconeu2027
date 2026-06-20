@@ -16,6 +16,11 @@ Orchestrates complete React component development in this Laravel Inertia app. U
 
 Turn a component task into a clear sequence of specialized skill work. Keep the process lightweight for small changes and explicit for reusable or risky components.
 
+Before designing or refactoring any component, consult
+[`RADIX-PRIMITIVES.md`](references/RADIX-PRIMITIVES.md) and determine whether
+one or more Radix primitives should be used before writing custom interaction or
+accessibility logic.
+
 ## When to Apply
 
 - A component task spans planning, architecture, implementation, testing, review, or documentation.
@@ -77,6 +82,7 @@ when coordinating or when adding a new skill.
 | [Workflow Routing](references/workflow-routing.md)                 | Deterministic task-signal to skill-subset routing matrix.     |
 | [Review Aggregation](references/review-aggregation.md)             | Maps the review gate to domain Completion checklists.         |
 | [Documentation Discipline](references/documentation-discipline.md) | Shared documentation-source rule.                             |
+| [Radix Primitives](references/RADIX-PRIMITIVES.md)                 | Canonical Radix primitive-selection and composition reference. |
 
 ## Process
 

@@ -17,6 +17,8 @@ Routing is deterministic: the same task signals select the same skill subset.
 - `pulse-reuse-decision` - when a similar component or pattern may already exist.
 - `pulse-docs-research` - when any framework, library, hydration, gesture, accessibility,
   or testing detail is uncertain. Mandatory before code changes (Boost `search-docs`).
+- Consult `RADIX-PRIMITIVES.md` (`RADIX-PRIMITIVES.md`) and determine
+  whether existing Radix primitives cover the interaction before custom logic.
 
 ## Phase 2: Design (select by signal)
 

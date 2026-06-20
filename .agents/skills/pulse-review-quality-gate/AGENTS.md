@@ -46,6 +46,11 @@ Reviews completed React component work in this Laravel Inertia app. Use before f
 
 Catch regressions and missing verification before reporting completion.
 
+Before designing or refactoring any component, consult
+[`RADIX-PRIMITIVES.md`](../pulse-workflow-orchestrator/references/RADIX-PRIMITIVES.md)
+and determine whether one or more Radix primitives should be used before writing
+custom interaction or accessibility logic.
+
 ## When to Apply
 
 - Component implementation or refactor is complete.

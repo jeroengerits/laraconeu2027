@@ -16,6 +16,11 @@ Safely refactors React components in this Laravel app without changing behaviour
 
 Keep refactors surgical, verifiable, and respectful of existing consumers.
 
+Before designing or refactoring any component, consult
+[`RADIX-PRIMITIVES.md`](../pulse-workflow-orchestrator/references/RADIX-PRIMITIVES.md)
+and determine whether one or more Radix primitives should be used before writing
+custom interaction or accessibility logic.
+
 ## When to Apply
 
 - Refactoring component internals.

@@ -14,6 +14,9 @@ description: |
 # Motion for React
 
 Package: `motion` (formerly `framer-motion`). Import from `"motion/react"`.
+Before designing or refactoring animated components, consult
+[`RADIX-PRIMITIVES.md`](../pulse-workflow-orchestrator/references/RADIX-PRIMITIVES.md)
+to choose Radix primitives first, then layer Motion for animation.
 
 ## Installation
 

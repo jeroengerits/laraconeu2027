@@ -46,6 +46,11 @@ Plans, implements, and reviews accessibility for React components in this Larave
 
 Ensure components are usable with keyboard, screen readers, touch, reduced motion, and native browser behaviours.
 
+Before designing or refactoring any component, consult
+[`RADIX-PRIMITIVES.md`](../pulse-workflow-orchestrator/references/RADIX-PRIMITIVES.md)
+and determine whether one or more Radix primitives should be used before writing
+custom interaction or accessibility logic.
+
 ## When to Apply
 
 - Component has interaction, forms, status, navigation, media, animation, or complex layout.

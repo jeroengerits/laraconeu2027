@@ -47,6 +47,11 @@ Orchestrates complete React component development in this Laravel Inertia app. U
 
 Turn a component task into a clear sequence of specialized skill work. Keep the process lightweight for small changes and explicit for reusable or risky components.
 
+Before designing or refactoring any component, consult
+[`RADIX-PRIMITIVES.md`](references/RADIX-PRIMITIVES.md) and determine whether
+one or more Radix primitives should be used before writing custom interaction or
+accessibility logic.
+
 ## When to Apply
 
 - A component task spans planning, architecture, implementation, testing, review, or documentation.
@@ -125,6 +130,7 @@ This skill owns the shared assets the whole Pulse ecosystem depends on:
 - `references/review-aggregation.md` - maps the review gate to domain Completion checklists.
 - `references/documentation-discipline.md` - shared documentation-source rule.
 - `references/question-discipline.md` - shared rule for how skills ask the user questions.
+- `references/RADIX-PRIMITIVES.md` - canonical Radix primitive-selection and composition reference.
 
 ---
 

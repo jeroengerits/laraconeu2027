@@ -37,21 +37,22 @@ Every meaningful component change should move through these phases:
 3. Existing component audit
 4. Reuse decision
 5. Documentation research
-6. Architecture and boundaries
-7. API contract
-8. State and effects planning
-9. Framework integration planning
-10. Design-system planning
-11. Accessibility planning
-12. Motion and interaction planning
-13. Media and asset planning
-14. Performance planning
-15. TDD planning
-16. Behaviour testing
-17. Implementation
-18. Browser verification
-19. Documentation
-20. Review and refinement
+6. Radix primitive selection
+7. Architecture and boundaries
+8. API contract
+9. State and effects planning
+10. Framework integration planning
+11. Design-system planning
+12. Accessibility planning
+13. Motion and interaction planning
+14. Media and asset planning
+15. Performance planning
+16. TDD planning
+17. Behaviour testing
+18. Implementation
+19. Browser verification
+20. Documentation
+21. Review and refinement
 
 For small changes, keep the workflow lightweight. The agent may handle several
 phases as a compact internal checklist, but it should not skip discovery,
@@ -131,6 +132,7 @@ reference them instead of duplicating the content.
 - `references/skill-structure.md` - the "well-formed skill" conformance standard.
 - `references/documentation-discipline.md` - shared documentation-source rule.
 - `references/project-structure.md` - project folder layout, naming, and file-placement rules.
+- `references/RADIX-PRIMITIVES.md` - canonical primitive-selection and Radix-first composition guidance.
 
 `pulse-create-component` gathers the brief and hands off. `pulse-workflow-orchestrator` is a
 lightweight, deterministic coordinator: it selects the minimal skill subset from the routing
@@ -152,10 +154,11 @@ Default end-to-end order:
 4. `pulse-existing-audit`
 5. `pulse-reuse-decision`
 6. `pulse-docs-research`
-7. `pulse-architecture-boundaries`
-8. `pulse-api-contract`
-9. `pulse-state-effects`
-10. Domain-specific planning skills:
+7. Consult `references/RADIX-PRIMITIVES.md` and select candidate primitive(s).
+8. `pulse-architecture-boundaries`
+9. `pulse-api-contract`
+10. `pulse-state-effects`
+11. Domain-specific planning skills:
     `pulse-inertia-integration`,
     `pulse-radix-composition`,
     `pulse-tailwind-design-system`,
@@ -163,14 +166,14 @@ Default end-to-end order:
     `pulse-motion-interactions`,
     `pulse-media-assets`, and
     `pulse-performance-vercel`.
-11. `pulse-tdd-planning`
-12. `pulse-behavior-testing`
-13. Gate 1: Definition of Ready (enforced by the orchestrator).
-14. `pulse-implementation` (use `pulse-refactor-safety` when changing existing
+12. `pulse-tdd-planning`
+13. `pulse-behavior-testing`
+14. Gate 1: Definition of Ready (enforced by the orchestrator).
+15. `pulse-implementation` (use `pulse-refactor-safety` when changing existing
     components without changing behaviour).
-15. `pulse-browser-verification`
-16. `pulse-documentation-dx`
-17. `pulse-review-quality-gate` (enforces Gate 2: Definition of Done).
+16. `pulse-browser-verification`
+17. `pulse-documentation-dx`
+18. `pulse-review-quality-gate` (enforces Gate 2: Definition of Done).
 
 Routing is deterministic: the orchestrator selects skills from
 `references/workflow-routing.md`. Use the smallest subset that

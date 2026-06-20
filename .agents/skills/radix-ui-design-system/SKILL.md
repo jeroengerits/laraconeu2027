@@ -14,6 +14,11 @@ Build production-ready, accessible design systems using Radix UI primitives with
 
 Radix UI provides unstyled, accessible components (primitives) that you can customize to match any design system. This skill guides you through building scalable component libraries with Radix UI, focusing on accessibility-first design, theming architecture, and composable patterns.
 
+Before designing or refactoring any component, consult
+[`RADIX-PRIMITIVES.md`](../pulse-workflow-orchestrator/references/RADIX-PRIMITIVES.md)
+to validate primitive choice before writing custom interaction or accessibility
+logic.
+
 **Key Strengths:**
 
 - **Headless by design**: Full styling control without fighting defaults

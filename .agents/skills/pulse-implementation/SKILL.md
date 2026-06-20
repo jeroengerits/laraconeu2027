@@ -16,6 +16,11 @@ Implements approved React component plans in this Laravel Inertia app. Use after
 
 Translate approved component decisions into code that follows React 19, TypeScript, Inertia, Tailwind, Radix, Motion, and local project conventions.
 
+Before designing or refactoring any component, consult
+[`RADIX-PRIMITIVES.md`](../pulse-workflow-orchestrator/references/RADIX-PRIMITIVES.md)
+and determine whether one or more Radix primitives should be used before writing
+custom interaction or accessibility logic.
+
 ## When to Apply
 
 - The plan is clear enough to edit files.

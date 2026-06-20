@@ -16,6 +16,11 @@ Designs TypeScript public APIs for React components in this Laravel Inertia app.
 
 Prevent prop sprawl, implementation leaks, and unclear public behaviour.
 
+Before designing or refactoring any component, consult
+[`RADIX-PRIMITIVES.md`](../pulse-workflow-orchestrator/references/RADIX-PRIMITIVES.md)
+and determine whether one or more Radix primitives should be used before writing
+custom interaction or accessibility logic.
+
 ## When to Apply
 
 - Creating reusable components.

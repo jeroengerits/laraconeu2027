@@ -16,6 +16,9 @@ January 2026
 > this app has an equivalent Laravel/Inertia pattern. When a rule suggests an
 > uninstalled package, prefer the no-new-dependency alternative first and ask
 > before changing dependencies.
+> Before designing or refactoring any component, consult
+> [`RADIX-PRIMITIVES.md`](../pulse-workflow-orchestrator/references/RADIX-PRIMITIVES.md)
+> to select primitives before custom interaction or accessibility logic.
 
 ---
 

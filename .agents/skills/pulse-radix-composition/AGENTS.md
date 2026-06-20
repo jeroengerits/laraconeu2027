@@ -46,6 +46,11 @@ Designs Radix-inspired React component composition in this Laravel app. Use when
 
 Avoid reimplementing complex accessibility behaviour and keep component APIs flexible without leaking DOM internals.
 
+Before designing or refactoring any component, consult
+[`RADIX-PRIMITIVES.md`](../pulse-workflow-orchestrator/references/RADIX-PRIMITIVES.md)
+and determine whether one or more Radix primitives should be used before writing
+custom interaction or accessibility logic.
+
 ## When to Apply
 
 - Building complex interactive primitives.
@@ -88,6 +93,7 @@ Optional:
 | [Decision Points](rules/decision-points.md)                   | Branching rules and handoff decisions.             |
 | [Checklists](rules/checklists.md)                             | Pre-flight, execution, and completion checks.      |
 | [Documentation Discipline](rules/documentation-discipline.md) | Shared documentation-source rule for code changes. |
+| [Radix Primitives Reference](../pulse-workflow-orchestrator/references/RADIX-PRIMITIVES.md) | Canonical primitive-selection reference. |
 
 ---
 

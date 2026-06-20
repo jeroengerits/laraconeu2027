@@ -21,6 +21,10 @@ Activate this skill when:
 ## Documentation
 
 Use `search-docs` for detailed Inertia v3 React patterns and documentation.
+Before designing or refactoring any component, consult
+[`RADIX-PRIMITIVES.md`](../pulse-workflow-orchestrator/references/RADIX-PRIMITIVES.md)
+to confirm whether Radix primitives should handle interaction and accessibility
+behavior first.
 
 ## Basic Usage
 
