@@ -1,5 +1,9 @@
 # Question Strategy
 
+For **how** to ask (decide vs. ask, structured options, recommended defaults, batching),
+follow the shared rule: [pulse-workflow-orchestrator/references/question-discipline.md](../../pulse-workflow-orchestrator/references/question-discipline.md).
+This file owns **what** to ask for component intake and in which order.
+
 Ask only what is needed for the next decision. Prefer one concise question when
 the missing information is narrow. Ask grouped questions when the component is
 new or ambiguous.
