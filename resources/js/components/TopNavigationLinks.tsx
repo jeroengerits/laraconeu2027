@@ -29,7 +29,7 @@ function TopNavigationLink({
         <Button
             asChild
             className={cn(
-                'font-mono text-xs font-semibold tracking-[0.12em] text-current/70 uppercase hover:bg-transparent hover:text-current aria-[current=location]:border-b-2 aria-[current=location]:border-current aria-[current=location]:text-current',
+                'h-14 rounded-none px-4 font-mono text-[0.6875rem] font-semibold tracking-[0.14em] text-current/68 uppercase hover:bg-current/5 hover:text-current aria-[current=location]:bg-current/8 aria-[current=location]:text-current',
                 className,
             )}
             size="medium"
@@ -58,7 +58,7 @@ function TopNavigationMobileLink({
         <Button
             asChild
             className={cn(
-                'w-full justify-start border-t border-canvas-foreground/15 font-mono text-xs font-semibold tracking-[0.12em] text-current/70 uppercase hover:bg-transparent hover:text-current aria-[current=location]:text-current',
+                'h-12 w-full justify-start rounded-none px-4 font-mono text-[0.6875rem] font-semibold tracking-[0.14em] text-current/68 uppercase hover:bg-current/5 hover:text-current aria-[current=location]:bg-current/8 aria-[current=location]:text-current',
                 className,
             )}
             size="medium"

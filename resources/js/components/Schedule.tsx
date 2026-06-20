@@ -83,11 +83,12 @@ const SCHEDULE_ITEM_TIME_CLASS =
 const SCHEDULE_ITEM_CONTENT_CLASS =
     'schedule-agenda-content min-w-0 text-sm leading-6 sm:px-6 sm:py-6 sm:text-base sm:leading-7';
 
-const SCHEDULE_TABS_HEADER_CLASS = 'items-center sm:justify-center';
+const SCHEDULE_TABS_HEADER_CLASS = 'items-center gap-3 sm:justify-center';
 
-const SCHEDULE_TABS_LIST_CLASS = 'justify-center';
+const SCHEDULE_TABS_LIST_CLASS = 'max-w-[26rem] justify-center';
 
-const SCHEDULE_TABS_TRIGGER_CLASS = 'normal-case';
+const SCHEDULE_TABS_TRIGGER_CLASS =
+    'min-h-10 px-3 py-2 text-sm normal-case sm:min-h-11 sm:px-4 sm:text-base';
 
 const scheduleDayDisplayName = 'ScheduleDay';
 

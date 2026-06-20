@@ -19,7 +19,10 @@ export function TopNavigationBrand({
     return (
         <Button
             asChild
-            className={cn('px-0 hover:bg-transparent', className)}
+            className={cn(
+                'h-14 rounded-none px-4 hover:bg-current/5',
+                className,
+            )}
             size="medium"
             variant="ghost"
         >

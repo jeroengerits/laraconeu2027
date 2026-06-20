@@ -90,7 +90,7 @@ function TopNavigationRoot({
             <TopNavigationStateContext.Provider value={stateContextValue}>
                 <header
                     className={cn(
-                        'fixed inset-x-0 top-0 z-20 grid w-full max-w-full grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] items-center gap-x-4 gap-y-3 border-b-2 border-canvas-foreground bg-canvas/88 px-4 py-3 backdrop-blur-xl transition-color-mode sm:px-6 lg:px-8',
+                        'fixed inset-x-0 top-0 z-20 grid min-h-14 w-full max-w-full grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] items-stretch gap-0 bg-canvas/96 px-0 py-0 text-canvas-foreground backdrop-blur-md transition-color-mode',
                         className,
                     )}
                     {...props}

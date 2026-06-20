@@ -4,6 +4,7 @@ import type { ReactElement } from 'react';
 import { Button } from '@/components/Button';
 import { ColorModeToggle, ColorModeTransition } from '@/components/ColorMode';
 import { LegalFooter } from '@/components/LegalFooter';
+import { ConferenceFactsSection } from '@/components/sections/ConferenceFactsSection';
 import { ExperienceSection } from '@/components/sections/ExperienceSection';
 import { HeroSection } from '@/components/sections/HeroSection';
 import { LocationSection } from '@/components/sections/LocationSection';
@@ -84,6 +85,7 @@ function WelcomeContent({
                 <ColorModeTransition />
                 <LaraconTopNavigation />
                 <HeroSection />
+                <ConferenceFactsSection />
                 <ExperienceSection />
                 <LocationSection />
                 <SpeakersSection speakers={speakers.speakers} />

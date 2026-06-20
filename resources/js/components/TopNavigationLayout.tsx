@@ -37,7 +37,7 @@ export function TopNavigationStart({
     return (
         <m.div
             className={cn(
-                'col-start-1 flex min-w-0 items-center gap-2 justify-self-start',
+                'col-start-1 flex min-w-0 items-stretch gap-0 justify-self-start',
                 className,
             )}
             {...layoutMotion}
@@ -59,7 +59,7 @@ export function TopNavigationPrimary({
         <m.nav
             aria-label="Primary"
             className={cn(
-                'col-start-2 hidden items-center justify-center gap-x-2 justify-self-center lg:flex',
+                'col-start-2 hidden h-full items-stretch justify-center justify-self-center lg:flex',
                 className,
             )}
             {...layoutMotion}
@@ -80,7 +80,7 @@ export function TopNavigationEnd({
     return (
         <m.div
             className={cn(
-                'col-start-3 flex items-center gap-2 justify-self-end',
+                'col-start-3 flex items-stretch gap-0 justify-self-end',
                 className,
             )}
             {...layoutMotion}
