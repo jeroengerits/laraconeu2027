@@ -57,6 +57,14 @@ export default [
         },
     },
     {
+        files: ['*.config.cjs'],
+        languageOptions: {
+            globals: {
+                ...globals.node,
+            },
+        },
+    },
+    {
         plugins: {
             import: importPlugin,
         },

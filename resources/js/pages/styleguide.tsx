@@ -3,7 +3,7 @@ import { CheckIcon, CopyIcon } from '@radix-ui/react-icons';
 import type { ReactElement, ReactNode } from 'react';
 
 import { useCopyToClipboard } from '@/hooks/useCopyToClipboard';
-import { useFocusVisible } from '@/hooks/useFocusVisible';
+import { focusVisibleClassName } from '@/lib/focusVisible';
 import { cn } from '@/lib/utils';
 
 type Shade = {
@@ -717,7 +717,6 @@ function Panel({ children, className = '' }: PanelProps): ReactElement {
 function TokenCode({ children }: { children: ReactNode }): ReactElement {
     const copyText = textFromReactNode(children);
     const { copiedText, copy } = useCopyToClipboard();
-    const focusVisibleClassName = useFocusVisible();
     const isCopied = copiedText === copyText;
 
     return (

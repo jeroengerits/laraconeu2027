@@ -1,6 +1,6 @@
 import { MoonIcon, SunIcon } from '@radix-ui/react-icons';
 import type { Transition } from 'motion/react';
-import { m } from 'motion/react';
+import { m, useReducedMotion } from 'motion/react';
 import { Toggle } from 'radix-ui';
 import type { ReactElement } from 'react';
 
@@ -28,6 +28,16 @@ const flashTransition: Transition = {
     type: 'tween',
 };
 
+const flashInitialState = {
+    opacity: 0,
+    x: '-120%',
+} as const;
+
+const flashAnimationState = {
+    opacity: [0, 0.92, 0],
+    x: ['-120%', '0%', '120%'],
+};
+
 const colorModeToggleClassName = 'relative overflow-hidden';
 
 const colorModeLabels = {
@@ -38,6 +48,10 @@ const colorModeLabels = {
 const iconTransition = {
     duration: 0.48,
     ease: 'easeOut',
+} as const;
+
+const reducedMotionIconTransition = {
+    duration: 0,
 } as const;
 
 const visibleIconState = {
@@ -52,15 +66,17 @@ const inactiveIconState = {
 
 export function ColorModeTransition(): ReactElement {
     const { isDarkMode } = useColorMode();
+    const shouldReduceMotion = useReducedMotion();
+
+    if (shouldReduceMotion) {
+        return <></>;
+    }
 
     return (
         <m.div
-            animate={{
-                opacity: [0, 0.92, 0],
-                x: ['-120%', '0%', '120%'],
-            }}
+            animate={flashAnimationState}
             className="pointer-events-none absolute inset-y-0 left-0 z-10 w-full skew-x-[-14deg] [background:var(--welcome-flash-bg)]"
-            initial={{ opacity: 0, x: '-120%' }}
+            initial={flashInitialState}
             key={isDarkMode ? 'dark-flash' : 'light-flash'}
             transition={flashTransition}
         />
@@ -73,6 +89,10 @@ function ColorModeToggleControl({
     onDarkModeChange,
 }: ColorModeToggleControlProps): ReactElement {
     const label = isDarkMode ? colorModeLabels.dark : colorModeLabels.light;
+    const shouldReduceMotion = useReducedMotion();
+    const activeIconTransition = shouldReduceMotion
+        ? reducedMotionIconTransition
+        : iconTransition;
 
     return (
         <Toggle.Root
@@ -90,7 +110,7 @@ function ColorModeToggleControl({
                     animate={isDarkMode ? visibleIconState : inactiveIconState}
                     className="absolute hidden dark:inline-flex"
                     initial={false}
-                    transition={iconTransition}
+                    transition={activeIconTransition}
                 >
                     <SunIcon aria-hidden="true" />
                 </m.span>
@@ -98,7 +118,7 @@ function ColorModeToggleControl({
                     animate={isDarkMode ? inactiveIconState : visibleIconState}
                     className="relative inline-flex dark:hidden"
                     initial={inactiveIconState}
-                    transition={iconTransition}
+                    transition={activeIconTransition}
                 >
                     <MoonIcon aria-hidden="true" />
                 </m.span>

@@ -1,5 +1,5 @@
 import { Cross2Icon, HamburgerMenuIcon } from '@radix-ui/react-icons';
-import { AnimatePresence, m } from 'motion/react';
+import { AnimatePresence, m, useReducedMotion } from 'motion/react';
 import type { HTMLMotionProps } from 'motion/react';
 import type { KeyboardEvent, ReactElement } from 'react';
 
@@ -40,6 +40,10 @@ const menuIconTransition = {
     ease: 'easeOut',
 } as const;
 
+const reducedMotionMenuIconTransition = {
+    duration: 0,
+} as const;
+
 const mobileMenuInitialState = {
     opacity: 0,
     y: -8,
@@ -60,6 +64,10 @@ const mobileMenuTransition = {
     ease: 'easeOut',
 } as const;
 
+const reducedMotionMobileMenuTransition = {
+    duration: 0,
+} as const;
+
 export function TopNavigationMenuButton({
     className,
     ...props
@@ -70,6 +78,10 @@ export function TopNavigationMenuButton({
         mobileNavigationId,
         toggleMobileMenu,
     } = useTopNavigation();
+    const shouldReduceMotion = useReducedMotion();
+    const activeIconTransition = shouldReduceMotion
+        ? reducedMotionMenuIconTransition
+        : menuIconTransition;
 
     return (
         <Button
@@ -95,7 +107,7 @@ export function TopNavigationMenuButton({
                         exit={menuIconExitState}
                         initial={menuIconInitialState}
                         key="close-menu"
-                        transition={menuIconTransition}
+                        transition={activeIconTransition}
                     >
                         <Cross2Icon aria-hidden="true" className="size-5" />
                     </m.span>
@@ -106,7 +118,7 @@ export function TopNavigationMenuButton({
                         exit={menuIconExitState}
                         initial={menuIconInitialState}
                         key="open-menu"
-                        transition={menuIconTransition}
+                        transition={activeIconTransition}
                     >
                         <HamburgerMenuIcon
                             aria-hidden="true"
@@ -131,6 +143,10 @@ export function TopNavigationMobileMenu({
         isMobileMenuOpen,
         mobileNavigationId,
     } = useTopNavigation();
+    const shouldReduceMotion = useReducedMotion();
+    const activeMenuTransition = shouldReduceMotion
+        ? reducedMotionMobileMenuTransition
+        : mobileMenuTransition;
 
     const handleKeyDown = (event: KeyboardEvent<HTMLElement>) => {
         onKeyDown?.(event);
@@ -159,7 +175,7 @@ export function TopNavigationMobileMenu({
                     initial={mobileMenuInitialState}
                     key={mobileNavigationId}
                     onKeyDown={handleKeyDown}
-                    transition={mobileMenuTransition}
+                    transition={activeMenuTransition}
                     {...props}
                 >
                     {children}

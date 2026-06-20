@@ -1,27 +1,29 @@
 import { m, useReducedMotion } from 'motion/react';
 import type { Variants } from 'motion/react';
-import { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import type {
-    KeyboardEvent,
-    PointerEvent,
-    ReactElement,
-    RefObject,
-} from 'react';
+import { memo, useMemo, useRef } from 'react';
+import type { ReactElement } from 'react';
 
 import { ResponsiveImage } from '@/components/ResponsiveImage';
-import { useFocusVisible } from '@/hooks/useFocusVisible';
+import { useHorizontalDragScroll } from '@/hooks/useHorizontalDragScroll';
+import { useHorizontalKeyboardScroll } from '@/hooks/useHorizontalKeyboardScroll';
+import { useHorizontalScrollPause } from '@/hooks/useHorizontalScrollPause';
+import { useLazyPhotoImage } from '@/hooks/useLazyPhotoImage';
+import { useMarqueeScroll } from '@/hooks/useMarqueeScroll';
 import { useRandomizedPhotos } from '@/hooks/useRandomizedPhotos';
-import { createPhotoAssets, type PhotoAsset } from '@/lib/photos';
+import { useVisibleItemKeys } from '@/hooks/useVisibleItemKeys';
+import { focusVisibleClassName } from '@/lib/focusVisible';
+import { createLazyPhotoAssets } from '@/lib/photos';
+import type { LazyPhotoAsset } from '@/lib/photos';
 import { cn } from '@/lib/utils';
 
 const polaroidWallPhotoModules = import.meta.glob<string>(
-    '../../img/photos/resized/*-{tiny,small,medium,large}.jpg',
+    '../../img/photos/resized/*-{tiny,small}.jpg',
     {
-        eager: true,
         import: 'default',
     },
 );
 
+const polaroidWallPhotoSizes = ['tiny', 'small'] as const;
 const polaroidWallRowCount = 3;
 const scrollResumeDelay = 300;
 const polaroidWallImageSizes =
@@ -74,13 +76,34 @@ const polaroidWallCardTransition = {
     type: 'spring',
 } as const;
 
-const polaroidWallPhotos = createPhotoAssets(polaroidWallPhotoModules, {
+const polaroidWallCardFocusState = {
+    rotate: 0,
+    scale: 1.04,
+    y: -8,
+    zIndex: 30,
+} as const;
+
+const polaroidWallCardHoverState = {
+    rotate: 0,
+    scale: 1.045,
+    y: -10,
+    zIndex: 30,
+} as const;
+
+const polaroidWallCardTapState = {
+    rotate: 0,
+    scale: 1.02,
+    y: -5,
+} as const;
+
+const polaroidWallPhotos = createLazyPhotoAssets(polaroidWallPhotoModules, {
     alt: (_, index) => getPolaroidWallAlt(index),
     height: 1024,
+    requiredSizes: polaroidWallPhotoSizes,
     width: 1536,
 });
 
-type PolaroidWallPhoto = PhotoAsset;
+type PolaroidWallPhoto = LazyPhotoAsset;
 
 type PolaroidWallRowProps = {
     direction: PolaroidWallDirection;
@@ -96,13 +119,10 @@ type PolaroidWallCardProps = {
     itemKey: string;
     photo: PolaroidWallPhoto;
     rowIndex: number;
+    shouldReduceMotion: boolean;
 };
 
 type PolaroidWallDirection = 'left' | 'right';
-
-function getInitialMarqueeScrollLeft(loopWidth: number): number {
-    return loopWidth / 2;
-}
 
 export function PolaroidWall(): ReactElement {
     const shouldReduceMotion = useReducedMotion() ?? false;
@@ -115,7 +135,7 @@ export function PolaroidWall(): ReactElement {
             initial={shouldReduceMotion ? false : 'hidden'}
             variants={polaroidWallSectionVariants}
             viewport={polaroidWallViewport}
-            whileInView="visible"
+            whileInView={shouldReduceMotion ? undefined : 'visible'}
         >
             <div className="grid gap-1">
                 {rows.map((photos, rowIndex) => (
@@ -141,251 +161,45 @@ const PolaroidWallRow = memo(function PolaroidWallRow({
     speed,
 }: PolaroidWallRowProps): ReactElement {
     const rowRef = useRef<HTMLDivElement>(null);
-    const pauseTimeoutRef = useRef<number | null>(null);
-    const isPausedRef = useRef(false);
     const isDraggingRef = useRef(false);
-    const isInitializedRef = useRef(false);
-    const isProgrammaticScrollRef = useRef(false);
-    const scrollPositionRef = useRef(0);
-    const dragStartXRef = useRef(0);
-    const dragStartScrollLeftRef = useRef(0);
-    const focusVisibleClassName = useFocusVisible();
     const loopedPhotos = useMemo(() => [...photos, ...photos], [photos]);
-    const visibleCardKeys = useVisiblePolaroidCardKeys(rowRef, loopedPhotos);
-
-    const pause = useCallback((): void => {
-        isPausedRef.current = true;
-
-        if (pauseTimeoutRef.current !== null) {
-            window.clearTimeout(pauseTimeoutRef.current);
-            pauseTimeoutRef.current = null;
-        }
-    }, []);
-
-    const resume = useCallback((): void => {
-        if (pauseTimeoutRef.current !== null) {
-            window.clearTimeout(pauseTimeoutRef.current);
-        }
-
-        pauseTimeoutRef.current = window.setTimeout(() => {
-            isPausedRef.current = false;
-            pauseTimeoutRef.current = null;
-        }, scrollResumeDelay);
-    }, []);
-
-    const scrollToPosition = useCallback(
-        (row: HTMLDivElement, nextScrollLeft: number): void => {
-            scrollPositionRef.current = nextScrollLeft;
-            isProgrammaticScrollRef.current = true;
-            row.scrollLeft = nextScrollLeft;
-        },
-        [],
-    );
-
-    const pauseForManualScroll = useCallback((): void => {
-        const row = rowRef.current;
-
-        if (row === null) {
-            return;
-        }
-
-        const currentScrollLeft = row.scrollLeft;
-
-        if (
-            isProgrammaticScrollRef.current &&
-            Math.abs(currentScrollLeft - scrollPositionRef.current) < 1
-        ) {
-            isProgrammaticScrollRef.current = false;
-
-            return;
-        }
-
-        isProgrammaticScrollRef.current = false;
-        scrollPositionRef.current = currentScrollLeft;
-        pause();
-
-        if (!isDraggingRef.current) {
-            resume();
-        }
-    }, [pause, resume]);
-
-    const pauseForHover = useCallback(
-        (event: PointerEvent<HTMLDivElement>): void => {
-            if (event.pointerType === 'mouse' || event.pointerType === 'pen') {
-                pause();
-            }
-        },
-        [pause],
-    );
-
-    const resumeAfterHover = useCallback(
-        (event: PointerEvent<HTMLDivElement>): void => {
-            if (
-                (event.pointerType === 'mouse' ||
-                    event.pointerType === 'pen') &&
-                !isDraggingRef.current
-            ) {
-                resume();
-            }
-        },
-        [resume],
-    );
-
-    const scrollByKeyboard = useCallback(
-        (event: KeyboardEvent<HTMLDivElement>): void => {
-            const row = rowRef.current;
-
-            if (row === null) {
-                return;
-            }
-
-            if (event.key === 'ArrowLeft' || event.key === 'ArrowRight') {
-                event.preventDefault();
-                pause();
-                row.scrollBy({
-                    behavior: shouldReduceMotion ? 'auto' : 'smooth',
-                    left: event.key === 'ArrowLeft' ? -280 : 280,
-                });
-                resume();
-            }
-
-            if (event.key === 'Home' || event.key === 'End') {
-                event.preventDefault();
-                pause();
-                row.scrollTo({
-                    behavior: shouldReduceMotion ? 'auto' : 'smooth',
-                    left: event.key === 'Home' ? 0 : row.scrollWidth,
-                });
-                resume();
-            }
-        },
-        [pause, resume, shouldReduceMotion],
-    );
-
-    const startPointerDrag = useCallback(
-        (event: PointerEvent<HTMLDivElement>): void => {
-            const row = rowRef.current;
-
-            if (row === null) {
-                return;
-            }
-
-            pause();
-
-            if (event.pointerType === 'touch' || event.button !== 0) {
-                return;
-            }
-
-            isDraggingRef.current = true;
-            dragStartXRef.current = event.clientX;
-            dragStartScrollLeftRef.current = row.scrollLeft;
-            scrollPositionRef.current = row.scrollLeft;
-            row.setPointerCapture(event.pointerId);
-        },
-        [pause],
-    );
-
-    const scrollByPointerDrag = useCallback(
-        (event: PointerEvent<HTMLDivElement>): void => {
-            const row = rowRef.current;
-
-            if (row === null || !isDraggingRef.current) {
-                return;
-            }
-
-            event.preventDefault();
-            const nextScrollLeft =
-                dragStartScrollLeftRef.current -
-                (event.clientX - dragStartXRef.current);
-
-            scrollToPosition(row, nextScrollLeft);
-        },
-        [scrollToPosition],
-    );
-
-    const endPointerDrag = useCallback(
-        (event: PointerEvent<HTMLDivElement>): void => {
-            const row = rowRef.current;
-
-            if (
-                row !== null &&
-                isDraggingRef.current &&
-                row.hasPointerCapture(event.pointerId)
-            ) {
-                row.releasePointerCapture(event.pointerId);
-            }
-
-            isDraggingRef.current = false;
-            resume();
-        },
-        [resume],
-    );
-
-    useEffect(() => {
-        if (shouldReduceMotion) {
-            return;
-        }
-
-        let animationFrame = 0;
-        let previousTimestamp = 0;
-
-        function scrollFrame(timestamp: number): void {
-            const row = rowRef.current;
-
-            if (row !== null) {
-                const loopWidth = row.scrollWidth / 2;
-                const canAutoScroll = loopWidth > row.clientWidth;
-
-                if (!canAutoScroll) {
-                    scrollPositionRef.current = row.scrollLeft;
-                    previousTimestamp = timestamp;
-                    animationFrame = window.requestAnimationFrame(scrollFrame);
-
-                    return;
-                }
-
-                if (!isInitializedRef.current) {
-                    scrollToPosition(
-                        row,
-                        getInitialMarqueeScrollLeft(loopWidth),
-                    );
-                    isInitializedRef.current = true;
-                }
-
-                if (isPausedRef.current) {
-                    scrollPositionRef.current = row.scrollLeft;
-                } else if (isInitializedRef.current && previousTimestamp > 0) {
-                    const delta = timestamp - previousTimestamp;
-                    let nextScrollLeft =
-                        scrollPositionRef.current +
-                        (direction === 'left' ? 1 : -1) * speed * delta;
-
-                    if (direction === 'left' && nextScrollLeft >= loopWidth) {
-                        nextScrollLeft -= loopWidth;
-                    }
-
-                    if (direction === 'right' && nextScrollLeft <= 0) {
-                        nextScrollLeft += loopWidth;
-                    }
-
-                    scrollToPosition(row, nextScrollLeft);
-                }
-            }
-
-            previousTimestamp = timestamp;
-            animationFrame = window.requestAnimationFrame(scrollFrame);
-        }
-
-        animationFrame = window.requestAnimationFrame(scrollFrame);
-
-        return () => {
-            window.cancelAnimationFrame(animationFrame);
-
-            if (pauseTimeoutRef.current !== null) {
-                window.clearTimeout(pauseTimeoutRef.current);
-            }
-        };
-    }, [direction, scrollToPosition, shouldReduceMotion, speed]);
+    const visibleCardKeys = useVisibleItemKeys(rowRef, {
+        getElementKey: getPolaroidWallElementKey,
+        getItemKey: getPolaroidWallItemKey,
+        items: loopedPhotos,
+        selector: '[data-polaroid-card-key]',
+    });
+    const {
+        isProgrammaticScrollRef,
+        pause,
+        resume,
+        scrollPositionRef,
+        scrollToPosition,
+    } = useMarqueeScroll(rowRef, {
+        direction,
+        reduceMotion: shouldReduceMotion,
+        resumeDelay: scrollResumeDelay,
+        speed,
+    });
+    const scrollPauseHandlers = useHorizontalScrollPause(rowRef, {
+        isDraggingRef,
+        isProgrammaticScrollRef,
+        pause,
+        resume,
+        scrollPositionRef,
+    });
+    const dragHandlers = useHorizontalDragScroll(rowRef, {
+        isDraggingRef,
+        pause,
+        resume,
+        scrollPositionRef,
+        scrollToPosition,
+    });
+    const scrollByKeyboard = useHorizontalKeyboardScroll(rowRef, {
+        pause,
+        reduceMotion: shouldReduceMotion,
+        resume,
+    });
 
     return (
         <m.div className="relative min-w-0" variants={polaroidWallRowVariants}>
@@ -396,17 +210,8 @@ const PolaroidWallRow = memo(function PolaroidWallRow({
                     focusVisibleClassName,
                 )}
                 onKeyDown={scrollByKeyboard}
-                onLostPointerCapture={endPointerDrag}
-                onPointerCancel={endPointerDrag}
-                onPointerDown={startPointerDrag}
-                onPointerEnter={pauseForHover}
-                onPointerLeave={resumeAfterHover}
-                onPointerMove={scrollByPointerDrag}
-                onPointerUp={endPointerDrag}
-                onScroll={pauseForManualScroll}
-                onTouchCancel={resume}
-                onTouchEnd={resume}
-                onTouchStart={pause}
+                {...scrollPauseHandlers}
+                {...dragHandlers}
                 ref={rowRef}
                 role="region"
                 tabIndex={0}
@@ -422,6 +227,7 @@ const PolaroidWallRow = memo(function PolaroidWallRow({
                             key={itemKey}
                             photo={photo}
                             rowIndex={rowIndex}
+                            shouldReduceMotion={shouldReduceMotion}
                         />
                     );
                 })}
@@ -436,40 +242,35 @@ const PolaroidWallCard = memo(function PolaroidWallCard({
     itemKey,
     photo,
     rowIndex,
+    shouldReduceMotion,
 }: PolaroidWallCardProps): ReactElement {
+    const image = useLazyPhotoImage(photo, isImageInViewport);
+
     return (
         <m.figure
             className={cn(
-                'group relative w-[8rem] shrink-0 rounded-[0.4rem] bg-cream-50/96 p-1 shadow-[0_18px_42px_-28px_rgba(12,10,9,0.7),0_4px_14px_-12px_rgba(12,10,9,0.4)] ring-1 ring-black/10 backdrop-blur-[2px] will-change-transform [backface-visibility:hidden] sm:w-[9.5rem] sm:p-1.5 section:w-[11rem] section:p-2 dark:bg-cream-100/96 dark:text-black-950',
+                'group relative w-[8rem] shrink-0 rounded-[0.4rem] bg-cream-50/96 p-1 shadow-[0_10px_24px_-18px_rgba(12,10,9,0.52),0_2px_8px_-7px_rgba(12,10,9,0.3)] ring-1 ring-black/10 backdrop-blur-[2px] will-change-transform [backface-visibility:hidden] sm:w-[9.5rem] sm:p-1.5 section:w-[11rem] section:p-2 dark:bg-cream-100/96 dark:text-black-950',
                 getPolaroidWallRotationClassName(index, rowIndex),
             )}
             data-polaroid-card-key={itemKey}
-            transition={polaroidWallCardTransition}
-            whileFocus={{
-                rotate: 0,
-                scale: 1.04,
-                y: -8,
-                zIndex: 30,
-            }}
-            whileHover={{
-                rotate: 0,
-                scale: 1.045,
-                y: -10,
-                zIndex: 30,
-            }}
-            whileTap={{
-                rotate: 0,
-                scale: 1.02,
-                y: -5,
-            }}
+            transition={
+                shouldReduceMotion ? undefined : polaroidWallCardTransition
+            }
+            whileFocus={
+                shouldReduceMotion ? undefined : polaroidWallCardFocusState
+            }
+            whileHover={
+                shouldReduceMotion ? undefined : polaroidWallCardHoverState
+            }
+            whileTap={shouldReduceMotion ? undefined : polaroidWallCardTapState}
         >
-            {isImageInViewport ? (
+            {image !== null ? (
                 <ResponsiveImage
                     alt={photo.alt}
                     className={polaroidWallImageClassName}
                     containerClassName={polaroidWallImageContainerClassName}
                     draggable={false}
-                    image={photo.image}
+                    image={image}
                     loading="lazy"
                     reveal={false}
                     sizes={polaroidWallImageSizes}
@@ -487,83 +288,6 @@ const PolaroidWallCard = memo(function PolaroidWallCard({
         </m.figure>
     );
 });
-
-function useVisiblePolaroidCardKeys(
-    rowRef: RefObject<HTMLDivElement | null>,
-    photos: readonly PolaroidWallPhoto[],
-): ReadonlySet<string> {
-    const [visibleCardKeys, setVisibleCardKeys] = useState<ReadonlySet<string>>(
-        () => new Set(),
-    );
-
-    useEffect(() => {
-        const row = rowRef.current;
-
-        if (row === null) {
-            return;
-        }
-
-        if (typeof IntersectionObserver === 'undefined') {
-            const fallbackTimeout = window.setTimeout(() => {
-                setVisibleCardKeys(
-                    new Set(
-                        photos.map((photo, index) =>
-                            getPolaroidWallItemKey(photo, index),
-                        ),
-                    ),
-                );
-            }, 0);
-
-            return () => {
-                window.clearTimeout(fallbackTimeout);
-            };
-        }
-
-        const observedElements = Array.from(
-            row.querySelectorAll<HTMLElement>('[data-polaroid-card-key]'),
-        );
-
-        const observer = new IntersectionObserver(
-            (entries) => {
-                for (const entry of entries) {
-                    if (!entry.isIntersecting) {
-                        continue;
-                    }
-
-                    const cardKey = (entry.target as HTMLElement).dataset
-                        .polaroidCardKey;
-
-                    if (cardKey !== undefined) {
-                        setVisibleCardKeys((currentCardKeys) => {
-                            if (currentCardKeys.has(cardKey)) {
-                                return currentCardKeys;
-                            }
-
-                            return new Set(currentCardKeys).add(cardKey);
-                        });
-                    }
-
-                    observer.unobserve(entry.target);
-                }
-            },
-            {
-                root: null,
-                rootMargin: '0px',
-                threshold: 0.01,
-            },
-        );
-
-        for (const element of observedElements) {
-            observer.observe(element);
-        }
-
-        return () => {
-            observer.disconnect();
-        };
-    }, [photos, rowRef]);
-
-    return visibleCardKeys;
-}
 
 function createPolaroidWallRows(
     photos: readonly PolaroidWallPhoto[],
@@ -585,6 +309,10 @@ function getPolaroidWallItemKey(
     index: number,
 ): string {
     return `${photo.name}-${index}`;
+}
+
+function getPolaroidWallElementKey(element: HTMLElement): string | undefined {
+    return element.dataset.polaroidCardKey;
 }
 
 function getPolaroidWallRotationClassName(

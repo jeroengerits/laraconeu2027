@@ -1,10 +1,10 @@
-import { m } from 'motion/react';
+import { m, useReducedMotion } from 'motion/react';
 import type { HTMLMotionProps } from 'motion/react';
 import { Slot } from 'radix-ui';
 import { forwardRef } from 'react';
 import type { ReactElement, Ref } from 'react';
 
-import { useFocusVisible } from '@/hooks/useFocusVisible';
+import { focusVisibleClassName } from '@/lib/focusVisible';
 import { cn } from '@/lib/utils';
 
 export type ButtonVariant = 'ghost' | 'outline' | 'primary' | 'secondary';
@@ -71,7 +71,7 @@ function ButtonComponent(
     }: ButtonProps,
     ref: Ref<HTMLButtonElement>,
 ): ReactElement {
-    const focusVisibleClassName = useFocusVisible();
+    const shouldReduceMotion = useReducedMotion();
     const buttonClassName = cn(
         buttonBaseClassName,
         buttonVariantClassNames[variant],
@@ -85,9 +85,9 @@ function ButtonComponent(
             <MotionSlot
                 className={buttonClassName}
                 ref={ref}
-                transition={buttonTransition}
-                whileHover={buttonHoverState}
-                whileTap={buttonTapState}
+                transition={shouldReduceMotion ? undefined : buttonTransition}
+                whileHover={shouldReduceMotion ? undefined : buttonHoverState}
+                whileTap={shouldReduceMotion ? undefined : buttonTapState}
                 {...props}
             >
                 {children}
@@ -99,10 +99,10 @@ function ButtonComponent(
         <m.button
             className={buttonClassName}
             ref={ref}
-            transition={buttonTransition}
+            transition={shouldReduceMotion ? undefined : buttonTransition}
             type={type}
-            whileHover={buttonHoverState}
-            whileTap={buttonTapState}
+            whileHover={shouldReduceMotion ? undefined : buttonHoverState}
+            whileTap={shouldReduceMotion ? undefined : buttonTapState}
             {...props}
         >
             {children}

@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
-import { EMPTY_NOTIFICATION } from '@/components/Notifications';
-import type { Notification } from '@/components/Notifications';
+import { emptyNotification } from '@/lib/notifications';
+import type { Notification } from '@/lib/notifications';
 
 type NotificationState = {
     notification: Notification;
@@ -14,7 +14,7 @@ const NOTIFICATION_REOPEN_DELAY = 100;
 
 export function useNotificationState(): NotificationState {
     const [notification, setNotification] =
-        useState<Notification>(EMPTY_NOTIFICATION);
+        useState<Notification>(emptyNotification);
     const [open, setOpen] = useState(false);
     const reopenTimerRef = useRef(0);
 

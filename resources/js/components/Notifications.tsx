@@ -1,11 +1,8 @@
-import { m } from 'motion/react';
+import { m, useReducedMotion } from 'motion/react';
 import { Toast } from 'radix-ui';
 import type { ReactElement } from 'react';
 
-export type Notification = {
-    description?: string;
-    title: string;
-};
+import type { Notification } from '@/lib/notifications';
 
 type NotificationsProps = {
     notification: Notification;
@@ -13,14 +10,10 @@ type NotificationsProps = {
     open: boolean;
 };
 
-export const EMPTY_NOTIFICATION: Notification = {
-    title: '',
-};
-
-const TOAST_ROOT_CLASS_NAME =
+const toastRootClassName =
     'grid w-[min(15rem,calc(100vw-2rem))] rounded-md border border-current/15 bg-(--welcome-fg) px-3 py-2 text-(--welcome-bg) shadow-lg outline-none data-[swipe=move]:translate-x-(--radix-toast-swipe-move-x) data-[swipe=cancel]:translate-x-0 data-[swipe=cancel]:transition-transform';
 
-const TOAST_VIEWPORT_CLASS_NAME =
+const toastViewportClassName =
     'fixed right-4 bottom-4 z-50 m-0 flex w-auto max-w-[100vw] list-none flex-col gap-2 p-0 outline-none';
 
 const toastVisibleState = {
@@ -41,11 +34,20 @@ const toastTransition = {
     type: 'tween',
 } as const;
 
+const reducedMotionToastHiddenState = {
+    opacity: 0,
+} as const;
+
 export function Notifications({
     notification,
     onOpenChange,
     open,
 }: NotificationsProps): ReactElement {
+    const shouldReduceMotion = useReducedMotion();
+    const hiddenState = shouldReduceMotion
+        ? reducedMotionToastHiddenState
+        : toastHiddenState;
+
     return (
         <>
             <Toast.Root
@@ -55,10 +57,12 @@ export function Notifications({
                 type="foreground"
             >
                 <m.li
-                    animate={open ? toastVisibleState : toastHiddenState}
-                    className={TOAST_ROOT_CLASS_NAME}
-                    initial={toastHiddenState}
-                    transition={toastTransition}
+                    animate={open ? toastVisibleState : hiddenState}
+                    className={toastRootClassName}
+                    initial={hiddenState}
+                    transition={
+                        shouldReduceMotion ? undefined : toastTransition
+                    }
                 >
                     <Toast.Title className="text-xs font-semibold">
                         {notification.title}
@@ -70,7 +74,7 @@ export function Notifications({
                     ) : null}
                 </m.li>
             </Toast.Root>
-            <Toast.Viewport className={TOAST_VIEWPORT_CLASS_NAME} />
+            <Toast.Viewport className={toastViewportClassName} />
         </>
     );
 }

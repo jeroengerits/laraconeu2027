@@ -1,4 +1,4 @@
-import { m } from 'motion/react';
+import { m, useReducedMotion } from 'motion/react';
 import { useEffect, useRef } from 'react';
 import type { ComponentPropsWithoutRef, ReactElement } from 'react';
 
@@ -131,10 +131,11 @@ export function ResponsiveImage({
     ...props
 }: ResponsiveImageProps): ReactElement {
     const imageRef = useRef<HTMLImageElement>(null);
+    const shouldReduceMotion = useReducedMotion();
     const resolvedFetchPriority =
         fetchPriority ?? (priority ? 'high' : undefined);
     const resolvedLoading = loading ?? (priority ? 'eager' : 'lazy');
-    const shouldReveal = reveal ?? !priority;
+    const shouldReveal = (reveal ?? !priority) && !shouldReduceMotion;
 
     useEffect(() => {
         const imageElement = imageRef.current;

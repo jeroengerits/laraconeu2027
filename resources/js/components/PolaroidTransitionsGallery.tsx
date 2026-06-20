@@ -5,12 +5,10 @@ import { memo, useCallback, useEffect, useMemo, useState } from 'react';
 import type { ReactElement } from 'react';
 
 import { Button } from '@/components/Button';
-import {
-    createResponsiveImageAsset,
-    ResponsiveImage,
-} from '@/components/ResponsiveImage';
-import type { ResponsiveImageAsset } from '@/components/ResponsiveImage';
-import { useFocusVisible } from '@/hooks/useFocusVisible';
+import { ResponsiveImage } from '@/components/ResponsiveImage';
+import { focusVisibleClassName } from '@/lib/focusVisible';
+import { createPhotoAssets } from '@/lib/photos';
+import type { PhotoAsset } from '@/lib/photos';
 import { cn } from '@/lib/utils';
 
 const polaroidTransitionPhotoModules = import.meta.glob<string>(
@@ -23,6 +21,16 @@ const polaroidTransitionPhotoModules = import.meta.glob<string>(
 
 const resizedPhotoPathPattern =
     /\/(?<baseName>.+)-(?<size>tiny|small|medium|large|huge|mega|original)\.jpg$/;
+
+const polaroidTransitionRequiredPhotoSizes = [
+    'tiny',
+    'small',
+    'medium',
+    'large',
+    'huge',
+    'mega',
+    'original',
+] as const;
 
 const polaroidTransitionPhotoCount = 11;
 const polaroidTransitionAutoplayDelay = 3600;
@@ -107,6 +115,11 @@ const polaroidTransitionReducedMotionTransition = {
     type: 'tween',
 } as const;
 
+const polaroidTransitionActiveTapState = {
+    rotate: 0,
+    scale: 1.02,
+} as const;
+
 const polaroidTransitionStageVariants: Variants = {
     hidden: {
         opacity: 0,
@@ -149,26 +162,6 @@ type PolaroidTransitionCardLayout = {
     z: number;
 };
 
-type PolaroidTransitionPhoto = {
-    alt: string;
-    image: ResponsiveImageAsset;
-    name: string;
-};
-
-type PolaroidTransitionPhotoSize =
-    | 'huge'
-    | 'large'
-    | 'medium'
-    | 'mega'
-    | 'original'
-    | 'small'
-    | 'tiny';
-
-type PolaroidTransitionPhotoSources = Record<
-    PolaroidTransitionPhotoSize,
-    string
->;
-
 type PolaroidTransitionCardProps = {
     activeIndex: number;
     index: number;
@@ -177,13 +170,12 @@ type PolaroidTransitionCardProps = {
         event: MouseEvent | TouchEvent | PointerEvent,
         info: PanInfo,
     ) => void;
-    photo: PolaroidTransitionPhoto;
+    photo: PhotoAsset;
     photoCount: number;
     shouldReduceMotion: boolean;
 };
 
 export function PolaroidTransitionsGallery(): ReactElement {
-    const focusVisibleClassName = useFocusVisible();
     const shouldReduceMotion = useReducedMotion() ?? false;
     const photos = useMemo(
         () =>
@@ -250,7 +242,7 @@ export function PolaroidTransitionsGallery(): ReactElement {
             initial={shouldReduceMotion ? false : 'hidden'}
             variants={polaroidTransitionStageVariants}
             viewport={polaroidTransitionViewport}
-            whileInView="visible"
+            whileInView={shouldReduceMotion ? undefined : 'visible'}
         >
             <div
                 aria-hidden="true"
@@ -367,6 +359,7 @@ const PolaroidTransitionCard = memo(function PolaroidTransitionCard({
     const offset = getCircularOffset(index, activeIndex, photoCount);
     const layout = getPolaroidTransitionLayout(offset);
     const isVisible = Math.abs(offset) <= 3;
+    const activeHoverState = getPolaroidTransitionActiveHoverState(layout);
 
     return (
         <m.figure
@@ -401,20 +394,11 @@ const PolaroidTransitionCard = memo(function PolaroidTransitionCard({
                     : polaroidTransitionCardTransition
             }
             whileHover={
-                isActive && !shouldReduceMotion
-                    ? {
-                          rotate: 0,
-                          scale: 1.04,
-                          y: layout.y - 8,
-                      }
-                    : undefined
+                isActive && !shouldReduceMotion ? activeHoverState : undefined
             }
             whileTap={
                 isActive && !shouldReduceMotion
-                    ? {
-                          rotate: 0,
-                          scale: 1.02,
-                      }
+                    ? polaroidTransitionActiveTapState
                     : undefined
             }
         >
@@ -473,70 +457,25 @@ function getPolaroidTransitionLayout(
     ];
 }
 
-function createPolaroidTransitionPhotos(): PolaroidTransitionPhoto[] {
-    return createPolaroidTransitionPhotoSourceGroups().map(
-        ({ baseName, sources }, index) => ({
-            alt: getPolaroidTransitionAlt(index),
-            image: createResponsiveImageAsset(sources, {
-                height: 2401,
-                originalWidth: 3600,
-                width: 3600,
-            }),
-            name: baseName,
-        }),
-    );
+function createPolaroidTransitionPhotos(): PhotoAsset[] {
+    return createPhotoAssets(polaroidTransitionPhotoModules, {
+        alt: (_baseName, index) => getPolaroidTransitionAlt(index),
+        height: 2401,
+        originalWidth: 3600,
+        pathPattern: resizedPhotoPathPattern,
+        requiredSizes: polaroidTransitionRequiredPhotoSizes,
+        width: 3600,
+    });
 }
 
-function createPolaroidTransitionPhotoSourceGroups(): {
-    baseName: string;
-    sources: PolaroidTransitionPhotoSources;
-}[] {
-    const groupedSources = new Map<
-        string,
-        Partial<Record<PolaroidTransitionPhotoSize, string>>
-    >();
-
-    for (const [path, src] of Object.entries(polaroidTransitionPhotoModules)) {
-        const match = resizedPhotoPathPattern.exec(path);
-        const groups = match?.groups;
-
-        if (groups === undefined) {
-            continue;
-        }
-
-        const baseName = groups.baseName;
-        const size = groups.size as PolaroidTransitionPhotoSize;
-        const sources = groupedSources.get(baseName) ?? {};
-
-        sources[size] = src;
-        groupedSources.set(baseName, sources);
-    }
-
-    return Array.from(groupedSources.entries())
-        .flatMap(([baseName, sources]) => {
-            if (!hasCompletePolaroidTransitionPhotoSources(sources)) {
-                return [];
-            }
-
-            return [{ baseName, sources }];
-        })
-        .toSorted((firstGroup, secondGroup) =>
-            firstGroup.baseName.localeCompare(secondGroup.baseName),
-        );
-}
-
-function hasCompletePolaroidTransitionPhotoSources(
-    sources: Partial<Record<PolaroidTransitionPhotoSize, string>>,
-): sources is PolaroidTransitionPhotoSources {
-    return (
-        sources.huge !== undefined &&
-        sources.large !== undefined &&
-        sources.medium !== undefined &&
-        sources.mega !== undefined &&
-        sources.original !== undefined &&
-        sources.small !== undefined &&
-        sources.tiny !== undefined
-    );
+function getPolaroidTransitionActiveHoverState(
+    layout: PolaroidTransitionCardLayout,
+): { readonly rotate: 0; readonly scale: 1.04; readonly y: number } {
+    return {
+        rotate: 0,
+        scale: 1.04,
+        y: layout.y - 8,
+    };
 }
 
 function getPolaroidTransitionAlt(index: number): string {

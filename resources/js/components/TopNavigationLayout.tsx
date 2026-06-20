@@ -1,4 +1,4 @@
-import { m } from 'motion/react';
+import { m, useReducedMotion } from 'motion/react';
 import type { HTMLMotionProps } from 'motion/react';
 import type { ReactElement } from 'react';
 
@@ -18,14 +18,18 @@ export function TopNavigationStart({
     className,
     ...props
 }: TopNavigationSectionProps): ReactElement {
+    const shouldReduceMotion = useReducedMotion();
+
     return (
         <m.div
             className={cn(
                 'col-start-1 flex min-w-0 items-center gap-2 justify-self-start',
                 className,
             )}
-            layout
-            transition={navigationLayoutTransition}
+            layout={!shouldReduceMotion}
+            transition={
+                shouldReduceMotion ? undefined : navigationLayoutTransition
+            }
             {...props}
         >
             {children}
@@ -38,6 +42,8 @@ export function TopNavigationPrimary({
     className,
     ...props
 }: TopNavigationPrimaryProps): ReactElement {
+    const shouldReduceMotion = useReducedMotion();
+
     return (
         <m.nav
             aria-label="Primary"
@@ -45,8 +51,10 @@ export function TopNavigationPrimary({
                 'col-start-2 hidden items-center justify-center gap-x-2 justify-self-center lg:flex',
                 className,
             )}
-            layout
-            transition={navigationLayoutTransition}
+            layout={!shouldReduceMotion}
+            transition={
+                shouldReduceMotion ? undefined : navigationLayoutTransition
+            }
             {...props}
         >
             {children}
@@ -59,14 +67,18 @@ export function TopNavigationEnd({
     className,
     ...props
 }: TopNavigationSectionProps): ReactElement {
+    const shouldReduceMotion = useReducedMotion();
+
     return (
         <m.div
             className={cn(
                 'col-start-3 flex items-center gap-2 justify-self-end',
                 className,
             )}
-            layout
-            transition={navigationLayoutTransition}
+            layout={!shouldReduceMotion}
+            transition={
+                shouldReduceMotion ? undefined : navigationLayoutTransition
+            }
             {...props}
         >
             {children}

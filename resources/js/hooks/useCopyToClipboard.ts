@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 import { useNotificationDispatcher } from '@/providers/context/NotificationContext';
 
@@ -82,8 +82,11 @@ export function useCopyToClipboard({
         [errorTitle, notify, resetDelay, successTitle],
     );
 
-    return {
-        copiedText,
-        copy,
-    };
+    return useMemo(
+        () => ({
+            copiedText,
+            copy,
+        }),
+        [copiedText, copy],
+    );
 }

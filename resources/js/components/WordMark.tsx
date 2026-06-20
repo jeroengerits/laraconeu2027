@@ -1,5 +1,5 @@
 import type { HTMLMotionProps, Transition } from 'motion/react';
-import { m } from 'motion/react';
+import { m, useReducedMotion } from 'motion/react';
 import type { ComponentPropsWithoutRef, ReactElement } from 'react';
 
 import { cn } from '@/lib/utils';
@@ -38,6 +38,15 @@ const wordMarkTransition: Transition = {
         type: 'spring',
         visualDuration: 0.28,
     },
+};
+
+const wordMarkAnimationState = {
+    filter: [
+        'brightness(1) saturate(1)',
+        'brightness(1.24) saturate(1.4)',
+        'brightness(1) saturate(1)',
+    ],
+    scale: [1, 1.04, 1],
 };
 
 const wordMarkSizeHeights: Record<WordMarkSize, string> = {
@@ -83,6 +92,7 @@ export function WordMark({
     style,
     ...props
 }: WordMarkProps): ReactElement {
+    const shouldReduceMotion = useReducedMotion();
     const wordMarkStyle: WordMarkProps['style'] = {
         height: wordMarkSizeHeights[size],
         maxHeight: fit ? wordMarkFitMaxHeight : undefined,
@@ -91,17 +101,10 @@ export function WordMark({
 
     return (
         <m.h1
-            animate={{
-                filter: [
-                    'brightness(1) saturate(1)',
-                    'brightness(1.24) saturate(1.4)',
-                    'brightness(1) saturate(1)',
-                ],
-                scale: [1, 1.04, 1],
-            }}
+            animate={shouldReduceMotion ? undefined : wordMarkAnimationState}
             className={cn('inline-flex min-w-0 px-2', className)}
             style={wordMarkStyle}
-            transition={wordMarkTransition}
+            transition={shouldReduceMotion ? undefined : wordMarkTransition}
             {...props}
         >
             <WordMarkSvg />

@@ -1,6 +1,7 @@
 import {
     m,
     useMotionValue,
+    useReducedMotion,
     useScroll,
     useSpring,
     useTransform,
@@ -9,11 +10,9 @@ import type { MotionValue } from 'motion/react';
 import { useMemo, useRef } from 'react';
 import type { PointerEvent, ReactElement } from 'react';
 
-import {
-    createResponsiveImageAsset,
-    ResponsiveImage,
-} from '@/components/ResponsiveImage';
-import type { ResponsiveImageAsset } from '@/components/ResponsiveImage';
+import { ResponsiveImage } from '@/components/ResponsiveImage';
+import { createPhotoAssets } from '@/lib/photos';
+import type { PhotoAsset } from '@/lib/photos';
 import { cn } from '@/lib/utils';
 
 const depthGalleryPhotoModules = import.meta.glob<string>(
@@ -100,6 +99,42 @@ const depthGalleryViewport = {
     once: true,
 } as const;
 
+const depthGalleryTitleInitialState = {
+    opacity: 0,
+    y: 24,
+} as const;
+
+const depthGalleryTitleVisibleState = {
+    opacity: 1,
+    y: 0,
+} as const;
+
+const depthGalleryTitleTransition = {
+    duration: 0.7,
+    ease: [0.16, 1, 0.3, 1],
+    type: 'tween',
+} as const;
+
+const depthGalleryCardInitialState = {
+    opacity: 0,
+    transform: 'translate3d(0, 26px, 0)',
+} as const;
+
+const depthGalleryCardVisibleState = {
+    opacity: 1,
+    transform: 'translate3d(0, 0, 0)',
+} as const;
+
+const depthGalleryRequiredPhotoSizes = [
+    'tiny',
+    'small',
+    'medium',
+    'large',
+    'huge',
+    'mega',
+    'original',
+] as const;
+
 type DepthGalleryLayout = {
     className: string;
     depth: number;
@@ -109,34 +144,19 @@ type DepthGalleryLayout = {
     z: number;
 };
 
-type DepthGalleryPhoto = {
-    alt: string;
-    image: ResponsiveImageAsset;
-    name: string;
-};
-
-type DepthGalleryPhotoSize =
-    | 'huge'
-    | 'large'
-    | 'medium'
-    | 'mega'
-    | 'original'
-    | 'small'
-    | 'tiny';
-
-type DepthGalleryPhotoSources = Record<DepthGalleryPhotoSize, string>;
-
 type DepthGalleryCardProps = {
     index: number;
     layout: DepthGalleryLayout;
-    photo: DepthGalleryPhoto;
+    photo: PhotoAsset;
     scrollYProgress: MotionValue<number>;
+    shouldReduceMotion: boolean;
 };
 
 const depthGalleryPhotos = createDepthGalleryPhotos();
 
 export function DepthGallery(): ReactElement {
     const galleryRef = useRef<HTMLDivElement>(null);
+    const shouldReduceMotion = useReducedMotion() ?? false;
     const pointerX = useMotionValue(0);
     const pointerY = useMotionValue(0);
     const springPointerX = useSpring(pointerX, {
@@ -159,6 +179,10 @@ export function DepthGallery(): ReactElement {
     );
 
     function handlePointerMove(event: PointerEvent<HTMLDivElement>): void {
+        if (shouldReduceMotion) {
+            return;
+        }
+
         const bounds = event.currentTarget.getBoundingClientRect();
 
         pointerX.set(((event.clientX - bounds.left) / bounds.width - 0.5) * 2);
@@ -173,8 +197,8 @@ export function DepthGallery(): ReactElement {
     return (
         <div
             className="relative mx-auto min-h-[46rem] max-w-[112rem] overflow-hidden px-3 py-10 sm:min-h-[52rem] sm:px-5 lg:min-h-[58rem] lg:px-6"
-            onPointerLeave={handlePointerLeave}
-            onPointerMove={handlePointerMove}
+            onPointerLeave={shouldReduceMotion ? undefined : handlePointerLeave}
+            onPointerMove={shouldReduceMotion ? undefined : handlePointerMove}
             ref={galleryRef}
         >
             <div className="absolute inset-x-4 top-1/2 h-px bg-black-950/15 dark:bg-cream-50/15" />
@@ -182,21 +206,29 @@ export function DepthGallery(): ReactElement {
                 className="relative h-[44rem] sm:h-[50rem] lg:h-[56rem]"
                 style={{
                     perspective: 1200,
-                    rotateX,
-                    rotateY,
+                    rotateX: shouldReduceMotion ? 0 : rotateX,
+                    rotateY: shouldReduceMotion ? 0 : rotateY,
                     transformStyle: 'preserve-3d',
                 }}
             >
                 <m.div
                     className="absolute inset-x-0 top-[38%] z-10 mx-auto grid max-w-[42rem] place-items-center px-6 text-center"
-                    initial={{ opacity: 0, y: 24 }}
+                    initial={
+                        shouldReduceMotion
+                            ? false
+                            : depthGalleryTitleInitialState
+                    }
                     viewport={depthGalleryViewport}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    transition={{
-                        duration: 0.7,
-                        ease: [0.16, 1, 0.3, 1],
-                        type: 'tween',
-                    }}
+                    whileInView={
+                        shouldReduceMotion
+                            ? undefined
+                            : depthGalleryTitleVisibleState
+                    }
+                    transition={
+                        shouldReduceMotion
+                            ? undefined
+                            : depthGalleryTitleTransition
+                    }
                 >
                     <p className="font-mono text-xs tracking-[0.24em] text-orange-600 uppercase dark:text-orange-300">
                         Depth Gallery
@@ -213,6 +245,7 @@ export function DepthGallery(): ReactElement {
                         layout={depthGalleryLayouts[index]}
                         photo={photo}
                         scrollYProgress={scrollYProgress}
+                        shouldReduceMotion={shouldReduceMotion}
                     />
                 ))}
             </m.div>
@@ -225,6 +258,7 @@ function DepthGalleryCard({
     layout,
     photo,
     scrollYProgress,
+    shouldReduceMotion,
 }: DepthGalleryCardProps): ReactElement {
     const x = useTransform(
         scrollYProgress,
@@ -242,41 +276,32 @@ function DepthGalleryCard({
         [layout.z * -0.25, layout.z],
     );
     const scale = useTransform(scrollYProgress, [0, 0.52, 1], [0.92, 1, 0.96]);
+    const hoverState = getDepthGalleryCardHoverState(layout);
+    const tapState = getDepthGalleryCardTapState(layout);
 
     return (
         <m.figure
             className={cn('absolute z-20', layout.className)}
-            initial={{
-                opacity: 0,
-                transform: 'translate3d(0, 26px, 0)',
-            }}
+            initial={shouldReduceMotion ? false : depthGalleryCardInitialState}
             style={{
                 rotateZ: layout.rotate,
-                scale,
+                scale: shouldReduceMotion ? 1 : scale,
                 transformStyle: 'preserve-3d',
-                x,
-                y,
-                z,
+                x: shouldReduceMotion ? 0 : x,
+                y: shouldReduceMotion ? 0 : y,
+                z: shouldReduceMotion ? 0 : z,
             }}
-            transition={{
-                delay: index * 0.045,
-                duration: 0.68,
-                ease: [0.16, 1, 0.3, 1],
-                type: 'tween',
-            }}
+            transition={
+                shouldReduceMotion
+                    ? undefined
+                    : getDepthGalleryCardTransition(index)
+            }
             viewport={depthGalleryViewport}
-            whileHover={{
-                scale: 1.06,
-                z: layout.z + layout.depth,
-            }}
-            whileInView={{
-                opacity: 1,
-                transform: 'translate3d(0, 0, 0)',
-            }}
-            whileTap={{
-                scale: 1.04,
-                z: layout.z + layout.depth,
-            }}
+            whileHover={shouldReduceMotion ? undefined : hoverState}
+            whileInView={
+                shouldReduceMotion ? undefined : depthGalleryCardVisibleState
+            }
+            whileTap={shouldReduceMotion ? undefined : tapState}
         >
             <ResponsiveImage
                 alt={photo.alt}
@@ -290,70 +315,38 @@ function DepthGalleryCard({
     );
 }
 
-function createDepthGalleryPhotos(): DepthGalleryPhoto[] {
-    return createDepthGalleryPhotoSourceGroups().map(
-        ({ baseName, sources }, index) => ({
-            alt: getDepthGalleryAlt(index),
-            image: createResponsiveImageAsset(sources, {
-                height: 2401,
-                originalWidth: 3600,
-                width: 3600,
-            }),
-            name: baseName,
-        }),
-    );
+function getDepthGalleryCardHoverState(layout: DepthGalleryLayout) {
+    return {
+        scale: 1.06,
+        z: layout.z + layout.depth,
+    };
 }
 
-function createDepthGalleryPhotoSourceGroups(): {
-    baseName: string;
-    sources: DepthGalleryPhotoSources;
-}[] {
-    const groupedSources = new Map<
-        string,
-        Partial<Record<DepthGalleryPhotoSize, string>>
-    >();
-
-    for (const [path, src] of Object.entries(depthGalleryPhotoModules)) {
-        const match = resizedPhotoPathPattern.exec(path);
-        const groups = match?.groups;
-
-        if (groups === undefined) {
-            continue;
-        }
-
-        const baseName = groups.baseName;
-        const size = groups.size as DepthGalleryPhotoSize;
-        const sources = groupedSources.get(baseName) ?? {};
-
-        sources[size] = src;
-        groupedSources.set(baseName, sources);
-    }
-
-    return Array.from(groupedSources.entries())
-        .flatMap(([baseName, sources]) => {
-            if (!hasCompleteDepthGalleryPhotoSources(sources)) {
-                return [];
-            }
-
-            return [{ baseName, sources }];
-        })
-        .toSorted((firstGroup, secondGroup) =>
-            firstGroup.baseName.localeCompare(secondGroup.baseName),
-        );
+function getDepthGalleryCardTapState(layout: DepthGalleryLayout) {
+    return {
+        scale: 1.04,
+        z: layout.z + layout.depth,
+    };
 }
 
-function hasCompleteDepthGalleryPhotoSources(
-    sources: Partial<Record<DepthGalleryPhotoSize, string>>,
-): sources is DepthGalleryPhotoSources {
-    return (
-        sources.huge !== undefined &&
-        sources.large !== undefined &&
-        sources.medium !== undefined &&
-        sources.mega !== undefined &&
-        sources.original !== undefined &&
-        sources.small !== undefined &&
-        sources.tiny !== undefined
-    );
+function getDepthGalleryCardTransition(index: number) {
+    return {
+        delay: index * 0.045,
+        duration: 0.68,
+        ease: [0.16, 1, 0.3, 1],
+        type: 'tween',
+    } as const;
+}
+
+function createDepthGalleryPhotos(): PhotoAsset[] {
+    return createPhotoAssets(depthGalleryPhotoModules, {
+        alt: (_baseName, index) => getDepthGalleryAlt(index),
+        height: 2401,
+        originalWidth: 3600,
+        pathPattern: resizedPhotoPathPattern,
+        requiredSizes: depthGalleryRequiredPhotoSizes,
+        width: 3600,
+    });
 }
 
 function getDepthGalleryAlt(index: number): string {

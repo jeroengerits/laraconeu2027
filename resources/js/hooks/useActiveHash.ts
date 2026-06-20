@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useSyncExternalStore } from 'react';
 
 function readLocationHash(): string {
     if (typeof window === 'undefined') {
@@ -8,23 +8,24 @@ function readLocationHash(): string {
     return window.location.hash;
 }
 
+function subscribeToLocationHash(onStoreChange: () => void): () => void {
+    window.addEventListener('hashchange', onStoreChange);
+    window.addEventListener('popstate', onStoreChange);
+
+    return () => {
+        window.removeEventListener('hashchange', onStoreChange);
+        window.removeEventListener('popstate', onStoreChange);
+    };
+}
+
+function getServerLocationHash(): string {
+    return '';
+}
+
 export function useActiveHash(): string {
-    const [activeHash, setActiveHash] = useState('');
-
-    useEffect(() => {
-        const updateActiveHash = (): void => {
-            setActiveHash(readLocationHash());
-        };
-
-        updateActiveHash();
-        window.addEventListener('hashchange', updateActiveHash);
-        window.addEventListener('popstate', updateActiveHash);
-
-        return () => {
-            window.removeEventListener('hashchange', updateActiveHash);
-            window.removeEventListener('popstate', updateActiveHash);
-        };
-    }, []);
-
-    return activeHash;
+    return useSyncExternalStore(
+        subscribeToLocationHash,
+        readLocationHash,
+        getServerLocationHash,
+    );
 }

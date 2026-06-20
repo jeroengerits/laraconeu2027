@@ -1,6 +1,6 @@
 import { createContext, useContext } from 'react';
 
-import type { Notification } from '@/components/Notifications';
+import type { Notification } from '@/lib/notifications';
 
 export type NotificationContextValue = {
     notify: (notification: Notification) => void;

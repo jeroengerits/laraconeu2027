@@ -1,5 +1,5 @@
 import { Cross2Icon } from '@radix-ui/react-icons';
-import { AnimatePresence, m } from 'motion/react';
+import { AnimatePresence, m, useReducedMotion } from 'motion/react';
 import type { Variants } from 'motion/react';
 import { Dialog, VisuallyHidden } from 'radix-ui';
 import { useCallback, useEffect, useRef, useState } from 'react';
@@ -59,6 +59,42 @@ const impressionItemViewport = {
     once: true,
 } as const;
 
+const impressionOverlayHiddenState = {
+    opacity: 0,
+} as const;
+
+const impressionOverlayVisibleState = {
+    opacity: 1,
+} as const;
+
+const impressionOverlayTransition = {
+    duration: 0.2,
+    ease: 'easeOut',
+} as const;
+
+const impressionDialogHiddenState = {
+    opacity: 0,
+    scale: 0.96,
+    y: 10,
+} as const;
+
+const impressionDialogVisibleState = {
+    opacity: 1,
+    scale: 1,
+    y: 0,
+} as const;
+
+const impressionDialogTransition = {
+    duration: 0.24,
+    ease: [0.16, 1, 0.3, 1],
+    type: 'tween',
+} as const;
+
+const impressionReducedMotionTransition = {
+    duration: 0.01,
+    type: 'tween',
+} as const;
+
 const landscapeAltTexts = [
     'Laracon EU attendees gathering between conference sessions',
     'Conference audience listening during a technical Laracon EU talk',
@@ -116,6 +152,7 @@ type ImpressionMesh = Mesh<ShapeGeometry, MeshBasicMaterial> & {
 };
 
 export function ImpressionSection(): ReactElement {
+    const shouldReduceMotion = useReducedMotion() ?? false;
     const [impressionPhotos, setImpressionPhotos] = useState<ImpressionPhoto[]>(
         [],
     );
@@ -149,10 +186,15 @@ export function ImpressionSection(): ReactElement {
             <div className="pointer-events-none absolute inset-x-0 top-0 h-24 bg-linear-to-b from-(--welcome-bg) to-transparent" />
             <m.div
                 className="relative mx-auto grid min-h-[78vh] max-w-[112rem] place-items-center overflow-visible"
-                initial="hidden"
+                initial={shouldReduceMotion ? false : 'hidden'}
+                transition={
+                    shouldReduceMotion
+                        ? impressionReducedMotionTransition
+                        : undefined
+                }
                 variants={impressionItemVariants}
                 viewport={impressionItemViewport}
-                whileInView="visible"
+                whileInView={shouldReduceMotion ? undefined : 'visible'}
             >
                 <ThreeImpressionGrid
                     onPhotoSelect={handlePhotoSelect}
@@ -223,6 +265,11 @@ function ImpressionPhotoDialog({
     onOpenChange: (isOpen: boolean) => void;
     photo: ImpressionPhoto | null;
 }): ReactElement {
+    const shouldReduceMotion = useReducedMotion() ?? false;
+    const transition = shouldReduceMotion
+        ? impressionReducedMotionTransition
+        : impressionDialogTransition;
+
     return (
         <Dialog.Root onOpenChange={onOpenChange} open={photo !== null}>
             <AnimatePresence>
@@ -230,36 +277,28 @@ function ImpressionPhotoDialog({
                     <Dialog.Portal forceMount>
                         <Dialog.Overlay asChild forceMount>
                             <m.div
+                                animate={impressionOverlayVisibleState}
                                 className="fixed inset-0 z-[80] bg-black/80 backdrop-blur-sm"
-                                exit={{ opacity: 0 }}
-                                initial={{ opacity: 0 }}
-                                transition={{ duration: 0.2, ease: 'easeOut' }}
-                                animate={{ opacity: 1 }}
+                                exit={impressionOverlayHiddenState}
+                                initial={impressionOverlayHiddenState}
+                                transition={
+                                    shouldReduceMotion
+                                        ? impressionReducedMotionTransition
+                                        : impressionOverlayTransition
+                                }
                             />
                         </Dialog.Overlay>
                         <Dialog.Content asChild forceMount>
                             <m.div
+                                animate={impressionDialogVisibleState}
                                 className="fixed inset-0 z-[90] flex items-center justify-center p-3 outline-none sm:p-6"
-                                exit={{
-                                    opacity: 0,
-                                    scale: 0.96,
-                                    y: 10,
-                                }}
-                                initial={{
-                                    opacity: 0,
-                                    scale: 0.96,
-                                    y: 10,
-                                }}
-                                transition={{
-                                    duration: 0.24,
-                                    ease: [0.16, 1, 0.3, 1],
-                                    type: 'tween',
-                                }}
-                                animate={{
-                                    opacity: 1,
-                                    scale: 1,
-                                    y: 0,
-                                }}
+                                exit={impressionDialogHiddenState}
+                                initial={
+                                    shouldReduceMotion
+                                        ? false
+                                        : impressionDialogHiddenState
+                                }
+                                transition={transition}
                             >
                                 <VisuallyHidden.Root asChild>
                                     <Dialog.Title>{photo.alt}</Dialog.Title>

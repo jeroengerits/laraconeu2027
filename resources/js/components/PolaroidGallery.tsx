@@ -9,12 +9,10 @@ import type { Variants } from 'motion/react';
 import { memo, useCallback, useState, useSyncExternalStore } from 'react';
 import type { KeyboardEvent, PointerEvent, ReactElement } from 'react';
 
-import {
-    createResponsiveImageAsset,
-    ResponsiveImage,
-} from '@/components/ResponsiveImage';
-import type { ResponsiveImageAsset } from '@/components/ResponsiveImage';
-import { useFocusVisible } from '@/hooks/useFocusVisible';
+import { ResponsiveImage } from '@/components/ResponsiveImage';
+import { focusVisibleClassName } from '@/lib/focusVisible';
+import { createPhotoAssets } from '@/lib/photos';
+import type { PhotoAsset } from '@/lib/photos';
 import { cn } from '@/lib/utils';
 
 const polaroidPhotoModules = import.meta.glob<string>(
@@ -27,6 +25,16 @@ const polaroidPhotoModules = import.meta.glob<string>(
 
 const resizedPhotoPathPattern =
     /\/(?<baseName>.+)-(?<size>tiny|small|medium|large|huge|mega|original)\.jpg$/;
+
+const polaroidRequiredPhotoSizes = [
+    'tiny',
+    'small',
+    'medium',
+    'large',
+    'huge',
+    'mega',
+    'original',
+] as const;
 
 const polaroidPhotoCount = 32;
 const polaroidPriorityPhotoCount = 12;
@@ -325,6 +333,26 @@ const polaroidCardInteractionTransition = {
     type: 'spring',
 } as const;
 
+const polaroidCardLayoutTransition = {
+    layout: polaroidCardInteractionTransition,
+} as const;
+
+const polaroidCardHoverState = {
+    rotate: 0,
+    scale: 1.1,
+    transition: polaroidCardInteractionTransition,
+    y: -14,
+    zIndex: 150,
+} as const;
+
+const polaroidCardTapState = {
+    rotate: 0,
+    scale: 1.07,
+    transition: polaroidCardInteractionTransition,
+    y: -8,
+    zIndex: 150,
+} as const;
+
 const polaroidGalleryRevealViewport = {
     amount: 0.28,
     margin: '0px 0px -12% 0px',
@@ -335,6 +363,16 @@ const polaroidGalleryRevealTransition = {
     duration: 0.7,
     ease: [0.16, 1, 0.3, 1],
     type: 'tween',
+} as const;
+
+const polaroidGalleryInitialState = {
+    opacity: 0,
+    y: 28,
+} as const;
+
+const polaroidGalleryVisibleState = {
+    opacity: 1,
+    y: 0,
 } as const;
 
 const polaroidPointerSpringOptions = {
@@ -354,16 +392,10 @@ type ClearedPolaroidTransform = {
 };
 
 type PolaroidGalleryItem = {
-    photo: PolaroidPhoto;
+    photo: PhotoAsset;
     scatterRotate: number;
     scatterX: number;
     scatterY: number;
-};
-
-type PolaroidPhoto = {
-    alt: string;
-    image: ResponsiveImageAsset;
-    name: string;
 };
 
 type PolaroidCardAnimation = {
@@ -377,21 +409,9 @@ type PolaroidCardAnimation = {
     shouldReduceMotion: boolean;
 };
 
-type PolaroidPhotoSize =
-    | 'huge'
-    | 'large'
-    | 'medium'
-    | 'mega'
-    | 'original'
-    | 'small'
-    | 'tiny';
-
-type PolaroidPhotoSources = Record<PolaroidPhotoSize, string>;
-
 const polaroidPhotoPool = createPolaroidPhotos();
 
 export function PolaroidGallery(): ReactElement {
-    const focusVisibleClassName = useFocusVisible();
     const shouldReduceMotion = useReducedMotion() ?? false;
     const canAnimateLayout = useMediaQuery(polaroidDesktopMediaQuery);
     const pointerX = useMotionValue(0);
@@ -491,14 +511,7 @@ export function PolaroidGallery(): ReactElement {
                 'relative isolate mx-auto max-w-[112rem] cursor-pointer touch-pan-y overflow-hidden px-4 py-16 [contain-intrinsic-size:80rem] [content-visibility:auto] sm:px-6 sm:py-20 section:min-h-[82rem] section:px-8 section:py-24',
                 focusVisibleClassName,
             )}
-            initial={
-                shouldReduceMotion
-                    ? false
-                    : {
-                          opacity: 0,
-                          y: 28,
-                      }
-            }
+            initial={shouldReduceMotion ? false : polaroidGalleryInitialState}
             onBlur={scatterPolaroids}
             onFocus={clearPolaroids}
             onKeyDown={toggleKeyboardPolaroids}
@@ -508,19 +521,20 @@ export function PolaroidGallery(): ReactElement {
             onPointerMove={updatePointerDepth}
             role="button"
             tabIndex={0}
-            transition={polaroidGalleryRevealTransition}
+            transition={
+                shouldReduceMotion ? undefined : polaroidGalleryRevealTransition
+            }
             viewport={polaroidGalleryRevealViewport}
-            whileInView={{
-                opacity: 1,
-                y: 0,
-            }}
+            whileInView={
+                shouldReduceMotion ? undefined : polaroidGalleryVisibleState
+            }
         >
             <m.div
                 aria-hidden="true"
                 className="pointer-events-none absolute inset-4 -z-10 rounded-[2rem] bg-[linear-gradient(135deg,rgba(255,253,240,0.72),rgba(248,239,209,0.18)_48%,rgba(204,57,0,0.12))] shadow-[inset_0_1px_0_rgba(255,255,255,0.45)] ring-1 ring-black-950/5 sm:inset-6 section:inset-10 dark:bg-[linear-gradient(135deg,rgba(29,18,7,0.78),rgba(5,4,2,0.2)_52%,rgba(204,57,0,0.14))] dark:shadow-[inset_0_1px_0_rgba(255,253,240,0.08)] dark:ring-cream-50/8"
                 style={{
-                    x: atmosphereX,
-                    y: atmosphereY,
+                    x: shouldReduceMotion ? 0 : atmosphereX,
+                    y: shouldReduceMotion ? 0 : atmosphereY,
                 }}
             />
             <div
@@ -614,28 +628,16 @@ const PolaroidCard = memo(function PolaroidCard({
                 'relative cursor-pointer rounded-[0.45rem] bg-cream-50/96 p-2.5 pb-9 shadow-[0_24px_58px_-30px_rgba(12,10,9,0.72),0_8px_18px_-14px_rgba(12,10,9,0.45)] ring-1 shadow-black/20 ring-black/10 backdrop-blur-[2px] will-change-transform select-none [backface-visibility:hidden] [transform-style:preserve-3d] sm:p-3 sm:pb-10 section:absolute section:top-1/2 section:left-1/2 dark:bg-cream-100/96 dark:text-black-950',
                 layout.size,
             )}
-            layout
+            layout={!shouldReduceMotion}
             style={{
                 zIndex: layout.z,
             }}
-            transition={{
-                layout: polaroidCardInteractionTransition,
-            }}
+            transition={
+                shouldReduceMotion ? undefined : polaroidCardLayoutTransition
+            }
             variants={polaroidCardVariants}
-            whileHover={{
-                rotate: 0,
-                scale: 1.1,
-                transition: polaroidCardInteractionTransition,
-                y: -14,
-                zIndex: 150,
-            }}
-            whileTap={{
-                rotate: 0,
-                scale: 1.07,
-                transition: polaroidCardInteractionTransition,
-                y: -8,
-                zIndex: 150,
-            }}
+            whileHover={shouldReduceMotion ? undefined : polaroidCardHoverState}
+            whileTap={shouldReduceMotion ? undefined : polaroidCardTapState}
         >
             <span
                 aria-hidden="true"
@@ -664,18 +666,15 @@ const PolaroidCard = memo(function PolaroidCard({
     );
 });
 
-function createPolaroidPhotos(): PolaroidPhoto[] {
-    return createPolaroidPhotoSourceGroups().map(
-        ({ baseName, sources }, index) => ({
-            alt: getPolaroidAlt(index),
-            image: createResponsiveImageAsset(sources, {
-                height: 2401,
-                originalWidth: 3600,
-                width: 3600,
-            }),
-            name: baseName,
-        }),
-    );
+function createPolaroidPhotos(): PhotoAsset[] {
+    return createPhotoAssets(polaroidPhotoModules, {
+        alt: (_baseName, index) => getPolaroidAlt(index),
+        height: 2401,
+        originalWidth: 3600,
+        pathPattern: resizedPhotoPathPattern,
+        requiredSizes: polaroidRequiredPhotoSizes,
+        width: 3600,
+    });
 }
 
 function getRandomPolaroidItems(): PolaroidGalleryItem[] {
@@ -761,58 +760,6 @@ function getServerMediaQuerySnapshot(): boolean {
 }
 
 function noop(): void {}
-
-function createPolaroidPhotoSourceGroups(): {
-    baseName: string;
-    sources: PolaroidPhotoSources;
-}[] {
-    const groupedSources = new Map<
-        string,
-        Partial<Record<PolaroidPhotoSize, string>>
-    >();
-
-    for (const [path, src] of Object.entries(polaroidPhotoModules)) {
-        const match = resizedPhotoPathPattern.exec(path);
-        const groups = match?.groups;
-
-        if (groups === undefined) {
-            continue;
-        }
-
-        const baseName = groups.baseName;
-        const size = groups.size as PolaroidPhotoSize;
-        const sources = groupedSources.get(baseName) ?? {};
-
-        sources[size] = src;
-        groupedSources.set(baseName, sources);
-    }
-
-    return Array.from(groupedSources.entries())
-        .flatMap(([baseName, sources]) => {
-            if (!hasCompletePolaroidPhotoSources(sources)) {
-                return [];
-            }
-
-            return [{ baseName, sources }];
-        })
-        .toSorted((firstGroup, secondGroup) =>
-            firstGroup.baseName.localeCompare(secondGroup.baseName),
-        );
-}
-
-function hasCompletePolaroidPhotoSources(
-    sources: Partial<Record<PolaroidPhotoSize, string>>,
-): sources is PolaroidPhotoSources {
-    return (
-        sources.huge !== undefined &&
-        sources.large !== undefined &&
-        sources.medium !== undefined &&
-        sources.mega !== undefined &&
-        sources.original !== undefined &&
-        sources.small !== undefined &&
-        sources.tiny !== undefined
-    );
-}
 
 function getPolaroidAlt(index: number): string {
     const altTexts = [
