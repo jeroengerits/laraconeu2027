@@ -1,5 +1,5 @@
 import type { ReactElement, ReactNode } from 'react';
-import { useCallback, useMemo, useSyncExternalStore } from 'react';
+import { useCallback, useEffect, useMemo, useSyncExternalStore } from 'react';
 
 import type {
     ColorModeDispatcherContextValue,
@@ -139,6 +139,10 @@ export function ColorModeProvider({
         serverColorModeSnapshot,
     );
     const isDarkMode = colorMode === 'dark';
+
+    useEffect(() => {
+        applyColorMode(readInitialColorMode());
+    }, []);
 
     const setColorMode = useCallback(
         (nextColorMode: ColorMode): void => {

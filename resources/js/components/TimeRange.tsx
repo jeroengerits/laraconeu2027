@@ -18,7 +18,7 @@ export function TimeRange({
         <p
             aria-label={`${start} to ${end}`}
             className={cn(
-                'font-mono text-sm leading-6 text-(--welcome-fg)/60 tabular-nums',
+                'font-mono text-sm leading-6 text-muted-foreground tabular-nums',
                 className,
             )}
         >

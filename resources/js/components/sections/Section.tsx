@@ -9,10 +9,10 @@ type SectionProps = {
 export function Section({ children, id, title }: SectionProps): ReactElement {
     return (
         <section
-            className="grid min-h-[400px] scroll-mt-24 content-start px-4 py-12 sm:px-6 lg:px-8"
+            className="grid min-h-[400px] scroll-mt-24 content-start px-4 py-12 text-canvas-foreground transition-color-mode sm:px-6 lg:px-8"
             id={id}
         >
-            <h2 className="font-display text-4xl leading-none font-bold text-balance">
+            <h2 className="font-display text-4xl leading-none font-bold text-balance text-canvas-foreground">
                 {title}
             </h2>
             {children}

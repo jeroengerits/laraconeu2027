@@ -180,10 +180,10 @@ export function ImpressionSection(): ReactElement {
     return (
         <section
             aria-label="Impression"
-            className="relative isolate scroll-mt-24 overflow-hidden bg-cream-100 px-3 py-14 text-black-950 transition-color-mode sm:px-5 md:py-16 lg:px-6 section:py-20 dark:bg-black-950 dark:text-cream-50"
+            className="relative isolate scroll-mt-24 overflow-hidden pair-surface px-3 py-14 transition-color-mode sm:px-5 md:py-16 lg:px-6 section:py-20"
             id="impression"
         >
-            <div className="pointer-events-none absolute inset-x-0 top-0 h-24 bg-linear-to-b from-(--welcome-bg) to-transparent" />
+            <div className="pointer-events-none absolute inset-x-0 top-0 h-24 bg-linear-to-b from-canvas to-transparent" />
             <m.div
                 className="relative mx-auto grid min-h-[78vh] max-w-[112rem] place-items-center overflow-visible"
                 initial={shouldReduceMotion ? false : 'hidden'}
@@ -278,7 +278,7 @@ function ImpressionPhotoDialog({
                         <Dialog.Overlay asChild forceMount>
                             <m.div
                                 animate={impressionOverlayVisibleState}
-                                className="fixed inset-0 z-[80] bg-black/80 backdrop-blur-sm"
+                                className="fixed inset-0 z-[80] bg-inverse/80 backdrop-blur-sm"
                                 exit={impressionOverlayHiddenState}
                                 initial={impressionOverlayHiddenState}
                                 transition={
@@ -306,7 +306,7 @@ function ImpressionPhotoDialog({
                                 <ResponsiveImage
                                     alt={photo.alt}
                                     className="h-full w-full object-contain shadow-2xl shadow-black/50"
-                                    containerClassName="flex h-[84vh] w-[94vw] max-w-[96rem] items-center justify-center overflow-hidden bg-black"
+                                    containerClassName="flex h-[84vh] w-[94vw] max-w-[96rem] items-center justify-center overflow-hidden bg-inverse"
                                     image={photo.image}
                                     priority
                                     reveal={false}
@@ -315,7 +315,7 @@ function ImpressionPhotoDialog({
                                 <Dialog.Close asChild>
                                     <Button
                                         aria-label="Close photo"
-                                        className="absolute top-5 right-5 bg-black/60 text-white backdrop-blur-md hover:bg-black/75"
+                                        className="absolute top-5 right-5 bg-inverse/60 text-inverse-foreground backdrop-blur-md hover:bg-inverse/75"
                                         size="icon"
                                         variant="ghost"
                                     >

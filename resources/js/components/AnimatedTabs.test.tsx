@@ -81,4 +81,19 @@ describe('AnimatedTabs', () => {
             screen.getByRole('tablist', { name: 'Example tabs' }),
         ).toBeInTheDocument();
     });
+
+    it('supports a sticky tab header below the top navigation', () => {
+        const { container } = render(
+            <AnimatedTabs
+                aria-label="Example tabs"
+                defaultValue="day-1"
+                stickyHeader
+                tabs={[...tabs]}
+            />,
+        );
+
+        expect(
+            container.querySelector('.animated-tabs-sticky-header'),
+        ).toBeInTheDocument();
+    });
 });

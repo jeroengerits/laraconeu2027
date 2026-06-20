@@ -81,7 +81,7 @@ function WelcomeContent({
     return (
         <>
             <Head title="Welcome" />
-            <main className="relative flex min-h-screen flex-col bg-(--welcome-bg) text-(--welcome-fg) transition-color-mode">
+            <main className="relative flex min-h-screen flex-col bg-canvas text-canvas-foreground transition-color-mode">
                 <ColorModeTransition />
                 <LaraconTopNavigation />
                 <HeroSection />

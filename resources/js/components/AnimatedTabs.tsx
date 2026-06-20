@@ -10,8 +10,8 @@ import type { ComponentPropsWithoutRef, ReactElement, ReactNode } from 'react';
 
 import { focusVisibleClassName } from '@/lib/focusVisible';
 import {
-    createTabPanelVariants,
     createTabHeaderSubtitleVariants,
+    createTabPanelVariants,
     tabIndicatorTransition,
     tabLabelTransition,
     tabTapTransition,
@@ -30,34 +30,102 @@ type AnimatedTabsProps = Omit<
     'children'
 > & {
     'aria-label': string;
+    headerClassName?: string;
     listClassName?: string;
     showSubtitleOnTrigger?: boolean;
+    stickyHeader?: boolean;
     tabs: AnimatedTabItem[];
     triggerClassName?: string;
 };
 
 const TAB_INDICATOR_LAYOUT_ID = 'animated-tabs-indicator';
 
-function DefaultTabTrigger({
-    isActive,
-    showSubtitleOnTrigger = true,
-    shouldReduceMotion,
-    subtitle,
-    tab,
-    triggerClassName,
-}: {
+const animatedTabsRootClassName = 'grid gap-8';
+
+const animatedTabsHeaderClassName =
+    'flex flex-col gap-4 bg-canvas transition-color-mode sm:flex-row sm:items-center sm:justify-between';
+
+const animatedTabsStickyHeaderClassName =
+    'animated-tabs-sticky-header -mx-4 px-4 py-3 sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8';
+
+const animatedTabsListClassName =
+    'flex flex-wrap gap-1 rounded-lg p-1 animated-tabs-track';
+
+const animatedTabsTriggerClassName =
+    'group relative isolate inline-flex min-h-10 items-center gap-2 rounded-md px-3 py-2 font-display text-sm font-bold tracking-wide uppercase transition-color-mode sm:px-4 sm:text-base';
+
+const animatedTabsTriggerLabelClassName =
+    'relative z-10 text-canvas-foreground';
+
+const animatedTabsTriggerSubtitleClassName =
+    'relative z-10 font-mono text-xs tracking-[0.12em] text-muted-foreground uppercase sm:text-sm';
+
+const animatedTabsTriggerSeparatorClassName =
+    'relative z-10 text-canvas-foreground/25 group-data-[state=active]:text-canvas-foreground/40';
+
+const animatedTabsMetaClassName =
+    'animated-tabs-meta shrink-0 pl-4 text-xs sm:text-sm';
+
+const animatedTabsPanelClassName =
+    'grid outline-none focus-visible:outline-none';
+
+type AnimatedTabTriggerProps = {
     isActive: boolean;
+    layoutId: string;
     showSubtitleOnTrigger?: boolean;
     shouldReduceMotion: boolean | null;
     subtitle?: ReactNode;
     tab: AnimatedTabItem;
     triggerClassName?: string;
-}): ReactElement {
+};
+
+function AnimatedTabTriggerSurface({
+    isActive,
+    layoutId,
+    shouldReduceMotion,
+}: {
+    isActive: boolean;
+    layoutId: string;
+    shouldReduceMotion: boolean | null;
+}): ReactElement | null {
+    if (!isActive) {
+        return null;
+    }
+
+    if (shouldReduceMotion) {
+        return (
+            <span
+                aria-hidden="true"
+                className="animated-tabs-trigger-surface absolute inset-0 rounded-md"
+            />
+        );
+    }
+
+    return (
+        <m.span
+            aria-hidden="true"
+            className="animated-tabs-trigger-surface absolute inset-0 rounded-md"
+            layoutId={layoutId}
+            transition={tabIndicatorTransition}
+        />
+    );
+}
+
+function AnimatedTabTrigger({
+    isActive,
+    layoutId,
+    showSubtitleOnTrigger = true,
+    shouldReduceMotion,
+    subtitle,
+    tab,
+    triggerClassName,
+}: AnimatedTabTriggerProps): ReactElement {
     return (
         <Tabs.Trigger asChild value={tab.value}>
             <m.button
                 className={cn(
-                    'group relative inline-flex items-baseline gap-2 border-b-2 border-transparent pb-1 font-display text-xl leading-none font-bold tracking-wide uppercase transition-color-mode',
+                    animatedTabsTriggerClassName,
+                    'text-muted-foreground data-[state=active]:text-canvas-foreground',
                     focusVisibleClassName,
                     triggerClassName,
                 )}
@@ -65,14 +133,19 @@ function DefaultTabTrigger({
                 whileHover={
                     shouldReduceMotion || isActive
                         ? undefined
-                        : { opacity: 0.78, y: -1 }
+                        : { opacity: 0.82, y: -1 }
                 }
                 whileTap={shouldReduceMotion ? undefined : { scale: 0.98 }}
                 transition={tabTapTransition}
             >
+                <AnimatedTabTriggerSurface
+                    isActive={isActive}
+                    layoutId={layoutId}
+                    shouldReduceMotion={shouldReduceMotion}
+                />
                 <m.span
-                    animate={{ opacity: isActive ? 1 : 0.45 }}
-                    className="text-(--welcome-fg)"
+                    animate={{ opacity: isActive ? 1 : 0.72 }}
+                    className={animatedTabsTriggerLabelClassName}
                     transition={tabLabelTransition}
                 >
                     {tab.label}
@@ -81,32 +154,103 @@ function DefaultTabTrigger({
                     <>
                         <span
                             aria-hidden="true"
-                            className="text-(--welcome-fg)/30 group-data-[state=active]:text-(--welcome-fg)/50"
+                            className={animatedTabsTriggerSeparatorClassName}
                         >
                             //
                         </span>
                         <m.span
-                            animate={{ opacity: isActive ? 0.8 : 0.6 }}
-                            className="text-base font-medium tracking-[0.12em] text-(--welcome-fg)/60 uppercase"
+                            animate={{ opacity: isActive ? 0.85 : 0.55 }}
+                            className={animatedTabsTriggerSubtitleClassName}
                             transition={tabLabelTransition}
                         >
                             {subtitle}
                         </m.span>
                     </>
                 ) : null}
-                {isActive ? (
-                    shouldReduceMotion ? (
-                        <span className="absolute inset-x-0 bottom-0 h-0.5 rounded-full bg-accent" />
-                    ) : (
-                        <m.span
-                            className="absolute inset-x-0 bottom-0 h-0.5 rounded-full bg-accent"
-                            layoutId={TAB_INDICATOR_LAYOUT_ID}
-                            transition={tabIndicatorTransition}
-                        />
-                    )
-                ) : null}
             </m.button>
         </Tabs.Trigger>
+    );
+}
+
+type AnimatedTabsHeaderProps = {
+    activeTabItem?: AnimatedTabItem;
+    ariaLabel: string;
+    headerClassName?: string;
+    headerSubtitleVariants: ReturnType<typeof createTabHeaderSubtitleVariants>;
+    layoutId: string;
+    listClassName?: string;
+    resolvedActiveTab: string;
+    shouldReduceMotion: boolean | null;
+    showSubtitleOnTrigger: boolean;
+    stickyHeader: boolean;
+    tabs: AnimatedTabItem[];
+    transitionDirection: number;
+    triggerClassName?: string;
+};
+
+function AnimatedTabsHeader({
+    activeTabItem,
+    ariaLabel,
+    headerClassName,
+    headerSubtitleVariants,
+    layoutId,
+    listClassName,
+    resolvedActiveTab,
+    shouldReduceMotion,
+    showSubtitleOnTrigger,
+    stickyHeader,
+    tabs,
+    transitionDirection,
+    triggerClassName,
+}: AnimatedTabsHeaderProps): ReactElement {
+    return (
+        <div
+            className={cn(
+                animatedTabsHeaderClassName,
+                stickyHeader && animatedTabsStickyHeaderClassName,
+                headerClassName,
+            )}
+        >
+            <LayoutGroup id={ariaLabel}>
+                <Tabs.List
+                    aria-label={ariaLabel}
+                    className={cn(animatedTabsListClassName, listClassName)}
+                >
+                    {tabs.map((tab) => (
+                        <AnimatedTabTrigger
+                            isActive={resolvedActiveTab === tab.value}
+                            key={tab.value}
+                            layoutId={layoutId}
+                            shouldReduceMotion={shouldReduceMotion}
+                            showSubtitleOnTrigger={showSubtitleOnTrigger}
+                            subtitle={tab.subtitle}
+                            tab={tab}
+                            triggerClassName={triggerClassName}
+                        />
+                    ))}
+                </Tabs.List>
+            </LayoutGroup>
+
+            <AnimatePresence
+                custom={transitionDirection}
+                initial={false}
+                mode="wait"
+            >
+                {!showSubtitleOnTrigger && activeTabItem?.subtitle ? (
+                    <m.p
+                        animate="visible"
+                        className={animatedTabsMetaClassName}
+                        custom={transitionDirection}
+                        exit="exit"
+                        initial="hidden"
+                        key={activeTabItem.value}
+                        variants={headerSubtitleVariants}
+                    >
+                        {activeTabItem.subtitle}
+                    </m.p>
+                ) : null}
+            </AnimatePresence>
+        </div>
     );
 }
 
@@ -114,9 +258,11 @@ export function AnimatedTabs({
     'aria-label': ariaLabel,
     className,
     defaultValue,
+    headerClassName,
     listClassName,
     onValueChange,
     showSubtitleOnTrigger = true,
+    stickyHeader = false,
     tabs,
     triggerClassName,
     value,
@@ -142,6 +288,7 @@ export function AnimatedTabs({
         tabs.findIndex((tab) => tab.value === defaultActiveTab),
     );
     const [transitionDirection, setTransitionDirection] = useState(0);
+    const indicatorLayoutId = `${TAB_INDICATOR_LAYOUT_ID}-${ariaLabel}`;
 
     function handleValueChange(nextValue: string): void {
         const nextIndex = tabs.findIndex((tab) => tab.value === nextValue);
@@ -168,58 +315,31 @@ export function AnimatedTabs({
     return (
         <Tabs.Root
             {...props}
-            className={cn('grid gap-6', className)}
+            className={cn(animatedTabsRootClassName, className)}
             onValueChange={handleValueChange}
             value={resolvedActiveTab}
         >
-            <div
-                className={cn(
-                    'flex flex-wrap items-end justify-between gap-x-6 gap-y-3',
-                    !showSubtitleOnTrigger && 'pb-1',
-                )}
+            <AnimatedTabsHeader
+                activeTabItem={activeTabItem}
+                ariaLabel={ariaLabel}
+                headerClassName={headerClassName}
+                headerSubtitleVariants={headerSubtitleVariants}
+                layoutId={indicatorLayoutId}
+                listClassName={listClassName}
+                resolvedActiveTab={resolvedActiveTab}
+                shouldReduceMotion={shouldReduceMotion}
+                showSubtitleOnTrigger={showSubtitleOnTrigger}
+                stickyHeader={stickyHeader}
+                tabs={tabs}
+                transitionDirection={transitionDirection}
+                triggerClassName={triggerClassName}
+            />
+
+            <AnimatePresence
+                custom={transitionDirection}
+                initial={false}
+                mode="wait"
             >
-                <LayoutGroup id={ariaLabel}>
-                    <Tabs.List
-                        aria-label={ariaLabel}
-                        className={cn(
-                            'flex flex-wrap gap-x-6 gap-y-2',
-                            showSubtitleOnTrigger &&
-                                'border-b border-(--welcome-fg)/15 pb-4',
-                            listClassName,
-                        )}
-                    >
-                        {tabs.map((tab) => (
-                            <DefaultTabTrigger
-                                isActive={resolvedActiveTab === tab.value}
-                                key={tab.value}
-                                shouldReduceMotion={shouldReduceMotion}
-                                showSubtitleOnTrigger={showSubtitleOnTrigger}
-                                subtitle={tab.subtitle}
-                                tab={tab}
-                                triggerClassName={triggerClassName}
-                            />
-                        ))}
-                    </Tabs.List>
-                </LayoutGroup>
-
-                <AnimatePresence custom={transitionDirection} initial={false} mode="wait">
-                    {!showSubtitleOnTrigger && activeTabItem?.subtitle ? (
-                        <m.p
-                            animate="visible"
-                            className="font-mono text-sm tracking-[0.12em] text-(--welcome-fg)/60 uppercase"
-                            custom={transitionDirection}
-                            exit="exit"
-                            initial="hidden"
-                            key={activeTabItem.value}
-                            variants={headerSubtitleVariants}
-                        >
-                            {activeTabItem.subtitle}
-                        </m.p>
-                    ) : null}
-                </AnimatePresence>
-            </div>
-
-            <AnimatePresence custom={transitionDirection} initial={false} mode="wait">
                 {tabs.map((tab) =>
                     resolvedActiveTab === tab.value ? (
                         <Tabs.Content
@@ -231,7 +351,7 @@ export function AnimatedTabs({
                         >
                             <m.div
                                 animate="visible"
-                                className="grid outline-none focus-visible:outline-none"
+                                className={animatedTabsPanelClassName}
                                 custom={transitionDirection}
                                 exit="exit"
                                 initial={

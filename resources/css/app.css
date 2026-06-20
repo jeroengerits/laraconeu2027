@@ -168,31 +168,31 @@
 }
 
 @theme inline {
-    /* Semantic color roles */
-    --color-canvas: var(--color-cream-50);
-    --color-canvas-foreground: var(--color-black-950);
-    --color-surface: var(--color-cream-100);
-    --color-surface-foreground: var(--color-black-900);
-    --color-muted: var(--color-black-50);
-    --color-muted-foreground: var(--color-black-600);
-    --color-inverse: var(--color-black-950);
-    --color-inverse-foreground: var(--color-cream-50);
-    --color-link: var(--color-blue-700);
-    --color-link-foreground: var(--color-cream-50);
-    --color-accent: var(--color-orange-600);
-    --color-accent-foreground: var(--color-cream-50);
-    --color-highlight: var(--color-gold-300);
-    --color-highlight-foreground: var(--color-black-950);
-    --color-info: var(--color-blue-800);
-    --color-info-foreground: var(--color-cream-50);
-    --color-support: var(--color-teal-700);
-    --color-support-foreground: var(--color-cream-50);
-    --color-earth: var(--color-olive-700);
-    --color-earth-foreground: var(--color-cream-50);
-    --color-emphasis: var(--color-violet-600);
-    --color-emphasis-foreground: var(--color-cream-50);
-    --color-warmth: var(--color-walnut-600);
-    --color-warmth-foreground: var(--color-cream-50);
+    /* Semantic color roles (runtime values live in --semantic-* below) */
+    --color-canvas: var(--semantic-canvas);
+    --color-canvas-foreground: var(--semantic-canvas-foreground);
+    --color-surface: var(--semantic-surface);
+    --color-surface-foreground: var(--semantic-surface-foreground);
+    --color-muted: var(--semantic-muted);
+    --color-muted-foreground: var(--semantic-muted-foreground);
+    --color-inverse: var(--semantic-inverse);
+    --color-inverse-foreground: var(--semantic-inverse-foreground);
+    --color-link: var(--semantic-link);
+    --color-link-foreground: var(--semantic-link-foreground);
+    --color-accent: var(--semantic-accent);
+    --color-accent-foreground: var(--semantic-accent-foreground);
+    --color-highlight: var(--semantic-highlight);
+    --color-highlight-foreground: var(--semantic-highlight-foreground);
+    --color-info: var(--semantic-info);
+    --color-info-foreground: var(--semantic-info-foreground);
+    --color-support: var(--semantic-support);
+    --color-support-foreground: var(--semantic-support-foreground);
+    --color-earth: var(--semantic-earth);
+    --color-earth-foreground: var(--semantic-earth-foreground);
+    --color-emphasis: var(--semantic-emphasis);
+    --color-emphasis-foreground: var(--semantic-emphasis-foreground);
+    --color-warmth: var(--semantic-warmth);
+    --color-warmth-foreground: var(--semantic-warmth-foreground);
 
     /* Semantic pair variables */
     --pair-canvas: var(--pair-canvas-bg) var(--pair-canvas-text);
@@ -240,10 +240,35 @@
     }
 
     :root {
-        --welcome-bg: var(--pair-canvas-bg);
-        --welcome-fg: var(--pair-canvas-text);
+        --semantic-canvas: var(--color-cream-50);
+        --semantic-canvas-foreground: var(--color-black-950);
+        --semantic-surface: var(--color-cream-100);
+        --semantic-surface-foreground: var(--color-black-900);
+        --semantic-muted: var(--color-black-50);
+        --semantic-muted-foreground: var(--color-black-600);
+        --semantic-inverse: var(--color-black-950);
+        --semantic-inverse-foreground: var(--color-cream-50);
+        --semantic-link: var(--color-blue-700);
+        --semantic-link-foreground: var(--color-cream-50);
+        --semantic-accent: var(--color-orange-600);
+        --semantic-accent-foreground: var(--color-cream-50);
+        --semantic-highlight: var(--color-gold-300);
+        --semantic-highlight-foreground: var(--color-black-950);
+        --semantic-info: var(--color-blue-800);
+        --semantic-info-foreground: var(--color-cream-50);
+        --semantic-support: var(--color-teal-700);
+        --semantic-support-foreground: var(--color-cream-50);
+        --semantic-earth: var(--color-olive-700);
+        --semantic-earth-foreground: var(--color-cream-50);
+        --semantic-emphasis: var(--color-violet-600);
+        --semantic-emphasis-foreground: var(--color-cream-50);
+        --semantic-warmth: var(--color-walnut-600);
+        --semantic-warmth-foreground: var(--color-cream-50);
+        --welcome-bg: var(--semantic-canvas);
+        --welcome-fg: var(--semantic-canvas-foreground);
         --color-mode-duration: 0.4s;
         --color-mode-ease: cubic-bezier(0.22, 1, 0.36, 1);
+        --top-nav-height: 6rem;
         --welcome-flash-bg: linear-gradient(
             105deg,
             transparent 0%,
@@ -258,8 +283,16 @@
     }
 
     :root.dark {
-        --welcome-bg: var(--pair-inverse-bg);
-        --welcome-fg: var(--pair-inverse-text);
+        --semantic-canvas: var(--color-black-950);
+        --semantic-canvas-foreground: var(--color-cream-50);
+        --semantic-surface: var(--color-black-800);
+        --semantic-surface-foreground: var(--color-cream-100);
+        --semantic-muted: var(--color-black-700);
+        --semantic-muted-foreground: var(--color-black-300);
+        --semantic-accent: var(--color-orange-500);
+        --semantic-accent-foreground: var(--color-black-950);
+        --welcome-bg: var(--semantic-canvas);
+        --welcome-fg: var(--semantic-canvas-foreground);
         --welcome-flash-bg: linear-gradient(
             105deg,
             transparent 0%,
@@ -275,6 +308,37 @@
     transition-duration: var(--color-mode-duration);
     transition-property: background-color, border-color, color, fill, filter, stroke;
     transition-timing-function: var(--color-mode-ease);
+}
+
+@utility animated-tabs-sticky-header {
+    position: sticky;
+    top: var(--top-nav-height);
+    z-index: 10;
+    border-bottom: 1px solid color-mix(in oklch, var(--color-canvas-foreground) 10%, transparent);
+    background-color: var(--color-canvas);
+    transition-property: background-color, border-color, color;
+    transition-duration: var(--color-mode-duration);
+    transition-timing-function: var(--color-mode-ease);
+}
+
+@utility animated-tabs-track {
+    border: 1px solid color-mix(in oklch, var(--color-canvas-foreground) 10%, transparent);
+    background-color: var(--color-canvas);
+}
+
+@utility animated-tabs-trigger-surface {
+    background-color: var(--color-surface);
+    box-shadow: 0 1px 2px color-mix(in oklch, var(--color-canvas-foreground) 8%, transparent);
+    outline: 1px solid color-mix(in oklch, var(--color-canvas-foreground) 10%, transparent);
+    outline-offset: -1px;
+}
+
+@utility animated-tabs-meta {
+    border-left: 1px solid color-mix(in oklch, var(--color-canvas-foreground) 10%, transparent);
+    color: color-mix(in oklch, var(--color-muted-foreground) 100%, transparent);
+    font-family: var(--font-mono);
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
 }
 
 @utility font-display {
