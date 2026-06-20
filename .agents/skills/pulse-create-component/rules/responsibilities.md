@@ -1,6 +1,6 @@
 # Responsibilities
 
-- Read `COMPONENT-DESIGN.md` before planning.
+- Read `pulse-workflow-orchestrator/COMPONENT-DESIGN.md` before planning.
 - Start a structured intake conversation when required information is missing.
 - Ask concise, grouped questions instead of a long interview.
 - Build a component brief from user answers and known project context.

@@ -7,6 +7,7 @@ This rule catalog follows the `vercel-react-best-practices` convention: one focu
 | [Responsibilities](responsibilities.md)                 | What this skill owns.                              |
 | [Non-Responsibilities](non-responsibilities.md)         | What this skill explicitly does not own.           |
 | [Workflow](workflow.md)                                 | Step-by-step execution process.                    |
+| [File Placement](file-placement.md)                     | Where new component code lives in this project.    |
 | [Decision Points](decision-points.md)                   | Branching rules and handoff decisions.             |
 | [Checklists](checklists.md)                             | Pre-flight, execution, and completion checks.      |
 | [Documentation Discipline](documentation-discipline.md) | Shared documentation-source rule for code changes. |
@@ -16,6 +17,7 @@ This rule catalog follows the `vercel-react-best-practices` convention: one focu
 - `responsibilities.md` defines ownership.
 - `non-responsibilities.md` defines boundaries.
 - `workflow.md` defines execution order.
+- `file-placement.md` defines where new files go in this project.
 - `decision-points.md` defines branch logic.
 - `checklists.md` defines validation gates.
 - `documentation-discipline.md` points to shared documentation-source rules.

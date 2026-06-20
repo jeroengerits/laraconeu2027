@@ -58,6 +58,7 @@ Read the relevant rule files in `rules/` before acting with this skill. Read all
 | [Responsibilities](rules/responsibilities.md)                 | What this skill owns.                              |
 | [Non-Responsibilities](rules/non-responsibilities.md)         | What this skill explicitly does not own.           |
 | [Workflow](rules/workflow.md)                                 | Step-by-step execution process.                    |
+| [File Placement](rules/file-placement.md)                     | Where new component code lives in this project.    |
 | [Decision Points](rules/decision-points.md)                   | Branching rules and handoff decisions.             |
 | [Checklists](rules/checklists.md)                             | Pre-flight, execution, and completion checks.      |
 | [Documentation Discipline](rules/documentation-discipline.md) | Shared documentation-source rule for code changes. |

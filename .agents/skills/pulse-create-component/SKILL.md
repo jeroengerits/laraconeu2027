@@ -15,7 +15,7 @@ Starts an intake-first Pulse React component creation workflow in this Laravel I
 ## Purpose
 
 Gather the minimum useful information required to create a high-quality React
-component, then route the work through `COMPONENT-DESIGN.md`,
+component, then route the work through `pulse-workflow-orchestrator/COMPONENT-DESIGN.md`,
 `pulse-workflow-orchestrator`, the focused `pulse-*` skills, and supporting
 skills such as `context7`, `inertia-react-development`, `motion-react`,
 `radix-ui-design-system`, `tailwind-design-system`,

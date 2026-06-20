@@ -44,7 +44,7 @@
     "Approval request before implementation when appropriate"
   ],
   "completion_criteria": [
-    "COMPONENT-DESIGN.md was read",
+    "pulse-workflow-orchestrator/COMPONENT-DESIGN.md was read",
     "A complete component brief exists or the blocking gaps are reported",
     "Approval mode (plan-first or implement-now) is explicit",
     "Routing signals are captured for the orchestrator"
@@ -109,7 +109,7 @@
     "rules/question-strategy.md"
   ],
   "responsibilities": [
-    "Read `COMPONENT-DESIGN.md` before planning.",
+    "Read `pulse-workflow-orchestrator/COMPONENT-DESIGN.md` before planning.",
     "Start a structured intake conversation when required information is missing.",
     "Ask concise, grouped questions instead of a long interview.",
     "Build a component brief from user answers and known project context.",

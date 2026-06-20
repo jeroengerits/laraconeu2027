@@ -1,6 +1,6 @@
 # Pulse Validation Gates
 
-Single source of truth for the two workflow gates. `COMPONENT-DESIGN.md`,
+Single source of truth for the two workflow gates. `../COMPONENT-DESIGN.md`,
 `pulse-workflow-orchestrator`, and `pulse-review-quality-gate` reference this file
 instead of restating the gates.
 

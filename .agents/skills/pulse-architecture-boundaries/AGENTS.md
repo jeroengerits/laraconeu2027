@@ -26,9 +26,10 @@ Defines React component architecture boundaries in this Laravel Inertia app. Use
 8. [Responsibilities](#responsibilities)
 9. [Non-Responsibilities](#non-responsibilities)
 10. [Workflow](#workflow)
-11. [Decision Points](#decision-points)
-12. [Checklists](#checklists)
-13. [Documentation Discipline](#documentation-discipline)
+11. [File Placement](#file-placement)
+12. [Decision Points](#decision-points)
+13. [Checklists](#checklists)
+14. [Documentation Discipline](#documentation-discipline)
 
 ---
 
@@ -86,6 +87,7 @@ Optional:
 | [Responsibilities](rules/responsibilities.md)                 | What this skill owns.                              |
 | [Non-Responsibilities](rules/non-responsibilities.md)         | What this skill explicitly does not own.           |
 | [Workflow](rules/workflow.md)                                 | Step-by-step execution process.                    |
+| [File Placement](rules/file-placement.md)                     | Where new component code lives in this project.    |
 | [Decision Points](rules/decision-points.md)                   | Branching rules and handoff decisions.             |
 | [Checklists](rules/checklists.md)                             | Pre-flight, execution, and completion checks.      |
 | [Documentation Discipline](rules/documentation-discipline.md) | Shared documentation-source rule for code changes. |
@@ -120,6 +122,28 @@ Optional:
 5. Avoid new base directories without approval.
 6. Route Inertia, state/effects, media, motion, and performance concerns to their owning skills.
 7. Route public API decisions to API contract skill.
+
+---
+
+## File Placement
+
+Use the shared layout as the source of truth: `../pulse-workflow-orchestrator/references/project-structure.md`. Frontend root is `resources/js/`, import alias `@/*`.
+
+| What you are creating                       | Where it goes                   |
+| ------------------------------------------- | ------------------------------- |
+| Reusable UI component (PascalCase `*.tsx`)  | `components/`                   |
+| Page section (`*Section.tsx`)               | `components/sections/`         |
+| Inertia page (lowercase)                    | `pages/`                      |
+| Reusable hook (`useX.ts`)                   | `hooks/`                      |
+| Pure utility (+ co-located `*.test.ts`)     | `lib/`                        |
+| Context provider                            | `providers/`                 |
+| Provider context object (`*Context.ts`)     | `providers/context/`         |
+| Hook used by one provider                   | `providers/hooks/`          |
+| Shared TypeScript type                      | `types/`                     |
+
+- Match sibling naming and import style; prefer `@/...` over deep relative paths.
+- Do not create new base directories under `resources/js/` without user approval.
+- Never hand-edit generated `actions/`, `routes/`, or `wayfinder/`; import their helpers instead.
 
 ---
 

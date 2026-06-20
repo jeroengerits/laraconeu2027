@@ -121,7 +121,7 @@ pulse-workflow-orchestrator
 ## Shared References And Routing
 
 The orchestrator and review gate are powered by shared assets owned by
-`pulse-workflow-orchestrator/references/`. These are the single source of truth; skills
+`references/`. These are the single source of truth; skills
 reference them instead of duplicating the content.
 
 - `references/workflow-routing.md` - deterministic task-signal to skill-subset routing matrix.
@@ -130,6 +130,7 @@ reference them instead of duplicating the content.
 - `references/skill-contract.md` - the `metadata.json` contract every skill satisfies.
 - `references/skill-structure.md` - the "well-formed skill" conformance standard.
 - `references/documentation-discipline.md` - shared documentation-source rule.
+- `references/project-structure.md` - project folder layout, naming, and file-placement rules.
 
 `pulse-create-component` gathers the brief and hands off. `pulse-workflow-orchestrator` is a
 lightweight, deterministic coordinator: it selects the minimal skill subset from the routing
@@ -172,7 +173,7 @@ Default end-to-end order:
 17. `pulse-review-quality-gate` (enforces Gate 2: Definition of Done).
 
 Routing is deterministic: the orchestrator selects skills from
-`pulse-workflow-orchestrator/references/workflow-routing.md`. Use the smallest subset that
+`references/workflow-routing.md`. Use the smallest subset that
 covers the request. Do not run every skill for a minor local change.
 
 ## Documentation Research
@@ -249,7 +250,7 @@ Use these choices when imported reference skills conflict with this app:
 
 This is Gate 1, enforced by `pulse-workflow-orchestrator` before implementation. The
 operational gate definition lives in
-`pulse-workflow-orchestrator/references/validation-gates.md`, which names the owning skill
+`references/validation-gates.md`, which names the owning skill
 for each item so a failed gate routes back deterministically.
 
 Before implementation starts, the agent should know:
@@ -267,8 +268,8 @@ Before implementation starts, the agent should know:
 
 This is Gate 2, enforced by `pulse-review-quality-gate`, which delegates each item to the
 domain owner's Completion checklist (see
-`pulse-workflow-orchestrator/references/review-aggregation.md`). The operational gate
-definition lives in `pulse-workflow-orchestrator/references/validation-gates.md`.
+`references/review-aggregation.md`). The operational gate
+definition lives in `references/validation-gates.md`.
 
 A component change is complete only when:
 

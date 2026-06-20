@@ -48,7 +48,7 @@ Starts an intake-first Pulse React component creation workflow in this Laravel I
 ## Purpose
 
 Gather the minimum useful information required to create a high-quality React
-component, then route the work through `COMPONENT-DESIGN.md`,
+component, then route the work through `pulse-workflow-orchestrator/COMPONENT-DESIGN.md`,
 `pulse-workflow-orchestrator`, the focused `pulse-*` skills, and supporting
 skills such as `context7`, `inertia-react-development`, `motion-react`,
 `radix-ui-design-system`, `tailwind-design-system`,
@@ -123,7 +123,7 @@ Useful optional context:
 
 ## Responsibilities
 
-- Read `COMPONENT-DESIGN.md` before planning.
+- Read `pulse-workflow-orchestrator/COMPONENT-DESIGN.md` before planning.
 - Start a structured intake conversation when required information is missing.
 - Ask concise, grouped questions instead of a long interview.
 - Build a component brief from user answers and known project context.
@@ -149,7 +149,7 @@ Useful optional context:
 
 ## Workflow
 
-1. Read `COMPONENT-DESIGN.md`.
+1. Read `pulse-workflow-orchestrator/COMPONENT-DESIGN.md`.
 2. Determine whether the user supplied enough information for a component brief.
 3. If the brief is incomplete, ask the smallest useful set of intake questions.
 4. Convert answers into this component brief:
@@ -201,7 +201,7 @@ This skill owns the intake mode decision only. Skill selection is delegated to
 
 Pre-flight:
 
-- `COMPONENT-DESIGN.md` is read.
+- `pulse-workflow-orchestrator/COMPONENT-DESIGN.md` is read.
 - The user request is classified as new component work.
 - Missing component brief fields are identified.
 

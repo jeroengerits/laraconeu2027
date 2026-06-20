@@ -1,6 +1,6 @@
 # Workflow
 
-1. Read `COMPONENT-DESIGN.md`.
+1. Read `pulse-workflow-orchestrator/COMPONENT-DESIGN.md`.
 2. Determine whether the user supplied enough information for a component brief.
 3. If the brief is incomplete, ask the smallest useful set of intake questions.
 4. Convert answers into this component brief:

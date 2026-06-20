@@ -124,6 +124,7 @@ This skill owns the shared assets the whole Pulse ecosystem depends on:
 - `references/workflow-routing.md` - deterministic task-signal to skill-subset routing.
 - `references/review-aggregation.md` - maps the review gate to domain Completion checklists.
 - `references/documentation-discipline.md` - shared documentation-source rule.
+- `references/question-discipline.md` - shared rule for how skills ask the user questions.
 
 ---
 

@@ -68,7 +68,7 @@ and `validation_criteria`, `failure_handling`, `escalation_path`, `upstream_skil
 - Review checks restated in the review gate: centralized via `review-aggregation.md`; the
   gate now delegates to domain Completion checklists.
 - Definition of Ready / Definition of Done: single operational source in
-  `validation-gates.md`, referenced by `COMPONENT-DESIGN.md`, the orchestrator, and the
+  `validation-gates.md`, referenced by `pulse-workflow-orchestrator/COMPONENT-DESIGN.md`, the orchestrator, and the
   review gate.
 
 ## Reusable Skill Extraction Decision

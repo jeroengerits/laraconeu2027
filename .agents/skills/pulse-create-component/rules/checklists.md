@@ -2,7 +2,7 @@
 
 Pre-flight:
 
-- `COMPONENT-DESIGN.md` is read.
+- `pulse-workflow-orchestrator/COMPONENT-DESIGN.md` is read.
 - The user request is classified as new component work.
 - Missing component brief fields are identified.
 
