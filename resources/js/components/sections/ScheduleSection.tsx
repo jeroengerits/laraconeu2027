@@ -26,12 +26,12 @@ export function ScheduleSection({
                         <p className="font-mono text-xs font-semibold tracking-[0.18em] text-muted-foreground uppercase">
                             Conference program / three days
                         </p>
-                        <h2 className="max-w-[8ch] font-display text-6xl leading-[0.86] font-bold text-canvas-foreground uppercase sm:text-7xl lg:text-8xl">
+                        <h2 className="max-w-[8ch] font-display text-5xl leading-[0.9] font-bold text-canvas-foreground uppercase sm:text-6xl lg:text-7xl">
                             Schedule
                         </h2>
                     </div>
                     <div className="grid gap-4 border-t border-canvas-foreground/15 pt-4 text-left lg:border-t-0 lg:pt-0 lg:text-right">
-                        <p className="font-display text-4xl leading-none font-bold text-canvas-foreground uppercase">
+                        <p className="font-display text-3xl leading-none font-bold text-canvas-foreground uppercase">
                             Apr 05-07
                         </p>
                         <p className="font-mono text-xs leading-6 tracking-[0.14em] text-muted-foreground uppercase">

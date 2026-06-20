@@ -29,7 +29,7 @@ const SpeakerCard = memo(function SpeakerCard({
         >
             <Avatar name={speaker.name} size="lg" src={speaker.photoUrl} />
             <div className="grid min-w-0 gap-2">
-                <p className="font-display text-2xl leading-none font-bold text-balance text-canvas-foreground sm:text-3xl">
+                <p className="font-display text-xl leading-none font-bold text-balance text-canvas-foreground sm:text-2xl">
                     {speaker.name}
                 </p>
                 {speaker.title ? (
@@ -53,7 +53,7 @@ export function SpeakersSection({
                         <p className="speakers-editorial-meta font-mono text-xs font-semibold tracking-[0.18em] text-muted-foreground uppercase">
                             Community voices
                         </p>
-                        <h2 className="max-w-[8ch] font-display text-6xl leading-[0.86] font-bold text-canvas-foreground uppercase sm:text-7xl lg:text-8xl">
+                        <h2 className="max-w-[8ch] font-display text-5xl leading-[0.9] font-bold text-canvas-foreground uppercase sm:text-6xl lg:text-7xl">
                             Speakers
                         </h2>
                     </div>

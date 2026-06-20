@@ -24,7 +24,7 @@ export function SectionHeading({
     children,
 }: SectionHeadingProps): ReactElement {
     return (
-        <h2 className="mx-auto text-center font-display text-4xl leading-none font-bold text-balance text-canvas-foreground">
+        <h2 className="mx-auto text-center font-display text-3xl leading-none font-bold text-balance text-canvas-foreground">
             {children}
         </h2>
     );

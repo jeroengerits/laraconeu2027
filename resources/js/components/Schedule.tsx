@@ -81,7 +81,7 @@ const SCHEDULE_ITEM_TIME_CLASS =
     'schedule-agenda-time self-start border-canvas-foreground/15 sm:border-r sm:px-0 sm:py-6';
 
 const SCHEDULE_ITEM_CONTENT_CLASS =
-    'schedule-agenda-content min-w-0 text-base leading-6 sm:px-6 sm:py-6 sm:text-lg sm:leading-7';
+    'schedule-agenda-content min-w-0 text-sm leading-6 sm:px-6 sm:py-6 sm:text-base sm:leading-7';
 
 const SCHEDULE_TABS_HEADER_CLASS = 'items-center sm:justify-center';
 
@@ -96,7 +96,7 @@ const scheduleItemKindClassNames: Record<ScheduleItemKind, string> = {
     lunch: 'bg-surface text-muted-foreground italic',
     registration: 'text-canvas-foreground',
     session: 'text-canvas-foreground',
-    social: 'font-display text-xl font-bold tracking-wide text-accent uppercase sm:text-2xl',
+    social: 'font-display text-lg font-bold tracking-wide text-accent uppercase sm:text-xl',
 };
 
 const scheduleItemEnterVariants = createSpeakerItemEnterVariants(false);
@@ -164,7 +164,7 @@ function ScheduleSessionContent({
             <div className={sessionClassName}>
                 <Avatar name={speakerName} size="lg" src={speakerPhotoUrl} />
                 <div className="grid min-w-0 gap-1">
-                    <p className="font-display text-2xl leading-none font-bold text-balance text-canvas-foreground sm:text-3xl lg:text-4xl">
+                    <p className="font-display text-xl leading-none font-bold text-balance text-canvas-foreground sm:text-2xl lg:text-3xl">
                         {title}
                     </p>
                     <p className="font-mono text-xs tracking-[0.08em] text-muted-foreground uppercase sm:text-sm">
@@ -187,7 +187,7 @@ function ScheduleSessionContent({
                 <Avatar name={speakerName} size="lg" src={speakerPhotoUrl} />
             </m.div>
             <m.div className="grid min-w-0 gap-1" variants={contentVariants}>
-                <p className="font-display text-2xl leading-none font-bold text-balance text-canvas-foreground sm:text-3xl lg:text-4xl">
+                <p className="font-display text-xl leading-none font-bold text-balance text-canvas-foreground sm:text-2xl lg:text-3xl">
                     {title}
                 </p>
                 <p className="font-mono text-xs tracking-[0.08em] text-muted-foreground uppercase sm:text-sm">

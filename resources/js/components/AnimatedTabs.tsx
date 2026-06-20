@@ -48,10 +48,10 @@ const animatedTabsStickyHeaderClassName =
     'animated-tabs-sticky-header -mx-4 px-4 py-3 sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8';
 
 const animatedTabsListClassName =
-    'animated-tabs-track animated-tabs-editorial-track grid w-full max-w-3xl grid-flow-col auto-cols-fr overflow-hidden border-y-2 border-canvas-foreground bg-canvas';
+    'animated-tabs-track animated-tabs-editorial-track grid w-full max-w-2xl grid-flow-col auto-cols-fr overflow-hidden border-y-2 border-canvas-foreground bg-canvas';
 
 const animatedTabsTriggerClassName =
-    'group relative isolate h-auto min-h-16 w-full gap-2 rounded-none border-r border-canvas-foreground/15 px-4 py-4 font-display text-xl leading-none font-bold tracking-normal normal-case transition-color-mode last:border-r-0 sm:min-h-20 sm:px-8 sm:text-2xl';
+    'group relative isolate h-auto min-h-14 w-full gap-2 rounded-none border-r border-canvas-foreground/15 px-3 py-3 font-display text-lg leading-none font-bold tracking-normal normal-case transition-color-mode last:border-r-0 sm:min-h-16 sm:px-6 sm:text-xl';
 
 const animatedTabsTriggerLabelClassName = 'relative z-10 text-current';
 
