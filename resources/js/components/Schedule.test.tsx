@@ -53,7 +53,7 @@ const sampleDays: ScheduleDay[] = [
 function renderScheduleItem(
     item: ScheduleDay['items'][number],
     speaker?: {
-        name: string;
+        name?: string;
         photoUrl?: string;
         speaker: string;
     },
@@ -78,9 +78,9 @@ function renderScheduleItem(
     );
 }
 
-function renderSchedule(days: ScheduleDay[] = sampleDays): ReturnType<
-    typeof render
-> {
+function renderSchedule(
+    days: ScheduleDay[] = sampleDays,
+): ReturnType<typeof render> {
     return render(
         <Schedule defaultValue={days[0]?.id ?? 'day-1'}>
             <Schedule.List aria-label="Conference schedule">
@@ -115,15 +115,15 @@ function renderSchedule(days: ScheduleDay[] = sampleDays): ReturnType<
 }
 
 describe('Schedule', () => {
+    beforeEach(() => {
+        window.HTMLElement.prototype.scrollIntoView = jest.fn();
+    });
+
     it('renders day tabs and the default day items', () => {
         renderSchedule();
 
-        expect(
-            screen.getByRole('tab', { name: /DAY 1/i }),
-        ).toBeInTheDocument();
-        expect(
-            screen.getByRole('tab', { name: /DAY 2/i }),
-        ).toBeInTheDocument();
+        expect(screen.getByRole('tab', { name: /DAY 1/i })).toBeInTheDocument();
+        expect(screen.getByRole('tab', { name: /DAY 2/i })).toBeInTheDocument();
         expect(screen.getByText('Registration')).toBeInTheDocument();
         expect(
             screen.getByText('Write better abstractions'),
@@ -141,10 +141,53 @@ describe('Schedule', () => {
         expect(screen.queryByText('Registration')).not.toBeInTheDocument();
     });
 
+    it('scrolls back to the top of the schedule when a tab is activated', async () => {
+        const handleValueChange = jest.fn();
+        const user = userEvent.setup();
+
+        render(
+            <Schedule defaultValue="day-1" onValueChange={handleValueChange}>
+                <Schedule.List aria-label="Conference schedule">
+                    {sampleDays.map((day) => (
+                        <Schedule.Day
+                            date={day.date}
+                            key={day.id}
+                            label={day.label}
+                            value={day.id}
+                        >
+                            {day.items.map((item) => (
+                                <Schedule.Item
+                                    end={item.end}
+                                    key={item.id}
+                                    kind={item.kind}
+                                    start={item.start}
+                                >
+                                    {item.title}
+                                </Schedule.Item>
+                            ))}
+                        </Schedule.Day>
+                    ))}
+                </Schedule.List>
+            </Schedule>,
+        );
+
+        await user.click(screen.getByRole('tab', { name: /DAY 2/i }));
+
+        expect(handleValueChange).toHaveBeenCalledWith('day-2');
+        expect(
+            window.HTMLElement.prototype.scrollIntoView,
+        ).toHaveBeenCalledWith({
+            behavior: 'smooth',
+            block: 'start',
+        });
+    });
+
     it('renders session titles with speaker names', () => {
         renderSchedule();
 
-        expect(screen.getByText('Write better abstractions')).toBeInTheDocument();
+        expect(
+            screen.getByText('Write better abstractions'),
+        ).toBeInTheDocument();
         expect(screen.getByText('DAN HARRIN')).toBeInTheDocument();
     });
 
@@ -201,8 +244,8 @@ describe('Schedule', () => {
         const items = within(tabPanel).getAllByRole('listitem');
 
         expect(items).toHaveLength(3);
-        expect(within(tabPanel).getByLabelText('08:30 to 09:15')).toHaveTextContent(
-            '08:30 – 09:15',
-        );
+        expect(
+            within(tabPanel).getByLabelText('08:30 to 09:15'),
+        ).toHaveTextContent('08:30 – 09:15');
     });
 });

@@ -1,16 +1,16 @@
-import type { Variants } from 'motion/react';
-import { m, useInView, useReducedMotion } from 'motion/react';
+import { m, useReducedMotion } from 'motion/react';
 import type { ComponentPropsWithoutRef, ReactElement, ReactNode } from 'react';
 import {
     Children,
     createContext,
     isValidElement,
-    memo,
+    useCallback,
     useContext,
     useMemo,
     useRef,
 } from 'react';
 
+import { AnimatedListItem } from '@/components/AnimatedListItem';
 import { AnimatedTabs } from '@/components/AnimatedTabs';
 import type { AnimatedTabItem } from '@/components/AnimatedTabs';
 import { Avatar } from '@/components/Avatar';
@@ -64,13 +64,6 @@ type ParsedScheduleDay = {
     value: string;
 };
 
-type ScheduleMotionContextValue = {
-    avatarVariants: Variants;
-    contentVariants: Variants;
-    rowVariants: Variants;
-    shouldReduceMotion: boolean | null;
-};
-
 type ScheduleComponent = {
     (props: ScheduleRootProps): ReactElement;
     Day: (props: ScheduleDayProps) => ReactElement | null;
@@ -97,16 +90,11 @@ const scheduleItemKindClassNames: Record<ScheduleItemKind, string> = {
     social: 'font-display text-lg font-bold tracking-wide text-accent uppercase',
 };
 
+const scheduleItemEnterVariants = createSpeakerItemEnterVariants(false);
+
 const ScheduleRootContext = createContext<
     Omit<ScheduleRootProps, 'children' | 'className'>
 >({});
-
-const ScheduleMotionContext = createContext<ScheduleMotionContextValue>({
-    avatarVariants: {},
-    contentVariants: {},
-    rowVariants: {},
-    shouldReduceMotion: null,
-});
 
 function scheduleTimeClassName(
     kind: ScheduleItemKind,
@@ -155,36 +143,26 @@ function parseScheduleDays(children: ReactNode): ParsedScheduleDay[] {
 }
 
 function ScheduleSessionContent({
-    avatarVariants,
     className,
-    contentVariants,
-    rowVariants,
-    shouldReduceMotion,
     speaker,
     speakerName,
     speakerPhotoUrl,
     title,
 }: {
-    avatarVariants: Variants;
     className?: string;
-    contentVariants: Variants;
-    rowVariants: Variants;
-    shouldReduceMotion: boolean | null;
     speaker: string;
     speakerName?: string;
     speakerPhotoUrl?: string;
     title: string;
 }): ReactElement {
-    const sessionClassName = cn(
-        'flex items-start gap-3 sm:gap-4',
-        className,
-    );
+    const shouldReduceMotion = useReducedMotion();
+    const sessionClassName = cn('flex items-start gap-3 sm:gap-4', className);
 
     if (shouldReduceMotion) {
         return (
             <div className={sessionClassName}>
                 <Avatar name={speakerName} size="lg" src={speakerPhotoUrl} />
-                <div className="min-w-0 grid gap-1">
+                <div className="grid min-w-0 gap-1">
                     <p className="text-base leading-snug font-bold text-canvas-foreground sm:text-lg">
                         {title}
                     </p>
@@ -196,12 +174,18 @@ function ScheduleSessionContent({
         );
     }
 
+    const avatarVariants =
+        createScheduleSessionAvatarVariants(shouldReduceMotion);
+    const contentVariants =
+        createScheduleSessionContentVariants(shouldReduceMotion);
+    const rowVariants = createScheduleSessionRowVariants(shouldReduceMotion);
+
     return (
         <m.div className={sessionClassName} variants={rowVariants}>
             <m.div className="shrink-0" variants={avatarVariants}>
                 <Avatar name={speakerName} size="lg" src={speakerPhotoUrl} />
             </m.div>
-            <m.div className="min-w-0 grid gap-1" variants={contentVariants}>
+            <m.div className="grid min-w-0 gap-1" variants={contentVariants}>
                 <p className="text-base leading-snug font-bold text-canvas-foreground sm:text-lg">
                     {title}
                 </p>
@@ -213,42 +197,34 @@ function ScheduleSessionContent({
     );
 }
 
-function ScheduleAgenda({
-    children,
-    className,
-}: {
-    children: ReactNode;
-    className?: string;
-}): ReactElement {
-    const shouldReduceMotion = useReducedMotion();
-    const motionContext = useMemo<ScheduleMotionContextValue>(
-        () => ({
-            avatarVariants:
-                createScheduleSessionAvatarVariants(shouldReduceMotion),
-            contentVariants:
-                createScheduleSessionContentVariants(shouldReduceMotion),
-            rowVariants: createScheduleSessionRowVariants(shouldReduceMotion),
-            shouldReduceMotion,
-        }),
-        [shouldReduceMotion],
-    );
-    const agendaClassName = cn(SCHEDULE_AGENDA_CLASS, className);
-
-    return (
-        <ScheduleMotionContext.Provider value={motionContext}>
-            <ol className={agendaClassName}>{children}</ol>
-        </ScheduleMotionContext.Provider>
-    );
-}
-
 function ScheduleRoot({
     children,
     className,
+    onValueChange,
     ...tabProps
 }: ScheduleRootProps): ReactElement {
+    const rootRef = useRef<HTMLDivElement>(null);
+    const shouldReduceMotion = useReducedMotion();
+    const handleValueChange = useCallback(
+        (nextValue: string): void => {
+            onValueChange?.(nextValue);
+            rootRef.current?.scrollIntoView({
+                behavior: shouldReduceMotion ? 'auto' : 'smooth',
+                block: 'start',
+            });
+        },
+        [onValueChange, shouldReduceMotion],
+    );
+    const contextValue = {
+        ...tabProps,
+        onValueChange: handleValueChange,
+    };
+
     return (
-        <ScheduleRootContext.Provider value={tabProps}>
-            <div className={cn('grid gap-6', className)}>{children}</div>
+        <ScheduleRootContext.Provider value={contextValue}>
+            <div className={cn('grid gap-6', className)} ref={rootRef}>
+                {children}
+            </div>
         </ScheduleRootContext.Provider>
     );
 }
@@ -266,7 +242,9 @@ function ScheduleList({
                 value: day.value,
                 label: day.label,
                 subtitle: day.date,
-                content: <ScheduleAgenda>{day.children}</ScheduleAgenda>,
+                content: (
+                    <ol className={SCHEDULE_AGENDA_CLASS}>{day.children}</ol>
+                ),
             })),
         [days],
     );
@@ -291,7 +269,7 @@ function ScheduleDay(props: ScheduleDayProps): null {
 
 ScheduleDay.displayName = scheduleDayDisplayName;
 
-const ScheduleItem = memo(function ScheduleItem({
+function ScheduleItem({
     children,
     className,
     contentClassName,
@@ -302,18 +280,6 @@ const ScheduleItem = memo(function ScheduleItem({
     speakerPhotoUrl,
     start,
 }: ScheduleItemProps): ReactElement {
-    const itemRef = useRef<HTMLLIElement>(null);
-    const isInView = useInView(itemRef, scheduleItemViewport);
-    const {
-        avatarVariants,
-        contentVariants,
-        rowVariants,
-        shouldReduceMotion,
-    } = useContext(ScheduleMotionContext);
-    const itemVariants = useMemo(
-        () => createSpeakerItemEnterVariants(shouldReduceMotion),
-        [shouldReduceMotion],
-    );
     const title = scheduleItemTitle(children);
     const showSpeakerRow = kind === 'session' && Boolean(speaker);
     const itemClassName = cn(SCHEDULE_ITEM_BASE_CLASS, className);
@@ -331,11 +297,7 @@ const ScheduleItem = memo(function ScheduleItem({
             />
             {showSpeakerRow && speaker ? (
                 <ScheduleSessionContent
-                    avatarVariants={avatarVariants}
                     className={contentClassNames}
-                    contentVariants={contentVariants}
-                    rowVariants={rowVariants}
-                    shouldReduceMotion={shouldReduceMotion}
                     speaker={speaker}
                     speakerName={speakerName}
                     speakerPhotoUrl={speakerPhotoUrl}
@@ -347,26 +309,16 @@ const ScheduleItem = memo(function ScheduleItem({
         </>
     );
 
-    if (shouldReduceMotion) {
-        return (
-            <li className={itemClassName} ref={itemRef}>
-                {content}
-            </li>
-        );
-    }
-
     return (
-        <m.li
-            ref={itemRef}
-            animate={isInView ? 'visible' : 'hidden'}
+        <AnimatedListItem
             className={itemClassName}
-            initial="hidden"
-            variants={itemVariants}
+            variants={scheduleItemEnterVariants}
+            viewport={scheduleItemViewport}
         >
             {content}
-        </m.li>
+        </AnimatedListItem>
     );
-});
+}
 
 export const Schedule = Object.assign(ScheduleRoot, {
     Day: ScheduleDay,
