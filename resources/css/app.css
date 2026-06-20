@@ -306,7 +306,8 @@
 
 @utility transition-color-mode {
     transition-duration: var(--color-mode-duration);
-    transition-property: background-color, border-color, color, fill, filter, stroke;
+    transition-property:
+        background-color, border-color, color, fill, filter, stroke;
     transition-timing-function: var(--color-mode-ease);
 }
 
@@ -314,7 +315,8 @@
     position: sticky;
     top: var(--top-nav-height);
     z-index: 10;
-    border-bottom: 1px solid color-mix(in oklch, var(--color-canvas-foreground) 10%, transparent);
+    border-bottom: 1px solid
+        color-mix(in oklch, var(--color-canvas-foreground) 10%, transparent);
     background-color: var(--color-canvas);
     transition-property: background-color, border-color, color;
     transition-duration: var(--color-mode-duration);
@@ -322,19 +324,23 @@
 }
 
 @utility animated-tabs-track {
-    border: 1px solid color-mix(in oklch, var(--color-canvas-foreground) 10%, transparent);
+    border: 1px solid
+        color-mix(in oklch, var(--color-canvas-foreground) 10%, transparent);
     background-color: var(--color-canvas);
 }
 
 @utility animated-tabs-trigger-surface {
     background-color: var(--color-surface);
-    box-shadow: 0 1px 2px color-mix(in oklch, var(--color-canvas-foreground) 8%, transparent);
-    outline: 1px solid color-mix(in oklch, var(--color-canvas-foreground) 10%, transparent);
+    box-shadow: 0 1px 2px
+        color-mix(in oklch, var(--color-canvas-foreground) 8%, transparent);
+    outline: 1px solid
+        color-mix(in oklch, var(--color-canvas-foreground) 10%, transparent);
     outline-offset: -1px;
 }
 
 @utility animated-tabs-meta {
-    border-left: 1px solid color-mix(in oklch, var(--color-canvas-foreground) 10%, transparent);
+    border-left: 1px solid
+        color-mix(in oklch, var(--color-canvas-foreground) 10%, transparent);
     color: color-mix(in oklch, var(--color-muted-foreground) 100%, transparent);
     font-family: var(--font-mono);
     letter-spacing: 0.14em;

@@ -1,7 +1,7 @@
-import { m, useInView, useReducedMotion } from 'motion/react';
 import type { ReactElement } from 'react';
-import { memo, useMemo, useRef } from 'react';
+import { memo } from 'react';
 
+import { AnimatedListItem } from '@/components/AnimatedListItem';
 import { Avatar } from '@/components/Avatar';
 import { Section } from '@/components/sections/Section';
 import {
@@ -14,21 +14,19 @@ type SpeakersSectionProps = {
     speakers: Speaker[];
 };
 
+const speakerCardVariants = createSpeakerItemEnterVariants(false);
+
 const SpeakerCard = memo(function SpeakerCard({
     speaker,
 }: {
     speaker: Speaker;
 }): ReactElement {
-    const cardRef = useRef<HTMLLIElement>(null);
-    const isInView = useInView(cardRef, scheduleItemViewport);
-    const shouldReduceMotion = useReducedMotion();
-    const speakerItemVariants = useMemo(
-        () => createSpeakerItemEnterVariants(shouldReduceMotion),
-        [shouldReduceMotion],
-    );
-
-    const content = (
-        <>
+    return (
+        <AnimatedListItem
+            className="grid justify-items-center gap-3 text-center"
+            variants={speakerCardVariants}
+            viewport={scheduleItemViewport}
+        >
             <Avatar name={speaker.name} size="lg" src={speaker.photoUrl} />
             <div className="grid gap-1">
                 <p className="text-base leading-snug font-bold text-canvas-foreground sm:text-lg">
@@ -40,30 +38,7 @@ const SpeakerCard = memo(function SpeakerCard({
                     </p>
                 ) : null}
             </div>
-        </>
-    );
-
-    if (shouldReduceMotion) {
-        return (
-            <li
-                className="grid justify-items-center gap-3 text-center"
-                ref={cardRef}
-            >
-                {content}
-            </li>
-        );
-    }
-
-    return (
-        <m.li
-            ref={cardRef}
-            animate={isInView ? 'visible' : 'hidden'}
-            className="grid justify-items-center gap-3 text-center"
-            initial="hidden"
-            variants={speakerItemVariants}
-        >
-            {content}
-        </m.li>
+        </AnimatedListItem>
     );
 });
 

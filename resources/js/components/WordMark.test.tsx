@@ -14,9 +14,7 @@ describe('WordMark', () => {
     it('renders as a level-1 heading', () => {
         render(<WordMark />);
 
-        expect(
-            screen.getByRole('heading', { level: 1 }),
-        ).toBeInTheDocument();
+        expect(screen.getByRole('heading', { level: 1 })).toBeInTheDocument();
     });
 
     it('honours a custom accessible label', () => {

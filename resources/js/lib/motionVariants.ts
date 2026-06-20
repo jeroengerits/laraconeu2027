@@ -1,6 +1,4 @@
 import type { Variants } from 'motion/react';
-import { useReducedMotion } from 'motion/react';
-import { useMemo } from 'react';
 
 const motionEase = [0.22, 1, 0.36, 1] as const;
 
@@ -12,11 +10,6 @@ const panelTransition = {
 const tabPanelExitTransition = {
     duration: 0.2,
     ease: [0.4, 0, 1, 1],
-} as const;
-
-const scheduleItemTransition = {
-    duration: 0.38,
-    ease: motionEase,
 } as const;
 
 const scheduleContentTransition = {
@@ -84,12 +77,6 @@ export function createTabHeaderSubtitleVariants(
     };
 }
 
-export function createPanelVariants(
-    shouldReduceMotion: boolean | null,
-): Variants {
-    return createTabPanelVariants(shouldReduceMotion);
-}
-
 export function createTabPanelVariants(
     shouldReduceMotion: boolean | null,
 ): Variants {
@@ -116,42 +103,6 @@ export function createTabPanelVariants(
                       staggerChildren: 0.045,
                   },
             x: 0,
-            y: 0,
-        },
-    };
-}
-
-export function createScheduleListVariants(
-    shouldReduceMotion: boolean | null,
-): Variants {
-    return {
-        hidden: {},
-        visible: {
-            transition: shouldReduceMotion
-                ? { duration: 0 }
-                : {
-                      delayChildren: 0.02,
-                      staggerChildren: 0.055,
-                  },
-        },
-    };
-}
-
-export function createScheduleItemVariants(
-    shouldReduceMotion: boolean | null,
-): Variants {
-    return {
-        hidden: {
-            opacity: shouldReduceMotion ? 1 : 0,
-            scale: shouldReduceMotion ? 1 : 0.992,
-            y: shouldReduceMotion ? 0 : 12,
-        },
-        visible: {
-            opacity: 1,
-            scale: 1,
-            transition: shouldReduceMotion
-                ? { duration: 0 }
-                : scheduleItemTransition,
             y: 0,
         },
     };
@@ -209,22 +160,6 @@ export function createScheduleSessionAvatarVariants(
     };
 }
 
-export function createStaggerListVariants(
-    shouldReduceMotion: boolean | null,
-): Variants {
-    return {
-        hidden: {},
-        visible: {
-            transition: shouldReduceMotion
-                ? { duration: 0 }
-                : {
-                      delayChildren: 0.04,
-                      staggerChildren: 0.04,
-                  },
-        },
-    };
-}
-
 export function createStaggerItemVariants(
     shouldReduceMotion: boolean | null,
 ): Variants {
@@ -241,69 +176,10 @@ export function createStaggerItemVariants(
     };
 }
 
-export function createSpeakerItemEnterVariants(
-    shouldReduceMotion: boolean | null,
-): Variants {
-    return {
-        hidden: {
-            opacity: shouldReduceMotion ? 1 : 0,
-            y: shouldReduceMotion ? 0 : 8,
-        },
-        visible: {
-            opacity: 1,
-            transition: shouldReduceMotion ? { duration: 0 } : itemTransition,
-            y: 0,
-        },
-    };
-}
+export const createSpeakerItemEnterVariants = createStaggerItemVariants;
 
 export const scheduleItemViewport = {
     amount: 0.2,
     margin: '0px 0px -8% 0px',
     once: true,
 } as const;
-
-export function useScheduleMotion(): {
-    avatarVariants: Variants;
-    contentVariants: Variants;
-    itemVariants: Variants;
-    listVariants: Variants;
-    rowVariants: Variants;
-    shouldReduceMotion: boolean | null;
-} {
-    const shouldReduceMotion = useReducedMotion();
-
-    return useMemo(
-        () => ({
-            avatarVariants:
-                createScheduleSessionAvatarVariants(shouldReduceMotion),
-            contentVariants:
-                createScheduleSessionContentVariants(shouldReduceMotion),
-            itemVariants: createScheduleItemVariants(shouldReduceMotion),
-            listVariants: createScheduleListVariants(shouldReduceMotion),
-            rowVariants: createScheduleSessionRowVariants(shouldReduceMotion),
-            shouldReduceMotion,
-        }),
-        [shouldReduceMotion],
-    );
-}
-
-export function useStaggerMotion(): {
-    itemVariants: Variants;
-    listVariants: Variants;
-    shouldReduceMotion: boolean | null;
-    speakerItemVariants: Variants;
-} {
-    const shouldReduceMotion = useReducedMotion();
-
-    return useMemo(
-        () => ({
-            shouldReduceMotion,
-            listVariants: createStaggerListVariants(shouldReduceMotion),
-            itemVariants: createStaggerItemVariants(shouldReduceMotion),
-            speakerItemVariants:
-                createSpeakerItemEnterVariants(shouldReduceMotion),
-        }),
-        [shouldReduceMotion],
-    );
-}

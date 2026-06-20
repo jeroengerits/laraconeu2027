@@ -96,7 +96,7 @@ function AnimatedTabTriggerSurface({
         return (
             <span
                 aria-hidden="true"
-                className="animated-tabs-trigger-surface absolute inset-0 rounded-md"
+                className="absolute inset-0 rounded-md animated-tabs-trigger-surface"
             />
         );
     }
@@ -104,7 +104,7 @@ function AnimatedTabTriggerSurface({
     return (
         <m.span
             aria-hidden="true"
-            className="animated-tabs-trigger-surface absolute inset-0 rounded-md"
+            className="absolute inset-0 rounded-md animated-tabs-trigger-surface"
             layoutId={layoutId}
             transition={tabIndicatorTransition}
         />
@@ -254,6 +254,55 @@ function AnimatedTabsHeader({
     );
 }
 
+type AnimatedTabsPanelsProps = {
+    enablePanelEnterAnimation: boolean;
+    panelVariants: ReturnType<typeof createTabPanelVariants>;
+    resolvedActiveTab: string;
+    tabs: AnimatedTabItem[];
+    transitionDirection: number;
+};
+
+function AnimatedTabsPanels({
+    enablePanelEnterAnimation,
+    panelVariants,
+    resolvedActiveTab,
+    tabs,
+    transitionDirection,
+}: AnimatedTabsPanelsProps): ReactElement {
+    return (
+        <AnimatePresence
+            custom={transitionDirection}
+            initial={false}
+            mode="wait"
+        >
+            {tabs.map((tab) =>
+                resolvedActiveTab === tab.value ? (
+                    <Tabs.Content
+                        asChild
+                        forceMount
+                        key={tab.value}
+                        tabIndex={-1}
+                        value={tab.value}
+                    >
+                        <m.div
+                            animate="visible"
+                            className={animatedTabsPanelClassName}
+                            custom={transitionDirection}
+                            exit="exit"
+                            initial={
+                                enablePanelEnterAnimation ? 'hidden' : false
+                            }
+                            variants={panelVariants}
+                        >
+                            {tab.content}
+                        </m.div>
+                    </Tabs.Content>
+                ) : null,
+            )}
+        </AnimatePresence>
+    );
+}
+
 export function AnimatedTabs({
     'aria-label': ariaLabel,
     className,
@@ -298,9 +347,7 @@ export function AnimatedTabs({
             activeIndexRef.current !== -1 &&
             nextIndex !== activeIndexRef.current
         ) {
-            setTransitionDirection(
-                nextIndex > activeIndexRef.current ? 1 : -1,
-            );
+            setTransitionDirection(nextIndex > activeIndexRef.current ? 1 : -1);
             activeIndexRef.current = nextIndex;
         }
 
@@ -335,36 +382,13 @@ export function AnimatedTabs({
                 triggerClassName={triggerClassName}
             />
 
-            <AnimatePresence
-                custom={transitionDirection}
-                initial={false}
-                mode="wait"
-            >
-                {tabs.map((tab) =>
-                    resolvedActiveTab === tab.value ? (
-                        <Tabs.Content
-                            asChild
-                            forceMount
-                            key={tab.value}
-                            tabIndex={-1}
-                            value={tab.value}
-                        >
-                            <m.div
-                                animate="visible"
-                                className={animatedTabsPanelClassName}
-                                custom={transitionDirection}
-                                exit="exit"
-                                initial={
-                                    enablePanelEnterAnimation ? 'hidden' : false
-                                }
-                                variants={panelVariants}
-                            >
-                                {tab.content}
-                            </m.div>
-                        </Tabs.Content>
-                    ) : null,
-                )}
-            </AnimatePresence>
+            <AnimatedTabsPanels
+                enablePanelEnterAnimation={enablePanelEnterAnimation}
+                panelVariants={panelVariants}
+                resolvedActiveTab={resolvedActiveTab}
+                tabs={tabs}
+                transitionDirection={transitionDirection}
+            />
         </Tabs.Root>
     );
 }

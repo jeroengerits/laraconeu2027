@@ -138,10 +138,8 @@ export function TopNavigationMobileMenu({
     ...props
 }: TopNavigationMobileMenuProps): ReactElement | null {
     const { isMobileMenuOpen, mobileNavigationId } = useTopNavigationState();
-    const {
-        closeMobileMenu,
-        focusMobileMenuButton,
-    } = useTopNavigationActions();
+    const { closeMobileMenu, focusMobileMenuButton } =
+        useTopNavigationActions();
     const shouldReduceMotion = useReducedMotion();
     const activeMenuTransition = shouldReduceMotion
         ? reducedMotionMobileMenuTransition

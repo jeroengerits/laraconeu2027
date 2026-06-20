@@ -39,7 +39,9 @@ describe('ColorModeToggle', () => {
         const user = userEvent.setup();
 
         renderToggle();
-        await user.click(screen.getByRole('button', { name: 'Switch to Dark' }));
+        await user.click(
+            screen.getByRole('button', { name: 'Switch to Dark' }),
+        );
 
         expect(document.documentElement).toHaveClass('dark');
         expect(

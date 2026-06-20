@@ -1,6 +1,4 @@
 import {
-    createPanelVariants,
-    createScheduleItemVariants,
     createScheduleSessionAvatarVariants,
     createSpeakerItemEnterVariants,
     createStaggerItemVariants,
@@ -18,11 +16,9 @@ describe('motionVariants', () => {
             y: 0,
         });
 
-        const reducedPanelVariants = createPanelVariants(true);
+        const reducedPanelVariants = createTabPanelVariants(true);
 
-        expect(reducedPanelVariants.hidden).toEqual(
-            expect.any(Function),
-        );
+        expect(reducedPanelVariants.hidden).toEqual(expect.any(Function));
         expect(
             (reducedPanelVariants.hidden as (direction: number) => object)(1),
         ).toEqual({
@@ -42,9 +38,11 @@ describe('motionVariants', () => {
             y: 8,
         });
         expect(
-            (createTabPanelVariants(false).hidden as (direction: number) => object)(
-                1,
-            ),
+            (
+                createTabPanelVariants(false).hidden as (
+                    direction: number,
+                ) => object
+            )(1),
         ).toEqual({
             opacity: 0,
             x: 20,
@@ -52,24 +50,14 @@ describe('motionVariants', () => {
         });
     });
 
-    it('removes schedule item motion when reduced motion is preferred', () => {
-        expect(createScheduleItemVariants(true).hidden).toEqual({
-            opacity: 1,
-            scale: 1,
-            y: 0,
-        });
+    it('removes schedule avatar motion when reduced motion is preferred', () => {
         expect(createScheduleSessionAvatarVariants(true).hidden).toEqual({
             opacity: 1,
             scale: 1,
         });
     });
 
-    it('uses schedule item offsets when reduced motion is not preferred', () => {
-        expect(createScheduleItemVariants(false).hidden).toEqual({
-            opacity: 0,
-            scale: 0.992,
-            y: 12,
-        });
+    it('uses schedule avatar offsets when reduced motion is not preferred', () => {
         expect(createScheduleSessionAvatarVariants(false).hidden).toEqual({
             opacity: 0,
             scale: 0.88,
