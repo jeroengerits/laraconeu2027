@@ -7,11 +7,66 @@
   "description": "Optimizes media and asset handling for React components in this Laravel Vite app. Use for responsive images, lazy loading, import.meta.glob, asset request counts, alt text, image sizing, viewport loading, video, and below-the-fold media.",
   "purpose": "Reduce pageload requests, avoid layout shift, and keep image/video rendering accessible and responsive.",
   "scope": "Pulse Media Assets",
-  "inputs": "Required: - Media source and usage context. - Existing image/rendering utilities. Optional: - Asset folder structure. - Performance symptoms. - Viewport loading requirements.",
-  "outputs": "- Media loading strategy. - Responsive sizing plan. - Accessibility notes. - Request-count risks. - Verification plan.",
+  "single_responsibility": "Media and asset handling for components: eager/lazy loading, responsive images, stable dimensions, alt text, and request count.",
+  "deterministic": true,
+  "triggers": [
+    "Component renders images, video, icons, or large asset sets",
+    "Lazy loading or responsive image behaviour is changing",
+    "`import.meta.glob` or Vite asset loading is involved",
+    "Request count or first paint is a concern"
+  ],
+  "inputs": {
+    "required": [
+      "Media source and usage context",
+      "Existing image/rendering utilities"
+    ],
+    "optional": [
+      "Asset folder structure",
+      "Performance symptoms",
+      "Viewport loading requirements"
+    ]
+  },
+  "outputs": [
+    "Media loading strategy",
+    "Responsive sizing plan",
+    "Accessibility notes",
+    "Request-count risks",
+    "Verification plan"
+  ],
+  "completion_criteria": [
+    "Eager vs lazy loading is chosen per viewport position",
+    "Image dimensions or aspect ratios are stable to avoid layout shift",
+    "`src`, `srcSet`, and `sizes` are deterministic across server and client render",
+    "Meaningful images have useful alt text and decorative images have empty alt",
+    "Existing responsive image utilities are reused when available"
+  ],
+  "validation_criteria": [
+    "Request-count impact is considered",
+    "Build verification is planned for Vite asset changes",
+    "Browser verification includes image loading"
+  ],
+  "failure_handling": [
+    "If media cannot load without layout shift, excessive requests, or broken hydration, stop and report the constraint instead of shipping it.",
+    "Report any asset or build behaviour that could not be verified."
+  ],
+  "escalation_path": [
+    "Route uncertain Vite asset, `import.meta.glob`, or responsive image APIs through pulse-docs-research.",
+    "Escalate to the user when reducing requests requires removing or replacing assets (a content or scope decision).",
+    "Hand broader bundle or render performance to pulse-performance-vercel and alt-text semantics to pulse-accessibility-wcag."
+  ],
+  "upstream_skills": [
+    "pulse-requirements-analysis",
+    "pulse-architecture-boundaries"
+  ],
+  "downstream_skills": [
+    "pulse-browser-verification",
+    "pulse-review-quality-gate"
+  ],
   "related_skills": [
     "pulse-docs-research",
-    "pulse-workflow-orchestrator"
+    "pulse-workflow-orchestrator",
+    "pulse-performance-vercel",
+    "pulse-accessibility-wcag"
   ],
   "rule_files": [
     "rules/responsibilities.md",
@@ -33,19 +88,5 @@
     "Generic bundle optimization outside media.",
     "Visual art direction beyond media fit and cropping.",
     "Creating new image assets unless requested."
-  ],
-  "success_criteria": [
-    "The skill stays within its focused responsibility.",
-    "The workflow and decision points are followed.",
-    "Validation checklist items are satisfied or skipped checks are reported.",
-    "Cross-skill handoffs are explicit when another skill owns the next concern."
-  ],
-  "validation_criteria": [
-    "SKILL.md loads as the entry point.",
-    "README.md summarizes usage for humans.",
-    "AGENTS.md provides the compiled agent guide.",
-    "metadata.json exposes machine-readable discovery metadata.",
-    "rules/_sections.md indexes rule files.",
-    "rules/_template.md defines the rule-file standard."
   ]
 }

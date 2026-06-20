@@ -7,11 +7,65 @@
   "description": "Decides whether to reuse, extend, refactor, or create a React component in this Laravel Inertia app. Use after auditing existing components and before introducing new abstractions or shared APIs.",
   "purpose": "Avoid speculative abstractions while still extracting reusable components when they reduce real complexity.",
   "scope": "Pulse Reuse Decision",
-  "inputs": "Required: - Existing audit findings. - Requirements and acceptance criteria. Optional: - Known future reuse. - Current consumers of the component.",
-  "outputs": "- Reuse decision. - Rationale. - Affected consumers. - Follow-up skill recommendations.",
+  "single_responsibility": "Decide whether to reuse, extend, refactor, or create a component, justified by responsibility fit and blast radius rather than visual similarity.",
+  "deterministic": false,
+  "triggers": [
+    "A similar component or pattern may already exist",
+    "A new component might become shared",
+    "The requested change could fit an existing API",
+    "Refactoring may be safer than adding another component"
+  ],
+  "inputs": {
+    "required": [
+      "Existing audit findings",
+      "Requirements and acceptance criteria"
+    ],
+    "optional": [
+      "Known future reuse",
+      "Current consumers of the component"
+    ]
+  },
+  "outputs": [
+    "Reuse decision",
+    "Rationale",
+    "Affected consumers",
+    "Follow-up skill recommendations"
+  ],
+  "completion_criteria": [
+    "Reuse candidates are compared by responsibility, not appearance alone",
+    "Known and likely consumers are counted",
+    "Decision to reuse, extend, refactor, or create is explicit with rationale",
+    "Blast radius and tradeoffs are documented",
+    "Implementation path and follow-up skills are named"
+  ],
+  "validation_criteria": [
+    "Decision is explicit",
+    "Implementation path is clear",
+    "Shared API work is routed to pulse-api-contract"
+  ],
+  "failure_handling": [
+    "If reuse versus create cannot be decided from audit findings and requirements, stop and report the missing information instead of guessing an abstraction.",
+    "Report the chosen decision with its tradeoffs and affected consumers."
+  ],
+  "escalation_path": [
+    "Escalate scope, dependency, or product tradeoff decisions to the user.",
+    "Route shared or public API design to pulse-api-contract.",
+    "Route uncertain library capability to pulse-docs-research."
+  ],
+  "upstream_skills": [
+    "pulse-existing-audit",
+    "pulse-requirements-analysis"
+  ],
+  "downstream_skills": [
+    "pulse-architecture-boundaries",
+    "pulse-api-contract",
+    "pulse-implementation",
+    "pulse-refactor-safety"
+  ],
   "related_skills": [
     "pulse-api-contract",
     "pulse-docs-research",
+    "pulse-existing-audit",
     "pulse-workflow-orchestrator"
   ],
   "rule_files": [
@@ -33,19 +87,5 @@
     "Designing detailed props.",
     "Implementing the decision.",
     "Running tests."
-  ],
-  "success_criteria": [
-    "The skill stays within its focused responsibility.",
-    "The workflow and decision points are followed.",
-    "Validation checklist items are satisfied or skipped checks are reported.",
-    "Cross-skill handoffs are explicit when another skill owns the next concern."
-  ],
-  "validation_criteria": [
-    "SKILL.md loads as the entry point.",
-    "README.md summarizes usage for humans.",
-    "AGENTS.md provides the compiled agent guide.",
-    "metadata.json exposes machine-readable discovery metadata.",
-    "rules/_sections.md indexes rule files.",
-    "rules/_template.md defines the rule-file standard."
   ]
 }

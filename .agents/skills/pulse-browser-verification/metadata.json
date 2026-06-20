@@ -7,10 +7,63 @@
   "description": "Verifies React component behaviour in the browser for this Laravel Herd/Inertia app. Use for interaction-heavy components, responsive UI, trackpad/mouse/touch gestures, keyboard flows, reduced motion, light/dark modes, image loading, hydration warnings, and visual regressions.",
   "purpose": "Validate real browser behaviour across input modes, viewports, and rendering states.",
   "scope": "Pulse Browser Verification",
-  "inputs": "Required: - URL or route/path. - Behaviour to verify. Optional: - Browser logs. - Viewport targets. - Known device issue.",
-  "outputs": "- Browser verification checklist. - Recent browser errors if any. - Behaviour findings. - Follow-up fixes if needed.",
+  "single_responsibility": "Verify real browser behaviour of React components across input modes, viewports, and rendering states, preferring Pest Browser tests.",
+  "deterministic": true,
+  "triggers": [
+    "Component has gestures, scroll, hover, drag, media, animation, overlays, or responsive layout",
+    "Hydration warnings or browser console errors are possible",
+    "User asks to test desktop, trackpad, mobile, touch, or browser behaviour"
+  ],
+  "inputs": {
+    "required": [
+      "URL or route/path",
+      "Behaviour to verify"
+    ],
+    "optional": [
+      "Browser logs",
+      "Viewport targets",
+      "Known device issue"
+    ]
+  },
+  "outputs": [
+    "Browser verification checklist",
+    "Recent browser errors if any",
+    "Behaviour findings",
+    "Follow-up fixes if needed"
+  ],
+  "completion_criteria": [
+    "App URL is resolved with Laravel Boost get-absolute-url",
+    "Behaviours tied to the change are verified across relevant input modes and viewports",
+    "Recent browser logs are checked for client-side errors",
+    "Untested device or input classes are disclosed"
+  ],
+  "validation_criteria": [
+    "Browser results are summarized",
+    "Any untested device or input class is disclosed",
+    "Console or hydration issues are addressed or reported"
+  ],
+  "failure_handling": [
+    "If a device, input class, or behaviour cannot be verified locally, stop guessing and report the gap with the expected manual check.",
+    "Report what was verified and what was not, including any console or hydration issues."
+  ],
+  "escalation_path": [
+    "Route uncertain browser, hydration, gesture, or testing APIs through pulse-docs-research.",
+    "Return defects to pulse-implementation or pulse-refactor-safety for fixes.",
+    "Hand verified results to pulse-review-quality-gate."
+  ],
+  "upstream_skills": [
+    "pulse-implementation",
+    "pulse-refactor-safety",
+    "pulse-behavior-testing"
+  ],
+  "downstream_skills": [
+    "pulse-review-quality-gate"
+  ],
   "related_skills": [
     "pulse-docs-research",
+    "pulse-motion-interactions",
+    "pulse-media-assets",
+    "pulse-accessibility-wcag",
     "pulse-workflow-orchestrator"
   ],
   "rule_files": [
@@ -35,19 +88,5 @@
     "Replacing automated tests.",
     "Running Herd serve commands; Herd already serves the app.",
     "Pixel-perfect visual QA."
-  ],
-  "success_criteria": [
-    "The skill stays within its focused responsibility.",
-    "The workflow and decision points are followed.",
-    "Validation checklist items are satisfied or skipped checks are reported.",
-    "Cross-skill handoffs are explicit when another skill owns the next concern."
-  ],
-  "validation_criteria": [
-    "SKILL.md loads as the entry point.",
-    "README.md summarizes usage for humans.",
-    "AGENTS.md provides the compiled agent guide.",
-    "metadata.json exposes machine-readable discovery metadata.",
-    "rules/_sections.md indexes rule files.",
-    "rules/_template.md defines the rule-file standard."
   ]
 }

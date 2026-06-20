@@ -7,11 +7,68 @@
   "description": "Applies Tailwind CSS 4 design-system rules to React components in this Laravel app. Use when styling components, variants, typography, spacing, colors, dark mode, shadows, responsive layout, tokens, or theme utilities.",
   "purpose": "Prevent one-off styling, token drift, inaccessible colour choices, and responsive layout instability.",
   "scope": "Pulse Tailwind Design System",
-  "inputs": "Required: - Target component or section. - Existing styling conventions. Optional: - Design reference. - Current CSS tokens. - Supported breakpoints.",
-  "outputs": "- Styling plan. - Variant and size map. - Responsive layout notes. - Dark mode and token decisions.",
+  "single_responsibility": "Tailwind CSS 4 styling of components against the design system: semantic tokens, finite variants, responsive layout, dark mode, and visual consistency.",
+  "deterministic": true,
+  "triggers": [
+    "Styling a reusable component or page section",
+    "Adding variants, sizes, shadows, radius, focus states, or dark mode",
+    "Changing layout or responsive behaviour",
+    "Creating or using Tailwind CSS 4 tokens"
+  ],
+  "inputs": {
+    "required": [
+      "Target component or section",
+      "Existing styling conventions"
+    ],
+    "optional": [
+      "Design reference",
+      "Current CSS tokens",
+      "Supported breakpoints"
+    ]
+  },
+  "outputs": [
+    "Styling plan",
+    "Variant and size map",
+    "Responsive layout notes",
+    "Dark mode and token decisions"
+  ],
+  "completion_criteria": [
+    "Semantic tokens and existing utilities are used before any new value",
+    "Classes follow local merge-helper conventions and arbitrary values stay rare and justified",
+    "Variants and sizes are finite and typed",
+    "Responsive behaviour is explicit across supported breakpoints",
+    "Light and dark variants preserve contrast and hierarchy"
+  ],
+  "validation_criteria": [
+    "Layout holds on mobile and desktop",
+    "Focus styles remain visible",
+    "Styling does not create a parallel visual system"
+  ],
+  "failure_handling": [
+    "If consistent styling cannot be achieved without inventing a parallel visual system or drifting from existing tokens, stop and report the token/design gap instead of shipping one-off styles.",
+    "Report any variant, token, or responsive decision left unresolved because conventions or breakpoints are unknown."
+  ],
+  "escalation_path": [
+    "Route uncertain Tailwind CSS 4 token or utility behaviour through pulse-docs-research.",
+    "Escalate to the user when new design tokens, a design reference, or a visual-direction decision is required.",
+    "Hand contrast and focus semantics to pulse-accessibility-wcag and animation styling to pulse-motion-interactions."
+  ],
+  "upstream_skills": [
+    "pulse-existing-audit",
+    "pulse-architecture-boundaries",
+    "pulse-api-contract"
+  ],
+  "downstream_skills": [
+    "pulse-implementation",
+    "pulse-browser-verification",
+    "pulse-review-quality-gate"
+  ],
   "related_skills": [
     "pulse-docs-research",
-    "pulse-workflow-orchestrator"
+    "pulse-workflow-orchestrator",
+    "pulse-accessibility-wcag",
+    "pulse-motion-interactions",
+    "pulse-radix-composition"
   ],
   "rule_files": [
     "rules/responsibilities.md",
@@ -33,19 +90,5 @@
     "Component API design beyond variant naming.",
     "Motion animation logic.",
     "Accessibility semantics, though contrast and focus are shared concerns."
-  ],
-  "success_criteria": [
-    "The skill stays within its focused responsibility.",
-    "The workflow and decision points are followed.",
-    "Validation checklist items are satisfied or skipped checks are reported.",
-    "Cross-skill handoffs are explicit when another skill owns the next concern."
-  ],
-  "validation_criteria": [
-    "SKILL.md loads as the entry point.",
-    "README.md summarizes usage for humans.",
-    "AGENTS.md provides the compiled agent guide.",
-    "metadata.json exposes machine-readable discovery metadata.",
-    "rules/_sections.md indexes rule files.",
-    "rules/_template.md defines the rule-file standard."
   ]
 }

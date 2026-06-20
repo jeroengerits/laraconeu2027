@@ -7,11 +7,72 @@
   "description": "Designs TypeScript public APIs for React components in this Laravel Inertia app. Use when defining props, callbacks, controlled/uncontrolled state, slots, compound components, discriminated unions, variants, or public behaviour contracts.",
   "purpose": "Prevent prop sprawl, implementation leaks, and unclear public behaviour.",
   "scope": "Pulse API Contract",
-  "inputs": "Required: - Requirements. - Architecture boundary plan. Optional: - Existing consumers. - Radix primitive APIs. - Form or Inertia integration needs.",
-  "outputs": "- Prop interface or type. - Callback contract. - Controlled/uncontrolled decision. - Composition model. - Public behaviour notes.",
+  "single_responsibility": "The public TypeScript API of a reusable React component: prop types, callback contracts, controlled/uncontrolled state, slots, and compound-component composition.",
+  "deterministic": true,
+  "triggers": [
+    "Component exposes public or reusable props, callbacks, or slots",
+    "Adding variants, compound parts, or asChild/polymorphic rendering",
+    "Designing controlled, uncontrolled, or hybrid component state",
+    "Changing shared component props consumed by other code"
+  ],
+  "inputs": {
+    "required": [
+      "Requirements",
+      "Architecture boundary plan"
+    ],
+    "optional": [
+      "Existing consumers",
+      "Radix primitive APIs",
+      "Form or Inertia integration needs"
+    ]
+  },
+  "outputs": [
+    "Prop interface or type",
+    "Callback contract",
+    "Controlled/uncontrolled decision",
+    "Composition model",
+    "Public behaviour notes"
+  ],
+  "completion_criteria": [
+    "Props are typed, descriptive, and have intentional defaults",
+    "Callbacks are named by public event with stable, documented payloads",
+    "Controlled, uncontrolled, or hybrid state is decided",
+    "Slot, children, asChild, and compound-part contracts are defined where needed",
+    "No DOM structure, classes, timing constants, or private state leak through the API"
+  ],
+  "validation_criteria": [
+    "The API supports the required behaviour without exposing internals",
+    "Accessibility and testing needs are representable through the API",
+    "Variants and discriminated unions are finite and typed",
+    "Documentation notes are ready when the component is reusable"
+  ],
+  "failure_handling": [
+    "If the required behaviour cannot be expressed without leaking internals or causing prop sprawl, stop and report the API tension instead of shipping a sprawling or unstable contract.",
+    "Report any prop, callback, or composition decision left unresolved because consumers or requirements are unknown."
+  ],
+  "escalation_path": [
+    "Route uncertain Radix, polymorphic, or third-party library API behaviour through pulse-docs-research.",
+    "Escalate to the user when reuse scope, consumers, or a breaking API change require a scope or product decision.",
+    "Hand state-machine and effect concerns to pulse-state-effects and behaviour scenarios to pulse-tdd-planning."
+  ],
+  "upstream_skills": [
+    "pulse-requirements-analysis",
+    "pulse-architecture-boundaries"
+  ],
+  "downstream_skills": [
+    "pulse-state-effects",
+    "pulse-tdd-planning",
+    "pulse-behavior-testing",
+    "pulse-implementation",
+    "pulse-review-quality-gate"
+  ],
   "related_skills": [
     "pulse-docs-research",
-    "pulse-workflow-orchestrator"
+    "pulse-workflow-orchestrator",
+    "pulse-radix-composition",
+    "pulse-state-effects",
+    "pulse-inertia-integration",
+    "pulse-tdd-planning"
   ],
   "rule_files": [
     "rules/responsibilities.md",
@@ -33,19 +94,5 @@
     "Internal implementation.",
     "Styling token decisions.",
     "Test code, though tests should validate the contract."
-  ],
-  "success_criteria": [
-    "The skill stays within its focused responsibility.",
-    "The workflow and decision points are followed.",
-    "Validation checklist items are satisfied or skipped checks are reported.",
-    "Cross-skill handoffs are explicit when another skill owns the next concern."
-  ],
-  "validation_criteria": [
-    "SKILL.md loads as the entry point.",
-    "README.md summarizes usage for humans.",
-    "AGENTS.md provides the compiled agent guide.",
-    "metadata.json exposes machine-readable discovery metadata.",
-    "rules/_sections.md indexes rule files.",
-    "rules/_template.md defines the rule-file standard."
   ]
 }

@@ -7,12 +7,70 @@
   "description": "Applies Inertia React v3 patterns to Laravel React components. Use when components touch page props, navigation, forms, Wayfinder route helpers, deferred data, useHttp, SSR boundaries, or Inertia-specific client behaviour.",
   "purpose": "Keep page props, navigation, forms, HTTP requests, and SSR integration aligned with Inertia v3 and local project conventions.",
   "scope": "Pulse Inertia Integration",
-  "inputs": "Required: - Inertia behaviour needed. - Route or prop context. Optional: - Controller/action names. - Existing page props. - Form fields and validation errors.",
-  "outputs": "- Inertia API choice. - Route helper strategy. - Page prop boundary notes. - Loading/deferred state plan.",
+  "single_responsibility": "Inertia v3 client integration for components: page props, navigation, forms, Wayfinder route helpers, deferred data, useHttp, and SSR/hydration boundaries.",
+  "deterministic": true,
+  "triggers": [
+    "Component reads or shapes Inertia page props",
+    "Internal navigation, Wayfinder route helpers, or links are added",
+    "Server-backed forms or standalone HTTP requests are involved",
+    "Deferred props, lazy data, or SSR/hydration boundaries are relevant"
+  ],
+  "inputs": {
+    "required": [
+      "Inertia behaviour needed",
+      "Route or prop context"
+    ],
+    "optional": [
+      "Controller/action names",
+      "Existing page props",
+      "Form fields and validation errors"
+    ]
+  },
+  "outputs": [
+    "Inertia API choice",
+    "Route helper strategy",
+    "Page prop boundary notes",
+    "Loading/deferred state plan"
+  ],
+  "completion_criteria": [
+    "Navigation and form APIs match Inertia intent (`<Link>`, `<Form<T>>`, `useForm`, `useFormContext<T>`, or `useHttp`)",
+    "Wayfinder helpers from `@/actions` or `@/routes` are used when route integration is needed",
+    "Page props are serializable, minimal, and stable",
+    "Deferred or lazy data has a visible empty, loading, or error fallback",
+    "Initial render stays stable for SSR/hydration"
+  ],
+  "validation_criteria": [
+    "Hydration boundary is safe",
+    "Route integration is typed when practical",
+    "Verification includes relevant page behaviour"
+  ],
+  "failure_handling": [
+    "If the correct Inertia or Wayfinder API cannot be confirmed, stop and report the uncertainty instead of guessing at an integration that risks hydration mismatches or broken navigation.",
+    "Report any page-prop, form, or route decision left unresolved because controller, route, or prop context is unknown."
+  ],
+  "escalation_path": [
+    "Route uncertain Inertia v3 or Wayfinder API behaviour through pulse-docs-research and `inertia-react-development`.",
+    "Escalate to the user when behaviour requires backend controller, route, or page-prop changes outside this skill's scope.",
+    "Hand generic state mechanics to pulse-state-effects and public prop shape to pulse-api-contract."
+  ],
+  "upstream_skills": [
+    "pulse-requirements-analysis",
+    "pulse-docs-research",
+    "pulse-architecture-boundaries"
+  ],
+  "downstream_skills": [
+    "pulse-state-effects",
+    "pulse-implementation",
+    "pulse-behavior-testing",
+    "pulse-browser-verification",
+    "pulse-review-quality-gate"
+  ],
   "related_skills": [
     "inertia-react-development",
     "pulse-docs-research",
-    "pulse-workflow-orchestrator"
+    "pulse-workflow-orchestrator",
+    "pulse-api-contract",
+    "pulse-state-effects"
   ],
   "rule_files": [
     "rules/responsibilities.md",
@@ -33,19 +91,5 @@
     "Backend controller or route implementation.",
     "Generic React state design not tied to Inertia.",
     "Visual styling."
-  ],
-  "success_criteria": [
-    "The skill stays within its focused responsibility.",
-    "The workflow and decision points are followed.",
-    "Validation checklist items are satisfied or skipped checks are reported.",
-    "Cross-skill handoffs are explicit when another skill owns the next concern."
-  ],
-  "validation_criteria": [
-    "SKILL.md loads as the entry point.",
-    "README.md summarizes usage for humans.",
-    "AGENTS.md provides the compiled agent guide.",
-    "metadata.json exposes machine-readable discovery metadata.",
-    "rules/_sections.md indexes rule files.",
-    "rules/_template.md defines the rule-file standard."
   ]
 }

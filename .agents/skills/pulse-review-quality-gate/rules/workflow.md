@@ -1,10 +1,19 @@
 # Workflow
 
-1. Compare implementation to requirements.
-2. Check changed public APIs and consumers.
-3. Confirm non-obvious API choices were backed by local conventions, supporting skills, Laravel Boost, Context7, or official web docs.
-4. Check accessibility, keyboard, focus, and native gestures.
-5. Check responsive layout, dark mode, and design tokens.
-6. Check render purity, lazy loading, imports, and request impact.
-7. Check tests cover meaningful behaviour.
-8. Confirm docs were updated only when explicitly requested or when an existing docs file needed a scoped update.
+This skill is an aggregator. It enforces Gate 2 (Definition of Done) by delegating each
+concern to the domain owner's Completion checklist, instead of restating domain checks.
+
+1. Identify which concerns the change touched, using the routing signals in
+   [workflow-routing.md](../../pulse-workflow-orchestrator/references/workflow-routing.md).
+2. For each touched concern, confirm the owning skill's `rules/checklists.md` Completion
+   items, per
+   [review-aggregation.md](../../pulse-workflow-orchestrator/references/review-aggregation.md).
+   Do not restate those domain checks here.
+3. Confirm the structural Gate 2 items in
+   [validation-gates.md](../../pulse-workflow-orchestrator/references/validation-gates.md)
+   that are not owned by a single skill (for example "existing patterns reused where
+   practical").
+4. Confirm non-obvious API choices were backed by local conventions, supporting skills,
+   Laravel Boost, Context7, or official web docs.
+5. Record findings by severity, naming the owning skill for each.
+6. Report every failed, skipped, or unverifiable item; do not hide skipped checks.

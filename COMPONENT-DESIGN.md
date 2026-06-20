@@ -108,13 +108,33 @@ pulse-workflow-orchestrator
       -> pulse-motion-interactions
       -> pulse-media-assets
       -> pulse-performance-vercel
+  -> [Gate 1: Definition of Ready]
   -> pulse-tdd-planning
       -> pulse-behavior-testing
   -> pulse-implementation
+      -> pulse-refactor-safety   (when changing existing components without changing behaviour)
   -> pulse-browser-verification
   -> pulse-documentation-dx
-  -> pulse-review-quality-gate
+  -> pulse-review-quality-gate   (enforces Gate 2: Definition of Done)
 ```
+
+## Shared References And Routing
+
+The orchestrator and review gate are powered by shared assets owned by
+`pulse-workflow-orchestrator/references/`. These are the single source of truth; skills
+reference them instead of duplicating the content.
+
+- `references/workflow-routing.md` - deterministic task-signal to skill-subset routing matrix.
+- `references/validation-gates.md` - Gate 1 (Definition of Ready) and Gate 2 (Definition of Done).
+- `references/review-aggregation.md` - maps the review gate to each domain skill's Completion checklist.
+- `references/skill-contract.md` - the `metadata.json` contract every skill satisfies.
+- `references/skill-structure.md` - the "well-formed skill" conformance standard.
+- `references/documentation-discipline.md` - shared documentation-source rule.
+
+`pulse-create-component` gathers the brief and hands off. `pulse-workflow-orchestrator` is a
+lightweight, deterministic coordinator: it selects the minimal skill subset from the routing
+matrix, enforces both gates, and delegates review to domain owners. It does not implement
+domain logic.
 
 Skills can be used independently when the task is narrow. For example, use only
 `pulse-behavior-testing` when adding focused component tests,
@@ -144,13 +164,16 @@ Default end-to-end order:
     `pulse-performance-vercel`.
 11. `pulse-tdd-planning`
 12. `pulse-behavior-testing`
-13. `pulse-implementation`
-14. `pulse-browser-verification`
-15. `pulse-documentation-dx`
-16. `pulse-review-quality-gate`
+13. Gate 1: Definition of Ready (enforced by the orchestrator).
+14. `pulse-implementation` (use `pulse-refactor-safety` when changing existing
+    components without changing behaviour).
+15. `pulse-browser-verification`
+16. `pulse-documentation-dx`
+17. `pulse-review-quality-gate` (enforces Gate 2: Definition of Done).
 
-Use the smallest subset that covers the request. Do not run every skill for a
-minor local change.
+Routing is deterministic: the orchestrator selects skills from
+`pulse-workflow-orchestrator/references/workflow-routing.md`. Use the smallest subset that
+covers the request. Do not run every skill for a minor local change.
 
 ## Documentation Research
 
@@ -224,6 +247,11 @@ Use these choices when imported reference skills conflict with this app:
 
 ## Definition Of Ready
 
+This is Gate 1, enforced by `pulse-workflow-orchestrator` before implementation. The
+operational gate definition lives in
+`pulse-workflow-orchestrator/references/validation-gates.md`, which names the owning skill
+for each item so a failed gate routes back deterministically.
+
 Before implementation starts, the agent should know:
 
 - User goal, non-goals, constraints, and target workflow.
@@ -236,6 +264,11 @@ Before implementation starts, the agent should know:
 - Verification commands and browser checks needed.
 
 ## Definition Of Done
+
+This is Gate 2, enforced by `pulse-review-quality-gate`, which delegates each item to the
+domain owner's Completion checklist (see
+`pulse-workflow-orchestrator/references/review-aggregation.md`). The operational gate
+definition lives in `pulse-workflow-orchestrator/references/validation-gates.md`.
 
 A component change is complete only when:
 

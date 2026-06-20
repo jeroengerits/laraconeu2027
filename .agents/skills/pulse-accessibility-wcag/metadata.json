@@ -7,10 +7,65 @@
   "description": "Plans, implements, and reviews accessibility for React components in this Laravel Inertia app. Use for WCAG 2.2, semantic HTML, ARIA, keyboard navigation, focus management, screen readers, touch targets, reduced motion, and accessible interaction alternatives.",
   "purpose": "Ensure components are usable with keyboard, screen readers, touch, reduced motion, and native browser behaviours.",
   "scope": "Pulse Accessibility WCAG",
-  "inputs": "Required: - Component behaviour and UI structure. - Interaction requirements. Optional: - Radix primitive docs. - Known accessibility issue. - Browser or assistive tech target.",
-  "outputs": "- Accessibility plan. - Keyboard and focus model. - ARIA and semantic decisions. - Reduced-motion and touch requirements. - Test scenarios.",
+  "single_responsibility": "Accessibility of React components: WCAG 2.2 AA, semantic HTML, ARIA, keyboard, focus, screen reader, reduced motion, and touch.",
+  "deterministic": true,
+  "triggers": [
+    "Component has interaction, focus management, or keyboard navigation",
+    "Radix primitives, overlays, or custom gestures are involved",
+    "Reviewing an accessibility regression"
+  ],
+  "inputs": {
+    "required": [
+      "Component behaviour and UI structure",
+      "Interaction requirements"
+    ],
+    "optional": [
+      "Radix primitive docs",
+      "Known accessibility issue",
+      "Browser or assistive tech target"
+    ]
+  },
+  "outputs": [
+    "Accessibility plan",
+    "Keyboard and focus model",
+    "ARIA and semantic decisions",
+    "Reduced-motion and touch requirements",
+    "Test scenarios"
+  ],
+  "completion_criteria": [
+    "Semantic elements are chosen before ARIA",
+    "Keyboard entry, movement, trapping, and restoration are defined",
+    "Controls are connected to labels, descriptions, and errors",
+    "Reduced-motion behaviour is defined for animated or autoplaying surfaces"
+  ],
+  "validation_criteria": [
+    "Keyboard-only flow works end to end",
+    "Screen reader names and states are meaningful",
+    "Reduced motion is respected",
+    "Colour contrast and visible focus hold in light and dark modes"
+  ],
+  "failure_handling": [
+    "If accessible behaviour cannot be achieved with semantic HTML or available primitives, stop and report the gap instead of shipping inaccessible markup.",
+    "Report any accessibility check that could not be verified with available tooling."
+  ],
+  "escalation_path": [
+    "Route uncertain ARIA, Radix, or assistive-technology behaviour through pulse-docs-research.",
+    "Escalate to the user when an accessible alternative requires a design or scope change."
+  ],
+  "upstream_skills": [
+    "pulse-requirements-analysis",
+    "pulse-architecture-boundaries"
+  ],
+  "downstream_skills": [
+    "pulse-tdd-planning",
+    "pulse-behavior-testing",
+    "pulse-browser-verification",
+    "pulse-review-quality-gate"
+  ],
   "related_skills": [
     "pulse-docs-research",
+    "pulse-radix-composition",
+    "pulse-motion-interactions",
     "pulse-workflow-orchestrator"
   ],
   "rule_files": [
@@ -34,19 +89,5 @@
     "Visual styling beyond focus visibility, contrast, and target size.",
     "Radix internals.",
     "Test implementation, though tests should validate accessible outcomes."
-  ],
-  "success_criteria": [
-    "The skill stays within its focused responsibility.",
-    "The workflow and decision points are followed.",
-    "Validation checklist items are satisfied or skipped checks are reported.",
-    "Cross-skill handoffs are explicit when another skill owns the next concern."
-  ],
-  "validation_criteria": [
-    "SKILL.md loads as the entry point.",
-    "README.md summarizes usage for humans.",
-    "AGENTS.md provides the compiled agent guide.",
-    "metadata.json exposes machine-readable discovery metadata.",
-    "rules/_sections.md indexes rule files.",
-    "rules/_template.md defines the rule-file standard."
   ]
 }

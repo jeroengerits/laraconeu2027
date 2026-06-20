@@ -7,10 +7,74 @@
   "description": "Implements approved React component plans in this Laravel Inertia app. Use after discovery, requirements, architecture, API, accessibility, performance, and testing decisions are made, to edit component, hook, helper, style, and test files following local conventions.",
   "purpose": "Translate approved component decisions into code that follows React 19, TypeScript, Inertia, Tailwind, Radix, Motion, and local project conventions.",
   "scope": "Pulse Implementation",
-  "inputs": "Required: - Component plan. - Target files or locations. - Applicable skill outputs. Optional: - Failing tests. - Browser logs. - Screenshots.",
-  "outputs": "- Code changes. - Test or verification changes when needed. - Verification results. - Brief implementation summary.",
+  "single_responsibility": "Translate approved component decisions into scoped code changes that follow React 19, TypeScript, Inertia, Tailwind, Radix, Motion, and local project conventions.",
+  "deterministic": true,
+  "triggers": [
+    "An approved plan is clear enough to edit files",
+    "The user approved implementation of a component, bug fix, or refactor",
+    "Outputs from design and test skills are ready to apply in code"
+  ],
+  "inputs": {
+    "required": [
+      "Component plan",
+      "Target files or locations",
+      "Applicable skill outputs"
+    ],
+    "optional": [
+      "Failing tests",
+      "Browser logs",
+      "Screenshots"
+    ]
+  },
+  "outputs": [
+    "Code changes",
+    "Test or verification changes when needed",
+    "Verification results",
+    "Brief implementation summary"
+  ],
+  "completion_criteria": [
+    "Code changes are applied using local patterns and stay scoped to the task",
+    "Outputs from upstream design and test skills are reflected in the code",
+    "The smallest reliable checks were run or explicitly reported as skipped",
+    "An implementation summary names the files changed"
+  ],
+  "validation_criteria": [
+    "Verification ran or was reported as skipped",
+    "Summary names the files changed",
+    "Residual risks are clear",
+    "No unrelated refactors were introduced"
+  ],
+  "failure_handling": [
+    "If implementation reveals a boundary, API, or dependency issue beyond the plan, stop and route back instead of silently expanding scope.",
+    "When blocked, report the files changed, the checks run or skipped, and the residual risks."
+  ],
+  "escalation_path": [
+    "Route uncertain Inertia, React, Motion, Radix, Tailwind, testing, or Vite APIs through pulse-docs-research.",
+    "Route boundary or structure problems to pulse-architecture-boundaries and public API changes to pulse-api-contract.",
+    "Escalate new dependencies, asset-loading, or SSR boundary changes to the user."
+  ],
+  "upstream_skills": [
+    "pulse-architecture-boundaries",
+    "pulse-api-contract",
+    "pulse-state-effects",
+    "pulse-inertia-integration",
+    "pulse-radix-composition",
+    "pulse-tailwind-design-system",
+    "pulse-accessibility-wcag",
+    "pulse-motion-interactions",
+    "pulse-media-assets",
+    "pulse-performance-vercel",
+    "pulse-tdd-planning",
+    "pulse-behavior-testing"
+  ],
+  "downstream_skills": [
+    "pulse-browser-verification",
+    "pulse-documentation-dx",
+    "pulse-review-quality-gate"
+  ],
   "related_skills": [
     "pulse-docs-research",
+    "pulse-refactor-safety",
     "pulse-workflow-orchestrator"
   ],
   "rule_files": [
@@ -32,19 +96,5 @@
     "Rewriting the architecture mid-implementation without surfacing why.",
     "Creating new dependencies without approval.",
     "Reverting unrelated user changes."
-  ],
-  "success_criteria": [
-    "The skill stays within its focused responsibility.",
-    "The workflow and decision points are followed.",
-    "Validation checklist items are satisfied or skipped checks are reported.",
-    "Cross-skill handoffs are explicit when another skill owns the next concern."
-  ],
-  "validation_criteria": [
-    "SKILL.md loads as the entry point.",
-    "README.md summarizes usage for humans.",
-    "AGENTS.md provides the compiled agent guide.",
-    "metadata.json exposes machine-readable discovery metadata.",
-    "rules/_sections.md indexes rule files.",
-    "rules/_template.md defines the rule-file standard."
   ]
 }

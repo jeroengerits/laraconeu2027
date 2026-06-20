@@ -7,11 +7,68 @@
   "description": "Reviews completed React component work in this Laravel Inertia app. Use before finalizing component changes to check requirements, architecture, API, accessibility, design system, Motion, performance, tests, browser behaviour, documentation, and maintainability.",
   "purpose": "Catch regressions and missing verification before reporting completion.",
   "scope": "Pulse Review Quality Gate",
-  "inputs": "Required: - Changed files. - Requirements or intended behaviour. Optional: - Test results. - Browser logs. - Build output. - Screenshots.",
-  "outputs": "- Findings by severity when reviewing. - Completion checklist. - Verification summary. - Residual risks.",
+  "single_responsibility": "Enforce Gate 2 (Definition of Done) by aggregating domain Completion checklists. It delegates domain checks to their owners rather than redefining them.",
+  "deterministic": true,
+  "triggers": [
+    "Component implementation or refactor is complete",
+    "The user asks for a review",
+    "A change touches shared code, interaction, accessibility, media, or performance"
+  ],
+  "inputs": {
+    "required": [
+      "Changed files",
+      "Requirements or intended behaviour"
+    ],
+    "optional": [
+      "Test results",
+      "Browser logs",
+      "Build output",
+      "Screenshots"
+    ]
+  },
+  "outputs": [
+    "Findings by severity, each naming the owning skill",
+    "Gate 2 (Definition of Done) status",
+    "Verification summary",
+    "Residual risks"
+  ],
+  "completion_criteria": [
+    "Touched concerns are identified from the routing signals",
+    "Each touched concern is confirmed against its owner's Completion checklist",
+    "Structural Gate 2 items not owned by a single skill are confirmed",
+    "Every failed, skipped, or unverifiable item is reported"
+  ],
+  "validation_criteria": [
+    "No known blocker remains, or it is reported with its owning skill",
+    "Verification status is clear",
+    "Final summary is concise and actionable",
+    "Review delegates to domain checklists rather than restating them"
+  ],
+  "failure_handling": [
+    "Do not report completion while a Gate 2 item is unmet; route the unmet item back to its owning skill.",
+    "Do not perform large new refactors during review; report them as follow-up instead."
+  ],
+  "escalation_path": [
+    "Route unknown framework or library behaviour to pulse-docs-research.",
+    "Escalate to the user when a fix requires a scope, dependency, or product decision."
+  ],
+  "upstream_skills": [
+    "pulse-implementation",
+    "pulse-behavior-testing",
+    "pulse-browser-verification",
+    "pulse-documentation-dx"
+  ],
+  "downstream_skills": [
+    "pulse-workflow-orchestrator"
+  ],
   "related_skills": [
     "pulse-docs-research",
     "pulse-workflow-orchestrator"
+  ],
+  "references": [
+    "../pulse-workflow-orchestrator/references/validation-gates.md",
+    "../pulse-workflow-orchestrator/references/review-aggregation.md",
+    "../pulse-workflow-orchestrator/references/workflow-routing.md"
   ],
   "rule_files": [
     "rules/responsibilities.md",
@@ -31,20 +88,7 @@
   "non_responsibilities": [
     "Performing large new refactors during review.",
     "Replacing automated tests.",
-    "Hiding skipped checks."
-  ],
-  "success_criteria": [
-    "The skill stays within its focused responsibility.",
-    "The workflow and decision points are followed.",
-    "Validation checklist items are satisfied or skipped checks are reported.",
-    "Cross-skill handoffs are explicit when another skill owns the next concern."
-  ],
-  "validation_criteria": [
-    "SKILL.md loads as the entry point.",
-    "README.md summarizes usage for humans.",
-    "AGENTS.md provides the compiled agent guide.",
-    "metadata.json exposes machine-readable discovery metadata.",
-    "rules/_sections.md indexes rule files.",
-    "rules/_template.md defines the rule-file standard."
+    "Hiding skipped checks.",
+    "Redefining domain checks owned by other skills."
   ]
 }

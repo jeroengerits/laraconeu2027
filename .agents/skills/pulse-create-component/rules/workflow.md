@@ -21,21 +21,13 @@
     - Approval mode:
     ```
 
-5. Select the relevant skill sequence:
-    - Always start with `pulse-workflow-orchestrator`.
-    - Use `pulse-requirements-analysis` when acceptance criteria need definition.
-    - Use `pulse-existing-audit` and `pulse-reuse-decision` before new code.
-    - Use Laravel Boost `search-docs` before code changes.
-    - Use `pulse-docs-research` for focused follow-up when API details,
-      hydration behaviour, gestures, accessibility, lazy loading, testing, or
-      browser behaviour may have changed.
-    - Let `pulse-docs-research` choose Laravel Boost `search-docs`, Context7,
-      local supporting skills, or web search based on the source order in
-      `COMPONENT-DESIGN.md`.
-    - Use focused skills for API, state, Inertia, Radix, Tailwind,
-      accessibility, Motion, media, performance, TDD, implementation, browser
-      verification, documentation, and review as needed.
-6. Present the brief and proposed skill sequence.
+5. Do not select the full skill sequence here. Skill selection is the
+   orchestrator's job; it selects the minimal subset deterministically from
+   [workflow-routing.md](../../pulse-workflow-orchestrator/references/workflow-routing.md).
+   Note any obvious signals from the brief (Inertia, Radix, Motion, media,
+   performance, tests) so the orchestrator can route, but do not enumerate
+   every skill.
+6. Present the brief and a plan-first or implement-now recommendation.
 7. If approval is required, ask for approval before implementation.
-8. If implementation is approved or clearly requested, hand off to
-   `pulse-workflow-orchestrator`.
+8. Hand off to `pulse-workflow-orchestrator` with the gathered brief when
+   implementation is approved or clearly requested.

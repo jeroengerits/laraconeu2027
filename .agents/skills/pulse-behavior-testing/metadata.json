@@ -7,12 +7,65 @@
   "description": "Writes and maintains behaviour-driven React component tests in this Laravel app using Jest, React Testing Library, user-event, and jest-dom. Use for user interactions, keyboard accessibility, focus, async states, callbacks, validation, public API contracts, and regression tests.",
   "purpose": "Implement tests that protect visible behaviour, accessibility, and public API contracts while allowing internals to change.",
   "scope": "Pulse Behavior Testing",
-  "inputs": "Required: - Behaviour scenarios. - Component or hook under test. Optional: - Existing test utilities. - Mocking requirements. - Async or network boundary details.",
-  "outputs": "- Behaviour tests. - Test utilities only when justified. - Test command results or skipped-test explanation.",
+  "single_responsibility": "Authoring behaviour-driven Jest + React Testing Library tests for visible behaviour, accessibility, and public API contracts.",
+  "deterministic": true,
+  "triggers": [
+    "A test plan or behaviour scenarios exist to implement",
+    "Component behaviour is changing",
+    "A regression needs test coverage",
+    "Accessibility or keyboard behaviour must be verified in tests"
+  ],
+  "inputs": {
+    "required": [
+      "Behaviour scenarios",
+      "Component or hook under test"
+    ],
+    "optional": [
+      "Existing test utilities",
+      "Mocking requirements",
+      "Async or network boundary details"
+    ]
+  },
+  "outputs": [
+    "Behaviour tests",
+    "Test utilities only when justified",
+    "Test command results or skipped-test explanation"
+  ],
+  "completion_criteria": [
+    "Tests use `screen` and accessible queries such as `getByRole` and `getByLabelText`",
+    "Interactions use `@testing-library/user-event`",
+    "Visible behaviour and public callbacks are asserted with `jest-dom` matchers",
+    "The narrowest relevant test command has been run or a tooling gap is reported"
+  ],
+  "validation_criteria": [
+    "Tests fail for meaningful regressions",
+    "Tests avoid implementation details",
+    "Test results are reported"
+  ],
+  "failure_handling": [
+    "If React test tooling is not configured, stop and report the gap instead of adding it unrequested.",
+    "Report any scenario that cannot be tested through accessible, user-observable behaviour."
+  ],
+  "escalation_path": [
+    "Route uncertain Jest, React Testing Library, `user-event`, or `jest-dom` APIs through jest-react-testing or pulse-docs-research.",
+    "Escalate to the user when test tooling must be added or a behaviour scenario is ambiguous.",
+    "Return missing or unclear scenarios to pulse-tdd-planning."
+  ],
+  "upstream_skills": [
+    "pulse-tdd-planning",
+    "pulse-implementation"
+  ],
+  "downstream_skills": [
+    "pulse-browser-verification",
+    "pulse-review-quality-gate"
+  ],
   "related_skills": [
     "jest-react-testing",
     "pulse-docs-research",
-    "pulse-workflow-orchestrator"
+    "pulse-workflow-orchestrator",
+    "pulse-accessibility-wcag",
+    "pulse-api-contract",
+    "pulse-refactor-safety"
   ],
   "rule_files": [
     "rules/responsibilities.md",
@@ -35,19 +88,5 @@
     "Snapshot testing large components.",
     "Testing Tailwind classes, private state, Motion configuration, or Radix internals.",
     "Browser/manual verification."
-  ],
-  "success_criteria": [
-    "The skill stays within its focused responsibility.",
-    "The workflow and decision points are followed.",
-    "Validation checklist items are satisfied or skipped checks are reported.",
-    "Cross-skill handoffs are explicit when another skill owns the next concern."
-  ],
-  "validation_criteria": [
-    "SKILL.md loads as the entry point.",
-    "README.md summarizes usage for humans.",
-    "AGENTS.md provides the compiled agent guide.",
-    "metadata.json exposes machine-readable discovery metadata.",
-    "rules/_sections.md indexes rule files.",
-    "rules/_template.md defines the rule-file standard."
   ]
 }

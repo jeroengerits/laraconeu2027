@@ -7,11 +7,70 @@
   "description": "Designs Radix-inspired React component composition in this Laravel app. Use when building dialogs, menus, popovers, tabs, accordions, selects, switches, compound components, slots, asChild APIs, portals, or controlled/uncontrolled primitives.",
   "purpose": "Avoid reimplementing complex accessibility behaviour and keep component APIs flexible without leaking DOM internals.",
   "scope": "Pulse Radix Composition",
-  "inputs": "Required: - Interaction type. - API contract or composition need. Optional: - Radix docs findings. - Existing local wrapper patterns. - Accessibility requirements.",
-  "outputs": "- Primitive/composition choice. - Compound part list. - Slot and `asChild` guidance. - Portal/layering notes.",
+  "single_responsibility": "Composition of complex interactive components on Radix primitives: primitive selection, compound parts, slots, asChild, portals, and public data-attribute styling.",
+  "deterministic": true,
+  "triggers": [
+    "Building a dialog, menu, popover, tabs, accordion, select, or switch",
+    "Wrapping or styling Radix UI primitives",
+    "Designing compound components with coordinated parts",
+    "Using asChild, slots, portals, or state data attributes"
+  ],
+  "inputs": {
+    "required": [
+      "Interaction type",
+      "API contract or composition need"
+    ],
+    "optional": [
+      "Radix docs findings",
+      "Existing local wrapper patterns",
+      "Accessibility requirements"
+    ]
+  },
+  "outputs": [
+    "Primitive/composition choice",
+    "Compound part list",
+    "Slot and `asChild` guidance",
+    "Portal/layering notes"
+  ],
+  "completion_criteria": [
+    "A Radix primitive or native HTML is chosen to fit the interaction's complexity",
+    "Radix focus, keyboard, ARIA, disabled, and portal behaviour is preserved",
+    "Compound parts and slots are exposed only when consumers need layout control",
+    "Styling targets public data attributes, not private DOM structure",
+    "Custom `asChild` children spread props and accept/pass refs"
+  ],
+  "validation_criteria": [
+    "API remains composable",
+    "Accessibility behaviour is preserved",
+    "Tests cover public outcomes, not Radix internals"
+  ],
+  "failure_handling": [
+    "If accessible interaction cannot be preserved with native HTML or an available Radix primitive, stop and report the gap instead of hand-rolling complex keyboard, focus, or ARIA behaviour.",
+    "Report any composition, slot, or portal decision left unresolved because the interaction or Radix API is unconfirmed."
+  ],
+  "escalation_path": [
+    "Route uncertain Radix primitive or asChild API behaviour through pulse-docs-research (Context7).",
+    "Hand semantic, keyboard, and screen-reader requirements to pulse-accessibility-wcag and public prop shape to pulse-api-contract.",
+    "Escalate to the user when the required interaction needs a new dependency or a scope change."
+  ],
+  "upstream_skills": [
+    "pulse-requirements-analysis",
+    "pulse-architecture-boundaries",
+    "pulse-api-contract"
+  ],
+  "downstream_skills": [
+    "pulse-accessibility-wcag",
+    "pulse-tailwind-design-system",
+    "pulse-implementation",
+    "pulse-behavior-testing",
+    "pulse-review-quality-gate"
+  ],
   "related_skills": [
     "pulse-docs-research",
-    "pulse-workflow-orchestrator"
+    "pulse-workflow-orchestrator",
+    "pulse-accessibility-wcag",
+    "pulse-api-contract",
+    "pulse-tailwind-design-system"
   ],
   "rule_files": [
     "rules/responsibilities.md",
@@ -33,19 +92,5 @@
     "Tailwind token selection.",
     "Business logic.",
     "Testing implementation."
-  ],
-  "success_criteria": [
-    "The skill stays within its focused responsibility.",
-    "The workflow and decision points are followed.",
-    "Validation checklist items are satisfied or skipped checks are reported.",
-    "Cross-skill handoffs are explicit when another skill owns the next concern."
-  ],
-  "validation_criteria": [
-    "SKILL.md loads as the entry point.",
-    "README.md summarizes usage for humans.",
-    "AGENTS.md provides the compiled agent guide.",
-    "metadata.json exposes machine-readable discovery metadata.",
-    "rules/_sections.md indexes rule files.",
-    "rules/_template.md defines the rule-file standard."
   ]
 }

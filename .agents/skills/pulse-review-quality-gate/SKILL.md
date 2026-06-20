@@ -61,6 +61,16 @@ Read the relevant rule files in `rules/` before acting with this skill. Read all
 | [Checklists](rules/checklists.md)                             | Pre-flight, execution, and completion checks.      |
 | [Documentation Discipline](rules/documentation-discipline.md) | Shared documentation-source rule for code changes. |
 
+## Aggregation Model
+
+This skill is an aggregator, not a second source of domain rules. It enforces Gate 2
+(Definition of Done) by delegating each touched concern to the domain owner's
+`rules/checklists.md` Completion section. It does not restate accessibility, performance,
+API, or design checks.
+
+- Gate definition: [validation-gates.md](../pulse-workflow-orchestrator/references/validation-gates.md)
+- Delegation map: [review-aggregation.md](../pulse-workflow-orchestrator/references/review-aggregation.md)
+
 ## Process
 
 Follow [Workflow](rules/workflow.md) first, then apply [Decision Points](rules/decision-points.md) and [Checklists](rules/checklists.md) before finalizing. Use [Responsibilities](rules/responsibilities.md) and [Non-Responsibilities](rules/non-responsibilities.md) to keep ownership narrow.

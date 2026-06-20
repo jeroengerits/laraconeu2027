@@ -7,11 +7,71 @@
   "description": "Designs React state, effects, refs, memoization, subscriptions, cleanup, and hydration-safe render logic for components in this Laravel Inertia React 19 app. Use when local state, effects, subscriptions, browser stores, refs, memoization, or hydration-safe rendering decisions are needed.",
   "purpose": "Avoid derived state bugs, effect misuse, stale closures, hydration mismatches, and unnecessary renders.",
   "scope": "Pulse State Effects",
-  "inputs": "Required: - Component architecture. - Behaviour requirements. Optional: - Hydration warnings. - Performance symptoms. - Existing hook code.",
-  "outputs": "- State model. - Effect plan. - Ref and cleanup plan. - Hydration safety notes. - Hook extraction guidance.",
+  "single_responsibility": "React component state mechanics: state shape and ownership, effects and cleanup, refs, memoization, external stores, and hydration-safe render.",
+  "deterministic": true,
+  "triggers": [
+    "Component needs local state, effects, subscriptions, timers, observers, or refs",
+    "Hydration mismatch risk exists at the server/client boundary",
+    "Memoization, external browser stores, or event-handler vs effect decisions are needed",
+    "A custom hook is being extracted"
+  ],
+  "inputs": {
+    "required": [
+      "Component architecture",
+      "Behaviour requirements"
+    ],
+    "optional": [
+      "Hydration warnings",
+      "Performance symptoms",
+      "Existing hook code"
+    ]
+  },
+  "outputs": [
+    "State model",
+    "Effect plan",
+    "Ref and cleanup plan",
+    "Hydration safety notes",
+    "Hook extraction guidance"
+  ],
+  "completion_criteria": [
+    "State shape and ownership are decided and kept minimal",
+    "Derived state is computed during render, not duplicated",
+    "Effects have narrow dependencies and clean up timers, frames, observers, requests, and listeners",
+    "Initial render is deterministic with no browser-only branches",
+    "Memoization is applied only for real cost or identity boundaries"
+  ],
+  "validation_criteria": [
+    "State shape is minimal",
+    "No browser-only branch breaks hydration",
+    "Hook extraction remains reusable and typed"
+  ],
+  "failure_handling": [
+    "If a deterministic first render cannot be achieved or an effect cannot be made safe, stop and report the hydration or effect risk instead of suppressing warnings or shipping non-deterministic render.",
+    "Report any state, effect, or cleanup decision left unresolved because behaviour or SSR context is unknown."
+  ],
+  "escalation_path": [
+    "Route uncertain React 19, hydration, or external-store API behaviour through pulse-docs-research.",
+    "Hand public API and prop shape concerns to pulse-api-contract and broader render-cost review to pulse-performance-vercel.",
+    "Escalate to the user when fixing state behaviour requires a scope or dependency change."
+  ],
+  "upstream_skills": [
+    "pulse-requirements-analysis",
+    "pulse-architecture-boundaries",
+    "pulse-api-contract"
+  ],
+  "downstream_skills": [
+    "pulse-tdd-planning",
+    "pulse-behavior-testing",
+    "pulse-implementation",
+    "pulse-performance-vercel",
+    "pulse-review-quality-gate"
+  ],
   "related_skills": [
     "pulse-docs-research",
-    "pulse-workflow-orchestrator"
+    "pulse-workflow-orchestrator",
+    "pulse-inertia-integration",
+    "pulse-motion-interactions",
+    "pulse-performance-vercel"
   ],
   "rule_files": [
     "rules/responsibilities.md",
@@ -34,19 +94,5 @@
     "Public API design.",
     "Motion-specific animation values.",
     "Performance review beyond state/effect mechanics."
-  ],
-  "success_criteria": [
-    "The skill stays within its focused responsibility.",
-    "The workflow and decision points are followed.",
-    "Validation checklist items are satisfied or skipped checks are reported.",
-    "Cross-skill handoffs are explicit when another skill owns the next concern."
-  ],
-  "validation_criteria": [
-    "SKILL.md loads as the entry point.",
-    "README.md summarizes usage for humans.",
-    "AGENTS.md provides the compiled agent guide.",
-    "metadata.json exposes machine-readable discovery metadata.",
-    "rules/_sections.md indexes rule files.",
-    "rules/_template.md defines the rule-file standard."
   ]
 }

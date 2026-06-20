@@ -7,11 +7,69 @@
   "description": "Plans behaviour-driven TDD for React components in this Laravel app. Use before implementing meaningful component behaviour to define user scenarios, accessibility expectations, public API contracts, red/green/refactor scope, and test coverage boundaries.",
   "purpose": "Make tests protect user-observable behaviour and public contracts rather than implementation details.",
   "scope": "Pulse TDD Planning",
-  "inputs": "Required: - Acceptance criteria. - Component API contract. Optional: - Existing tests. - Bug reproduction steps. - Accessibility plan.",
-  "outputs": "- Behaviour scenarios. - Test plan. - Red/green/refactor workflow. - Out-of-scope test list.",
+  "single_responsibility": "Behaviour-driven test planning: user scenarios, public API and accessibility expectations, and red/green/refactor scope.",
+  "deterministic": true,
+  "triggers": [
+    "Component has meaningful user-observable behaviour",
+    "Component API or accessibility behaviour is changing",
+    "A refactor needs regression protection",
+    "The user asks for TDD or tests"
+  ],
+  "inputs": {
+    "required": [
+      "Acceptance criteria",
+      "Component API contract"
+    ],
+    "optional": [
+      "Existing tests",
+      "Bug reproduction steps",
+      "Accessibility plan"
+    ]
+  },
+  "outputs": [
+    "Behaviour scenarios",
+    "Test plan",
+    "Red/green/refactor workflow",
+    "Out-of-scope test list"
+  ],
+  "completion_criteria": [
+    "Behaviour scenarios are written in user language",
+    "Accessibility, keyboard, and focus expectations are captured",
+    "Public API outcomes and callbacks are covered while internals are excluded",
+    "Each red test has a defined expected failing reason"
+  ],
+  "validation_criteria": [
+    "Tests can fail for the right reason",
+    "Behaviour testing has enough detail to implement from",
+    "Untested scope is intentional and documented"
+  ],
+  "failure_handling": [
+    "If acceptance criteria or the public API contract are undefined, stop and request them instead of inventing scenarios.",
+    "Report any behaviour that cannot be expressed as an observable scenario."
+  ],
+  "escalation_path": [
+    "Route uncertain Testing Library or accessibility query expectations through pulse-docs-research.",
+    "Escalate to the user when behaviour scope or acceptance criteria are ambiguous.",
+    "Escalate missing API or accessibility detail to pulse-api-contract or pulse-accessibility-wcag, and hand the plan to pulse-behavior-testing."
+  ],
+  "upstream_skills": [
+    "pulse-requirements-analysis",
+    "pulse-api-contract",
+    "pulse-accessibility-wcag",
+    "pulse-architecture-boundaries"
+  ],
+  "downstream_skills": [
+    "pulse-behavior-testing",
+    "pulse-implementation",
+    "pulse-refactor-safety",
+    "pulse-review-quality-gate"
+  ],
   "related_skills": [
     "pulse-docs-research",
-    "pulse-workflow-orchestrator"
+    "pulse-workflow-orchestrator",
+    "pulse-behavior-testing",
+    "pulse-api-contract",
+    "pulse-accessibility-wcag"
   ],
   "rule_files": [
     "rules/responsibilities.md",
@@ -33,19 +91,5 @@
     "Writing the actual test code.",
     "Configuring Jest from scratch unless requested.",
     "Testing CSS classes or exact DOM structure."
-  ],
-  "success_criteria": [
-    "The skill stays within its focused responsibility.",
-    "The workflow and decision points are followed.",
-    "Validation checklist items are satisfied or skipped checks are reported.",
-    "Cross-skill handoffs are explicit when another skill owns the next concern."
-  ],
-  "validation_criteria": [
-    "SKILL.md loads as the entry point.",
-    "README.md summarizes usage for humans.",
-    "AGENTS.md provides the compiled agent guide.",
-    "metadata.json exposes machine-readable discovery metadata.",
-    "rules/_sections.md indexes rule files.",
-    "rules/_template.md defines the rule-file standard."
   ]
 }

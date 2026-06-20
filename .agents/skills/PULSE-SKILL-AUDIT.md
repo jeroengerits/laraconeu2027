@@ -2,32 +2,94 @@
 
 ## Executive Summary
 
-Standardized 23 `pulse-*` skills to follow the local `vercel-react-best-practices` reference architecture. Each Pulse skill now has a loadable `SKILL.md`, human `README.md`, compiled `AGENTS.md`, machine-readable `metadata.json`, indexed `rules/_sections.md`, and reusable `rules/_template.md`.
+The 23 `pulse-*` skills now form a DRY, AI-executable React component factory built on the
+local `vercel-react-best-practices` architecture. The first standardization pass gave every
+skill a `SKILL.md`, `README.md`, `AGENTS.md`, `metadata.json`, and a `rules/` catalog. This
+refactor adds the missing AI-execution layer: a machine-readable skill contract, shared
+workflow assets, deterministic routing, wired validation gates, and a review gate that
+delegates to domain owners instead of duplicating their checks.
 
-## Complete Audit
+### Strengths
 
-| Area                          | Before                             | After                                                  |
-| ----------------------------- | ---------------------------------- | ------------------------------------------------------ |
-| Entry point                   | `SKILL.md` existed for every skill | Preserved and normalized                               |
-| Human overview                | Missing                            | Added `README.md` to every skill                       |
-| Compiled agent guide          | Missing                            | Added `AGENTS.md` to every skill                       |
-| Machine metadata              | Missing                            | Added `metadata.json` to every skill                   |
-| Rule catalog                  | Present but unindexed              | Added `rules/_sections.md` and `rules/_template.md`    |
-| Documentation-source guidance | Duplicated across skills           | Replaced with links to shared documentation discipline |
-| Cross-skill references        | Embedded in prose                  | Extracted into metadata and dependency graph           |
+- Clean single-responsibility boundaries across all 23 skills.
+- Consistent file structure matching the canonical reference skill.
+- Documentation-source guidance centralized in a shared reference.
 
-## Refactoring Plan Implemented
+### Weaknesses addressed by this refactor
 
-1. Preserve all existing skill names and focused responsibilities.
-2. Normalize `SKILL.md` sections to Purpose, When to Apply, When Not to Apply, Inputs, Outputs, Rule Catalog, Process, Decision Trees, Validation, Examples, Related Skills, Integration, How to Use, and Full Compiled Document.
-3. Generate a compiled `AGENTS.md` per skill with all rules expanded.
-4. Generate discovery metadata per skill.
-5. Add rule indexes and rule templates.
-6. Centralize repeated documentation-source rules in `pulse-workflow-orchestrator/references/documentation-discipline.md`.
+- `success_criteria` / `validation_criteria` were byte-identical boilerplate that described
+  file structure, not domain completion. Replaced with skill-specific contract fields.
+- No machine-readable failure handling, escalation, or downstream routing. Added to every
+  `metadata.json` and to each `rules/decision-points.md`.
+- Routing was a static linear list. Replaced with a deterministic routing matrix and two
+  enforced gates.
+- The review gate restated domain checks. It now delegates to domain Completion checklists.
+
+## Recommended Architecture
+
+- `pulse-create-component` is intake-only: it builds a brief and hands off.
+- `pulse-workflow-orchestrator` is a lightweight, deterministic coordinator: it selects the
+  minimal skill subset from `references/workflow-routing.md`, enforces Gate 1 (Definition of
+  Ready) and Gate 2 (Definition of Done) from `references/validation-gates.md`, and delegates
+  review via `references/review-aggregation.md`.
+- Domain owner skills own both planning and review for their domain.
+- `pulse-review-quality-gate` is an aggregator that confirms each domain owner's Completion
+  checklist rather than redefining the checks.
+
+This is Option C from the audit brief (a dynamic decision engine) implemented as a
+deterministic routing table plus gates, not a heavyweight monolithic orchestrator.
+
+## Shared Assets (owned by pulse-workflow-orchestrator/references/)
+
+| Asset                       | Purpose                                                        |
+| --------------------------- | ------------------------------------------------------------- |
+| `skill-contract.md`         | The `metadata.json` contract every skill must satisfy.        |
+| `skill-structure.md`        | The "well-formed skill" conformance standard (was per-skill). |
+| `validation-gates.md`       | Gate 1 (Definition of Ready) and Gate 2 (Definition of Done). |
+| `workflow-routing.md`       | Deterministic task-signal to skill-subset routing matrix.     |
+| `review-aggregation.md`     | Maps the review gate to domain Completion checklists.         |
+| `documentation-discipline.md` | Shared documentation-source rule (pre-existing).            |
+
+## Skill Contract (added to every metadata.json)
+
+Each `metadata.json` now exposes: `single_responsibility`, `deterministic`, `triggers`,
+structured `inputs` (`required`/`optional`), `outputs`, skill-specific `completion_criteria`
+and `validation_criteria`, `failure_handling`, `escalation_path`, `upstream_skills`,
+`downstream_skills`, plus the existing `responsibilities`, `non_responsibilities`,
+`related_skills`, and `rule_files`. The old generic `success_criteria` and the file-structure
+`validation_criteria` were removed; structure conformance now lives once in
+`skill-structure.md`.
+
+## Duplication Audit And Disposition
+
+- Documentation-source guidance: already centralized; per-skill pointer files kept.
+- `success_criteria` / `validation_criteria` boilerplate: removed; replaced with
+  skill-specific contract fields. Structure conformance centralized in `skill-structure.md`.
+- Review checks restated in the review gate: centralized via `review-aggregation.md`; the
+  gate now delegates to domain Completion checklists.
+- Definition of Ready / Definition of Done: single operational source in
+  `validation-gates.md`, referenced by `COMPONENT-DESIGN.md`, the orchestrator, and the
+  review gate.
+
+## Reusable Skill Extraction Decision
+
+No new `-review` skills were created. The suggested reusable skills already exist as domain
+owners (`pulse-accessibility-wcag`, `pulse-performance-vercel`, `pulse-api-contract`,
+`pulse-motion-interactions`, `pulse-tdd-planning`, `pulse-review-quality-gate`,
+`pulse-documentation-dx`). Creating parallel `-review` skills would add duplication, not
+remove it. The reusable extraction is therefore shared assets and a skill contract, not new
+skills.
+
+## Refactoring Plan (executed)
+
+- Added: 0 new functional skills; 5 shared reference assets.
+- Merged / Split / Removed / Renamed: none. Boundaries were already clean; names preserved.
+- Standardized: every `metadata.json` to the skill contract; every `rules/decision-points.md`
+  gained a Failure and Escalation section; every `AGENTS.md` regenerated to match.
+- Restructured: orchestrator to deterministic coordinator; create-component to intake-only;
+  review gate to delegating aggregator.
 
 ## Standard Folder Structure
-
-Each `pulse-*` skill now follows this shape:
 
 ```text
 pulse-skill-name/
@@ -38,183 +100,27 @@ pulse-skill-name/
 └── rules/
     ├── _sections.md
     ├── _template.md
-    ├── checklists.md
-    ├── decision-points.md
-    ├── documentation-discipline.md
-    ├── non-responsibilities.md
     ├── responsibilities.md
-    └── workflow.md
+    ├── non-responsibilities.md
+    ├── workflow.md
+    ├── decision-points.md      (now includes Failure and Escalation)
+    ├── checklists.md
+    └── documentation-discipline.md
 ```
 
-Skills with additional specialized guidance keep extra files in `rules/`, such as `intake-questions.md`, `question-strategy.md`, and `prompt-template.md`.
-
-## Updated Skill Specifications
-
-### `pulse-accessibility-wcag`
-
-- Purpose: Ensure components are usable with keyboard, screen readers, touch, reduced motion, and native browser behaviours.
-- Rule files: `rules/responsibilities.md`, `rules/non-responsibilities.md`, `rules/workflow.md`, `rules/decision-points.md`, `rules/checklists.md`, `rules/documentation-discipline.md`
-- Related skills: `pulse-docs-research`, `pulse-workflow-orchestrator`
-
-### `pulse-api-contract`
-
-- Purpose: Prevent prop sprawl, implementation leaks, and unclear public behaviour.
-- Rule files: `rules/responsibilities.md`, `rules/non-responsibilities.md`, `rules/workflow.md`, `rules/decision-points.md`, `rules/checklists.md`, `rules/documentation-discipline.md`
-- Related skills: `pulse-docs-research`, `pulse-workflow-orchestrator`
-
-### `pulse-architecture-boundaries`
-
-- Purpose: Keep components coherent, reusable only when justified, and aligned with project structure.
-- Rule files: `rules/responsibilities.md`, `rules/non-responsibilities.md`, `rules/workflow.md`, `rules/decision-points.md`, `rules/checklists.md`, `rules/documentation-discipline.md`
-- Related skills: `pulse-docs-research`, `pulse-workflow-orchestrator`
-
-### `pulse-behavior-testing`
-
-- Purpose: Implement tests that protect visible behaviour, accessibility, and public API contracts while allowing internals to change.
-- Rule files: `rules/responsibilities.md`, `rules/non-responsibilities.md`, `rules/workflow.md`, `rules/decision-points.md`, `rules/checklists.md`, `rules/documentation-discipline.md`
-- Related skills: `jest-react-testing`, `pulse-docs-research`, `pulse-workflow-orchestrator`
-
-### `pulse-browser-verification`
-
-- Purpose: Validate real browser behaviour across input modes, viewports, and rendering states.
-- Rule files: `rules/responsibilities.md`, `rules/non-responsibilities.md`, `rules/workflow.md`, `rules/decision-points.md`, `rules/checklists.md`, `rules/documentation-discipline.md`
-- Related skills: `pulse-docs-research`, `pulse-workflow-orchestrator`
-
-### `pulse-create-component`
-
-- Purpose: Gather the minimum useful information required to create a high-quality React component, then route the work through `COMPONENT-DESIGN.md`, `pulse-workflow-orchestrator`, the focused `pulse-*` skills, and supporting skills such as `context7`, `inertia-react-development`, `motion-react`, `radix-ui-design-system`, `tailwind-design-system`, `vercel-react-best-practices`, and `jest-react-testing`.
-- Rule files: `rules/responsibilities.md`, `rules/non-responsibilities.md`, `rules/workflow.md`, `rules/decision-points.md`, `rules/checklists.md`, `rules/documentation-discipline.md`, `rules/intake-questions.md`, `rules/prompt-template.md`, `rules/question-strategy.md`
-- Related skills: `context7`, `inertia-react-development`, `jest-react-testing`, `motion-react`, `pulse-accessibility-wcag`, `pulse-api-contract`, `pulse-architecture-boundaries`, `pulse-behavior-testing`, `pulse-browser-verification`, `pulse-docs-research`, `pulse-documentation-dx`, `pulse-existing-audit`, `pulse-implementation`, `pulse-inertia-integration`, `pulse-media-assets`, `pulse-motion-interactions`, `pulse-performance-vercel`, `pulse-radix-composition`, `pulse-requirements-analysis`, `pulse-reuse-decision`, `pulse-review-quality-gate`, `pulse-state-effects`, `pulse-tailwind-design-system`, `pulse-tdd-planning`, `pulse-workflow-orchestrator`, `radix-ui-design-system`, `tailwind-design-system`, `vercel-react-best-practices`
-
-### `pulse-docs-research`
-
-- Purpose: Provide current, version-aware documentation context for component implementation and review.
-- Rule files: `rules/responsibilities.md`, `rules/non-responsibilities.md`, `rules/workflow.md`, `rules/decision-points.md`, `rules/checklists.md`, `rules/documentation-discipline.md`
-- Related skills: `context7`, `pulse-workflow-orchestrator`
-
-### `pulse-documentation-dx`
-
-- Purpose: Make component APIs and behaviour understandable for future maintainers and AI agents.
-- Rule files: `rules/responsibilities.md`, `rules/non-responsibilities.md`, `rules/workflow.md`, `rules/decision-points.md`, `rules/checklists.md`, `rules/documentation-discipline.md`
-- Related skills: `pulse-docs-research`, `pulse-workflow-orchestrator`
-
-### `pulse-existing-audit`
-
-- Purpose: Prevent duplicate components, inconsistent APIs, and design drift by checking local code and conventions first.
-- Rule files: `rules/responsibilities.md`, `rules/non-responsibilities.md`, `rules/workflow.md`, `rules/decision-points.md`, `rules/checklists.md`, `rules/documentation-discipline.md`
-- Related skills: `pulse-api-contract`, `pulse-docs-research`, `pulse-reuse-decision`, `pulse-workflow-orchestrator`
-
-### `pulse-implementation`
-
-- Purpose: Translate approved component decisions into code that follows React 19, TypeScript, Inertia, Tailwind, Radix, Motion, and local project conventions.
-- Rule files: `rules/responsibilities.md`, `rules/non-responsibilities.md`, `rules/workflow.md`, `rules/decision-points.md`, `rules/checklists.md`, `rules/documentation-discipline.md`
-- Related skills: `pulse-docs-research`, `pulse-workflow-orchestrator`
-
-### `pulse-inertia-integration`
-
-- Purpose: Keep page props, navigation, forms, HTTP requests, and SSR integration aligned with Inertia v3 and local project conventions.
-- Rule files: `rules/responsibilities.md`, `rules/non-responsibilities.md`, `rules/workflow.md`, `rules/decision-points.md`, `rules/checklists.md`, `rules/documentation-discipline.md`
-- Related skills: `inertia-react-development`, `pulse-docs-research`, `pulse-workflow-orchestrator`
-
-### `pulse-media-assets`
-
-- Purpose: Reduce pageload requests, avoid layout shift, and keep image/video rendering accessible and responsive.
-- Rule files: `rules/responsibilities.md`, `rules/non-responsibilities.md`, `rules/workflow.md`, `rules/decision-points.md`, `rules/checklists.md`, `rules/documentation-discipline.md`
-- Related skills: `pulse-docs-research`, `pulse-workflow-orchestrator`
-
-### `pulse-motion-interactions`
-
-- Purpose: Make animation clarify state or interaction while preserving accessibility, performance, and browser gestures.
-- Rule files: `rules/responsibilities.md`, `rules/non-responsibilities.md`, `rules/workflow.md`, `rules/decision-points.md`, `rules/checklists.md`, `rules/documentation-discipline.md`
-- Related skills: `pulse-docs-research`, `pulse-workflow-orchestrator`
-
-### `pulse-performance-vercel`
-
-- Purpose: Keep component rendering fast, hydration stable, bundles lean, and loading behaviour intentional.
-- Rule files: `rules/responsibilities.md`, `rules/non-responsibilities.md`, `rules/workflow.md`, `rules/decision-points.md`, `rules/checklists.md`, `rules/documentation-discipline.md`
-- Related skills: `pulse-docs-research`, `pulse-workflow-orchestrator`
-
-### `pulse-radix-composition`
-
-- Purpose: Avoid reimplementing complex accessibility behaviour and keep component APIs flexible without leaking DOM internals.
-- Rule files: `rules/responsibilities.md`, `rules/non-responsibilities.md`, `rules/workflow.md`, `rules/decision-points.md`, `rules/checklists.md`, `rules/documentation-discipline.md`
-- Related skills: `pulse-docs-research`, `pulse-workflow-orchestrator`
-
-### `pulse-refactor-safety`
-
-- Purpose: Keep refactors surgical, verifiable, and respectful of existing consumers.
-- Rule files: `rules/responsibilities.md`, `rules/non-responsibilities.md`, `rules/workflow.md`, `rules/decision-points.md`, `rules/checklists.md`, `rules/documentation-discipline.md`
-- Related skills: `pulse-api-contract`, `pulse-docs-research`, `pulse-workflow-orchestrator`
-
-### `pulse-requirements-analysis`
-
-- Purpose: Convert the user request into actionable component requirements that can drive architecture, API design, tests, and review.
-- Rule files: `rules/responsibilities.md`, `rules/non-responsibilities.md`, `rules/workflow.md`, `rules/decision-points.md`, `rules/checklists.md`, `rules/documentation-discipline.md`
-- Related skills: `pulse-api-contract`, `pulse-browser-verification`, `pulse-docs-research`, `pulse-tdd-planning`, `pulse-workflow-orchestrator`
-
-### `pulse-reuse-decision`
-
-- Purpose: Avoid speculative abstractions while still extracting reusable components when they reduce real complexity.
-- Rule files: `rules/responsibilities.md`, `rules/non-responsibilities.md`, `rules/workflow.md`, `rules/decision-points.md`, `rules/checklists.md`, `rules/documentation-discipline.md`
-- Related skills: `pulse-api-contract`, `pulse-docs-research`, `pulse-workflow-orchestrator`
-
-### `pulse-review-quality-gate`
-
-- Purpose: Catch regressions and missing verification before reporting completion.
-- Rule files: `rules/responsibilities.md`, `rules/non-responsibilities.md`, `rules/workflow.md`, `rules/decision-points.md`, `rules/checklists.md`, `rules/documentation-discipline.md`
-- Related skills: `pulse-docs-research`, `pulse-workflow-orchestrator`
-
-### `pulse-state-effects`
-
-- Purpose: Avoid derived state bugs, effect misuse, stale closures, hydration mismatches, and unnecessary renders.
-- Rule files: `rules/responsibilities.md`, `rules/non-responsibilities.md`, `rules/workflow.md`, `rules/decision-points.md`, `rules/checklists.md`, `rules/documentation-discipline.md`
-- Related skills: `pulse-docs-research`, `pulse-workflow-orchestrator`
-
-### `pulse-tailwind-design-system`
-
-- Purpose: Prevent one-off styling, token drift, inaccessible colour choices, and responsive layout instability.
-- Rule files: `rules/responsibilities.md`, `rules/non-responsibilities.md`, `rules/workflow.md`, `rules/decision-points.md`, `rules/checklists.md`, `rules/documentation-discipline.md`
-- Related skills: `pulse-docs-research`, `pulse-workflow-orchestrator`
-
-### `pulse-tdd-planning`
-
-- Purpose: Make tests protect user-observable behaviour and public contracts rather than implementation details.
-- Rule files: `rules/responsibilities.md`, `rules/non-responsibilities.md`, `rules/workflow.md`, `rules/decision-points.md`, `rules/checklists.md`, `rules/documentation-discipline.md`
-- Related skills: `pulse-docs-research`, `pulse-workflow-orchestrator`
-
-### `pulse-workflow-orchestrator`
-
-- Purpose: Turn a component task into a clear sequence of specialized skill work. Keep the process lightweight for small changes and explicit for reusable or risky components.
-- Rule files: `rules/responsibilities.md`, `rules/non-responsibilities.md`, `rules/workflow.md`, `rules/decision-points.md`, `rules/checklists.md`, `rules/documentation-discipline.md`
-- Related skills: `pulse-api-contract`, `pulse-docs-research`, `pulse-existing-audit`, `pulse-requirements-analysis`, `pulse-reuse-decision`, `pulse-review-quality-gate`
+`pulse-workflow-orchestrator` additionally owns `references/` (shared assets) and
+`rules/progress-report.md`. `pulse-create-component` keeps `rules/intake-questions.md`,
+`rules/prompt-template.md`, and `rules/question-strategy.md`.
 
 ## Dependency Graph
 
 See [PULSE-SKILL-DEPENDENCY-GRAPH.md](PULSE-SKILL-DEPENDENCY-GRAPH.md).
 
-## Cross-Reference Update Plan Implemented
-
-- Preserved all existing `pulse-*` skill names.
-- Generated `metadata.json` related-skill arrays from actual skill references.
-- Added compiled docs so references to `AGENTS.md` are valid for every Pulse skill.
-- Added rule indexes so references to rule catalogs are deterministic.
-- Centralized shared documentation-source rules to avoid drift.
-
-## Duplicated Responsibilities Removed
-
-- Repeated documentation-source guidance was moved to a shared orchestrator reference and replaced by per-skill pointers.
-- Rule catalog explanations were standardized in generated `SKILL.md`, `README.md`, and `AGENTS.md` files.
-- Validation language now consistently points to `rules/checklists.md` instead of duplicating bespoke completion language in each skill.
-
-## Renamed, Merged, Split, Or Deprecated Skills
-
-No skills were renamed, merged, split, or deprecated. The current Pulse skill set already has clear single-responsibility boundaries; standardization was enough.
-
 ## Recommendations For Future Skill Creation
 
-- Start from any standardized `pulse-*` folder as the template.
-- Keep `SKILL.md` below 500 lines and move detailed rules into `rules/`.
-- Add one focused rule per file.
-- Update `metadata.json` and `AGENTS.md` whenever rule files change.
-- Prefer shared references for cross-cutting rules instead of copying the same guidance into every skill.
-- Add eval prompts only when a skill's output can be objectively compared.
+- Copy any standardized `pulse-*` folder and validate it against `skill-structure.md`.
+- Fill the full skill contract in `metadata.json` per `skill-contract.md`.
+- Keep `SKILL.md` under 500 lines; put operational detail in `rules/`.
+- Add the skill's signals to `workflow-routing.md` and its Completion checklist to
+  `review-aggregation.md` so routing and review stay deterministic.
+- Prefer shared references for cross-cutting rules instead of copying guidance per skill.

@@ -7,10 +7,62 @@
   "description": "Safely refactors React components in this Laravel app without changing behaviour. Use when extracting hooks, splitting components, renaming props, simplifying state, reducing duplication, preserving public APIs, or improving maintainability.",
   "purpose": "Keep refactors surgical, verifiable, and respectful of existing consumers.",
   "scope": "Pulse Refactor Safety",
-  "inputs": "Required: - Current component files. - Intended refactor goal. Optional: - Existing tests. - Consumer list. - API contract.",
-  "outputs": "- Refactor plan. - Behaviour preservation checklist. - Consumer impact notes. - Verification plan.",
+  "single_responsibility": "Refactor React components without changing observable behaviour or public API unless an API migration is approved.",
+  "deterministic": true,
+  "triggers": [
+    "Refactoring component internals or extracting hooks, helpers, or subcomponents",
+    "Reducing duplication or simplifying state without changing behaviour",
+    "Changing or preserving a public component API"
+  ],
+  "inputs": {
+    "required": [
+      "Current component files",
+      "Intended refactor goal"
+    ],
+    "optional": [
+      "Existing tests",
+      "Consumer list",
+      "API contract"
+    ]
+  },
+  "outputs": [
+    "Refactor plan",
+    "Behaviour preservation checklist",
+    "Consumer impact notes",
+    "Verification plan"
+  ],
+  "completion_criteria": [
+    "Externally visible behaviour and consumers are identified before changes",
+    "Refactor is sequenced in small steps that preserve public API and behaviour",
+    "Tests or verification cover affected behaviour before and after",
+    "No unrelated cleanup is introduced"
+  ],
+  "validation_criteria": [
+    "Behaviour remains unchanged or changes are documented",
+    "Verification is complete",
+    "Maintainability improved for a concrete reason"
+  ],
+  "failure_handling": [
+    "If a refactor cannot preserve behaviour or public API, stop and surface the required change instead of silently altering consumers.",
+    "Report any unavoidable behaviour or API changes and their consumer impact."
+  ],
+  "escalation_path": [
+    "Route public API changes back to pulse-api-contract before editing consumers.",
+    "Route uncertain framework or library behaviour through pulse-docs-research.",
+    "Escalate broad architectural rewrites to pulse-architecture-boundaries or the user."
+  ],
+  "upstream_skills": [
+    "pulse-existing-audit",
+    "pulse-api-contract",
+    "pulse-state-effects"
+  ],
+  "downstream_skills": [
+    "pulse-browser-verification",
+    "pulse-review-quality-gate"
+  ],
   "related_skills": [
     "pulse-api-contract",
+    "pulse-implementation",
     "pulse-docs-research",
     "pulse-workflow-orchestrator"
   ],
@@ -34,19 +86,5 @@
     "Adding new behaviour.",
     "Broad architectural rewrites.",
     "Deleting tests without approval."
-  ],
-  "success_criteria": [
-    "The skill stays within its focused responsibility.",
-    "The workflow and decision points are followed.",
-    "Validation checklist items are satisfied or skipped checks are reported.",
-    "Cross-skill handoffs are explicit when another skill owns the next concern."
-  ],
-  "validation_criteria": [
-    "SKILL.md loads as the entry point.",
-    "README.md summarizes usage for humans.",
-    "AGENTS.md provides the compiled agent guide.",
-    "metadata.json exposes machine-readable discovery metadata.",
-    "rules/_sections.md indexes rule files.",
-    "rules/_template.md defines the rule-file standard."
   ]
 }

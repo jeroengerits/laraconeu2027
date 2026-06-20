@@ -5,10 +5,68 @@
   "canonical_architecture": "vercel-react-best-practices",
   "name": "pulse-create-component",
   "description": "Starts an intake-first Pulse React component creation workflow in this Laravel Inertia app. Use whenever the user asks to create, build, add, scaffold, plan, or start a new React component or reusable page section and the agent needs to gather enough information before orchestration.",
-  "purpose": "Gather the minimum useful information required to create a high-quality React component, then route the work through `COMPONENT-DESIGN.md`, `pulse-workflow-orchestrator`, the focused `pulse-*` skills, and supporting skills such as `context7`, `inertia-react-development`, `motion-react`, `radix-ui-design-system`, `tailwind-design-system`, `vercel-react-best-practices`, and `jest-react-testing`.",
+  "purpose": "Gather the minimum useful information required to create a high-quality React component, then hand off to pulse-workflow-orchestrator, which selects the skill subset.",
   "scope": "Pulse Create Component",
-  "inputs": "Required before orchestration: - Component name or working name. - Component purpose. - Intended usage location. - Primary user workflow. - Expected behaviour. Useful optional context: - Existing component or design pattern to match. - Reuse expectation. - Props or data shape. - Inertia route, form, or page prop needs. - Radix primitive or accessibility expectations. - Tailwind design-system constraints. - Motion or gesture needs. - Media or asset requirements. - Performance, lazy loading, or hydration concerns. - Test expectations.",
-  "outputs": "- Component brief. - Known requirements and non-goals. - Missing information, if still blocking. - Suggested Pulse and supporting skill sequence. - Plan-first or implement-now recommendation. - Approval request before implementation when appropriate.",
+  "single_responsibility": "Intake and handoff: turn an incomplete component request into a complete component brief, then hand off to pulse-workflow-orchestrator. It does not select the skill sequence itself.",
+  "deterministic": true,
+  "triggers": [
+    "User asks to create, build, add, scaffold, plan, or start a React component or reusable page section",
+    "The component idea is incomplete and needs requirements discovery",
+    "The component may become reusable or part of the design system"
+  ],
+  "inputs": {
+    "required": [
+      "Component name or working name",
+      "Component purpose",
+      "Intended usage location",
+      "Primary user workflow",
+      "Expected behaviour"
+    ],
+    "optional": [
+      "Existing component or design pattern to match",
+      "Reuse expectation",
+      "Props or data shape",
+      "Inertia route, form, or page prop needs",
+      "Radix primitive or accessibility expectations",
+      "Tailwind design-system constraints",
+      "Motion or gesture needs",
+      "Media or asset requirements",
+      "Performance, lazy loading, or hydration concerns",
+      "Test expectations"
+    ]
+  },
+  "outputs": [
+    "Component brief",
+    "Known requirements and non-goals",
+    "Missing information, if still blocking",
+    "Routing signals for the orchestrator",
+    "Plan-first or implement-now recommendation",
+    "Approval request before implementation when appropriate"
+  ],
+  "completion_criteria": [
+    "COMPONENT-DESIGN.md was read",
+    "A complete component brief exists or the blocking gaps are reported",
+    "Approval mode (plan-first or implement-now) is explicit",
+    "Routing signals are captured for the orchestrator"
+  ],
+  "validation_criteria": [
+    "Component brief is explicit",
+    "Approval mode is clear",
+    "Handoff to pulse-workflow-orchestrator is ready",
+    "No more than five questions were asked at once"
+  ],
+  "failure_handling": [
+    "Do not hand off an incomplete brief; after one focused round of questions, report the blocking gaps instead of guessing.",
+    "Do not select the full skill sequence or implement; that is the orchestrator's and focused skills' job."
+  ],
+  "escalation_path": [
+    "Escalate scope, dependency, or 'should this be a component' decisions to the user before handoff.",
+    "Escalate uncertain framework or library feasibility to pulse-docs-research via the orchestrator."
+  ],
+  "upstream_skills": [],
+  "downstream_skills": [
+    "pulse-workflow-orchestrator"
+  ],
   "related_skills": [
     "context7",
     "inertia-react-development",
@@ -56,30 +114,16 @@
     "Ask concise, grouped questions instead of a long interview.",
     "Build a component brief from user answers and known project context.",
     "Decide whether the task is ready for planning or implementation.",
-    "Select the relevant Pulse and supporting skills.",
+    "Capture routing signals for the orchestrator rather than selecting the full skill sequence.",
     "Ensure Laravel Boost `search-docs` is used before code changes.",
-    "Select additional documentation sources only for APIs and behaviours that affect the planned component.",
     "Hand off to `pulse-workflow-orchestrator` with the gathered brief.",
     "Stop before implementation when user approval is needed."
   ],
   "non_responsibilities": [
+    "Selecting the full skill sequence; the orchestrator routes from the matrix.",
     "Designing the full API without `pulse-api-contract`.",
     "Implementing before discovery and reuse checks.",
-    "Replacing focused skills such as `pulse-accessibility-wcag`,",
+    "Replacing focused skills such as `pulse-accessibility-wcag`, `pulse-performance-vercel`, or `pulse-behavior-testing`.",
     "Creating new documentation files unless the user explicitly requests them."
-  ],
-  "success_criteria": [
-    "The skill stays within its focused responsibility.",
-    "The workflow and decision points are followed.",
-    "Validation checklist items are satisfied or skipped checks are reported.",
-    "Cross-skill handoffs are explicit when another skill owns the next concern."
-  ],
-  "validation_criteria": [
-    "SKILL.md loads as the entry point.",
-    "README.md summarizes usage for humans.",
-    "AGENTS.md provides the compiled agent guide.",
-    "metadata.json exposes machine-readable discovery metadata.",
-    "rules/_sections.md indexes rule files.",
-    "rules/_template.md defines the rule-file standard."
   ]
 }

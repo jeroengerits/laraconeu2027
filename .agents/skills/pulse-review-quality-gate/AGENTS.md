@@ -109,24 +109,40 @@ Optional:
 
 ---
 
+## Aggregation Model
+
+This skill is an aggregator, not a second source of domain rules. It enforces Gate 2
+(Definition of Done) by delegating each touched concern to the domain owner's
+`rules/checklists.md` Completion section, per
+`../pulse-workflow-orchestrator/references/review-aggregation.md`. It does not restate
+accessibility, performance, API, or design checks.
+
+---
+
 ## Workflow
 
-1. Compare implementation to requirements.
-2. Check changed public APIs and consumers.
-3. Confirm non-obvious API choices were backed by local conventions, supporting skills, Laravel Boost, Context7, or official web docs.
-4. Check accessibility, keyboard, focus, and native gestures.
-5. Check responsive layout, dark mode, and design tokens.
-6. Check render purity, lazy loading, imports, and request impact.
-7. Check tests cover meaningful behaviour.
-8. Confirm docs were updated only when explicitly requested or when an existing docs file needed a scoped update.
+1. Identify which concerns the change touched, using the routing signals in `../pulse-workflow-orchestrator/references/workflow-routing.md`.
+2. For each touched concern, confirm the owning skill's `rules/checklists.md` Completion items per `../pulse-workflow-orchestrator/references/review-aggregation.md`. Do not restate domain checks.
+3. Confirm structural Gate 2 items not owned by a single skill, from `../pulse-workflow-orchestrator/references/validation-gates.md`.
+4. Confirm non-obvious API choices were backed by local conventions, supporting skills, Laravel Boost, Context7, or official web docs.
+5. Record findings by severity, naming the owning skill for each.
+6. Report every failed, skipped, or unverifiable item; do not hide skipped checks.
 
 ---
 
 ## Decision Points
 
+- Delegate each concern to its domain owner's Completion checklist; do not duplicate domain checks.
 - Fix blocking issues before final response.
 - Report skipped verification honestly.
 - Recommend follow-up only when it builds on the request.
+
+### Failure and Escalation
+
+- Stop condition: do not report completion while a Gate 2 item is unmet; route the unmet item back to its owning skill.
+- Reporting: surface every failed, skipped, or unverifiable item with the owning skill named.
+- Escalate unknown framework or library behaviour to `pulse-docs-research`.
+- Escalate to the user when a fix requires a scope, dependency, or product decision, or a large new refactor.
 
 ---
 

@@ -7,11 +7,66 @@
   "description": "Applies Vercel-style React performance practices to components in this Laravel Inertia app. Use for hydration safety, render cost, memoization, lazy imports, bundle size, waterfalls, media loading, request count, Suspense, and responsive performance.",
   "purpose": "Keep component rendering fast, hydration stable, bundles lean, and loading behaviour intentional.",
   "scope": "Pulse Performance Vercel",
-  "inputs": "Required: - Component behaviour and render surface. - Existing imports and assets. Optional: - Browser logs. - Build output. - Performance complaint. - Hydration warning.",
-  "outputs": "- Performance risk assessment. - Lazy loading and bundle guidance. - Hydration safety notes. - Verification commands.",
+  "single_responsibility": "Render and load performance for components: deterministic hydration, render cost, memoization, lazy imports, and waterfalls.",
+  "deterministic": true,
+  "triggers": [
+    "Component affects first paint, hydration, large lists, or bundle size",
+    "Render cost, request count, or lazy loading is changing",
+    "There is a hydration mismatch warning",
+    "A heavy library or import may be introduced"
+  ],
+  "inputs": {
+    "required": [
+      "Component behaviour and render surface",
+      "Existing imports and assets"
+    ],
+    "optional": [
+      "Browser logs",
+      "Build output",
+      "Performance complaint",
+      "Hydration warning"
+    ]
+  },
+  "outputs": [
+    "Performance risk assessment",
+    "Lazy loading and bundle guidance",
+    "Hydration safety notes",
+    "Verification commands"
+  ],
+  "completion_criteria": [
+    "Initial render is deterministic and free of hydration mismatches",
+    "Static values are hoisted and expensive work is kept out of render",
+    "Memoization is applied only when identity or cost justifies it",
+    "Heavy optional features are lazy-imported and independent async work is started early"
+  ],
+  "validation_criteria": [
+    "Relevant build, type, and lint checks are identified",
+    "Request-count impact is understood",
+    "Residual performance risks are reported"
+  ],
+  "failure_handling": [
+    "If a performance fix would change behaviour or cannot be verified, stop and report it instead of applying a speculative optimization.",
+    "Report any build, type, or hydration check that could not be run."
+  ],
+  "escalation_path": [
+    "Route uncertain React, hydration, or Vite performance APIs through pulse-docs-research.",
+    "Escalate to the user when a performance fix requires a scope, dependency, or behaviour change.",
+    "Hand media loading to pulse-media-assets and animation-loop cost to pulse-motion-interactions."
+  ],
+  "upstream_skills": [
+    "pulse-requirements-analysis",
+    "pulse-architecture-boundaries"
+  ],
+  "downstream_skills": [
+    "pulse-browser-verification",
+    "pulse-review-quality-gate"
+  ],
   "related_skills": [
     "pulse-docs-research",
-    "pulse-workflow-orchestrator"
+    "pulse-workflow-orchestrator",
+    "pulse-state-effects",
+    "pulse-media-assets",
+    "pulse-motion-interactions"
   ],
   "rule_files": [
     "rules/responsibilities.md",
@@ -34,19 +89,5 @@
     "Backend query optimization.",
     "Animation-specific performance internals.",
     "Rewriting unrelated code."
-  ],
-  "success_criteria": [
-    "The skill stays within its focused responsibility.",
-    "The workflow and decision points are followed.",
-    "Validation checklist items are satisfied or skipped checks are reported.",
-    "Cross-skill handoffs are explicit when another skill owns the next concern."
-  ],
-  "validation_criteria": [
-    "SKILL.md loads as the entry point.",
-    "README.md summarizes usage for humans.",
-    "AGENTS.md provides the compiled agent guide.",
-    "metadata.json exposes machine-readable discovery metadata.",
-    "rules/_sections.md indexes rule files.",
-    "rules/_template.md defines the rule-file standard."
   ]
 }

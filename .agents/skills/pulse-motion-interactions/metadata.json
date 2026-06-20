@@ -7,11 +7,68 @@
   "description": "Designs Motion React animations and gestures for components in this Laravel app. Use for micro-interactions, variants, hover, focus, tap, drag, scroll effects, autoplay, marquee behaviour, reduced motion, animation performance, and gesture support.",
   "purpose": "Make animation clarify state or interaction while preserving accessibility, performance, and browser gestures.",
   "scope": "Pulse Motion Interactions",
-  "inputs": "Required: - Interaction goal. - Component architecture. Optional: - Motion docs findings. - Gesture requirements. - Performance constraints.",
-  "outputs": "- Animation plan. - Gesture model. - Reduced-motion behaviour. - Performance notes. - Verification scenarios.",
+  "single_responsibility": "Motion React animation and gesture behaviour for components: intent, triggers, reduced motion, stable variants, and scroll-safe gestures.",
+  "deterministic": true,
+  "triggers": [
+    "Component adds or changes Motion React animation",
+    "Drag, swipe, hover, tap, scroll, autoplay, or marquee behaviour is involved",
+    "Reduced motion or animation performance needs handling"
+  ],
+  "inputs": {
+    "required": [
+      "Interaction goal",
+      "Component architecture"
+    ],
+    "optional": [
+      "Motion docs findings",
+      "Gesture requirements",
+      "Performance constraints"
+    ]
+  },
+  "outputs": [
+    "Animation plan",
+    "Gesture model",
+    "Reduced-motion behaviour",
+    "Performance notes",
+    "Verification scenarios"
+  ],
+  "completion_criteria": [
+    "Animation intent and trigger are defined",
+    "Animations use transform and opacity where possible",
+    "Reduced-motion paths are defined with `useReducedMotion`",
+    "Variants and transition objects are stable and gestures do not block native vertical scroll",
+    "Listeners and animation frames are cleaned up"
+  ],
+  "validation_criteria": [
+    "Keyboard and touch alternatives exist when interaction needs them",
+    "Reduced motion is respected",
+    "Browser verification scenarios are listed"
+  ],
+  "failure_handling": [
+    "If an animation cannot respect reduced motion or would block native scroll, stop and report the conflict instead of shipping the motion.",
+    "Report any Motion API or gesture behaviour that could not be verified."
+  ],
+  "escalation_path": [
+    "Route uncertain `motion/react` APIs or gesture behaviour through pulse-docs-research.",
+    "Escalate to the user when motion intent requires a design or scope decision.",
+    "Hand animation performance concerns to pulse-performance-vercel and accessible-alternative needs to pulse-accessibility-wcag."
+  ],
+  "upstream_skills": [
+    "pulse-requirements-analysis",
+    "pulse-architecture-boundaries"
+  ],
+  "downstream_skills": [
+    "pulse-tdd-planning",
+    "pulse-behavior-testing",
+    "pulse-browser-verification",
+    "pulse-review-quality-gate"
+  ],
   "related_skills": [
     "pulse-docs-research",
-    "pulse-workflow-orchestrator"
+    "pulse-workflow-orchestrator",
+    "pulse-accessibility-wcag",
+    "pulse-state-effects",
+    "pulse-performance-vercel"
   ],
   "rule_files": [
     "rules/responsibilities.md",
@@ -34,19 +91,5 @@
     "Tailwind styling decisions.",
     "General React state not tied to animation.",
     "Browser verification execution."
-  ],
-  "success_criteria": [
-    "The skill stays within its focused responsibility.",
-    "The workflow and decision points are followed.",
-    "Validation checklist items are satisfied or skipped checks are reported.",
-    "Cross-skill handoffs are explicit when another skill owns the next concern."
-  ],
-  "validation_criteria": [
-    "SKILL.md loads as the entry point.",
-    "README.md summarizes usage for humans.",
-    "AGENTS.md provides the compiled agent guide.",
-    "metadata.json exposes machine-readable discovery metadata.",
-    "rules/_sections.md indexes rule files.",
-    "rules/_template.md defines the rule-file standard."
   ]
 }

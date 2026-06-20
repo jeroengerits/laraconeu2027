@@ -7,8 +7,64 @@
   "description": "Analyzes requirements for React component work in this Laravel Inertia app. Use when a component request needs goals, non-goals, constraints, user workflows, acceptance criteria, edge cases, or behaviour scenarios before implementation.",
   "purpose": "Convert the user request into actionable component requirements that can drive architecture, API design, tests, and review.",
   "scope": "Pulse Requirements Analysis",
-  "inputs": "Required: - User request. - Relevant existing UI behaviour. Optional: - Design references. - Bug reports, logs, screenshots, or failing tests. - Browser/device constraints.",
-  "outputs": "- Goals and non-goals. - User workflows. - Acceptance criteria. - Behaviour scenarios. - Known edge cases.",
+  "single_responsibility": "Turn the user request into actionable, testable component requirements: goals, non-goals, constraints, workflows, acceptance criteria, edge cases, and behaviour scenarios.",
+  "deterministic": false,
+  "triggers": [
+    "Acceptance criteria or behaviour scenarios are undefined",
+    "Request is broad, ambiguous, or multi-step",
+    "Behaviour, accessibility, responsive, animation, or testing expectations need definition",
+    "A reusable component API may be introduced or changed"
+  ],
+  "inputs": {
+    "required": [
+      "User request",
+      "Relevant existing UI behaviour"
+    ],
+    "optional": [
+      "Design references",
+      "Bug reports, logs, screenshots, or failing tests",
+      "Browser/device constraints"
+    ]
+  },
+  "outputs": [
+    "Goals and non-goals",
+    "User workflows",
+    "Acceptance criteria",
+    "Behaviour scenarios",
+    "Known edge cases"
+  ],
+  "completion_criteria": [
+    "Goals and non-goals are explicit",
+    "Acceptance criteria are written as observable user outcomes",
+    "Edge cases and failure states are named",
+    "Assumptions are marked separately from confirmed requirements",
+    "Open questions are minimal, concrete, and flagged when they block implementation"
+  ],
+  "validation_criteria": [
+    "Acceptance criteria are testable",
+    "Open questions are minimal and concrete",
+    "Next skill is clear"
+  ],
+  "failure_handling": [
+    "If the request is too ambiguous to define testable acceptance criteria, stop and report the open questions instead of inventing scope.",
+    "Report any requirement left unresolved and whether it blocks implementation."
+  ],
+  "escalation_path": [
+    "Escalate scope, priority, or product decisions to the user.",
+    "Route uncertain library or framework behaviour to pulse-docs-research.",
+    "Hand reusable API implications to pulse-api-contract."
+  ],
+  "upstream_skills": [
+    "pulse-create-component",
+    "pulse-workflow-orchestrator"
+  ],
+  "downstream_skills": [
+    "pulse-existing-audit",
+    "pulse-reuse-decision",
+    "pulse-architecture-boundaries",
+    "pulse-api-contract",
+    "pulse-tdd-planning"
+  ],
   "related_skills": [
     "pulse-api-contract",
     "pulse-browser-verification",
@@ -36,19 +92,5 @@
     "Choosing implementation files.",
     "Designing props or variants.",
     "Writing tests or code."
-  ],
-  "success_criteria": [
-    "The skill stays within its focused responsibility.",
-    "The workflow and decision points are followed.",
-    "Validation checklist items are satisfied or skipped checks are reported.",
-    "Cross-skill handoffs are explicit when another skill owns the next concern."
-  ],
-  "validation_criteria": [
-    "SKILL.md loads as the entry point.",
-    "README.md summarizes usage for humans.",
-    "AGENTS.md provides the compiled agent guide.",
-    "metadata.json exposes machine-readable discovery metadata.",
-    "rules/_sections.md indexes rule files.",
-    "rules/_template.md defines the rule-file standard."
   ]
 }

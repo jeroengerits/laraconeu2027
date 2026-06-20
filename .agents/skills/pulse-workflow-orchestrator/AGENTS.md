@@ -114,21 +114,39 @@ Optional:
 
 ---
 
+## Shared References
+
+This skill owns the shared assets the whole Pulse ecosystem depends on:
+
+- `references/skill-contract.md` - the `metadata.json` contract every skill must satisfy.
+- `references/skill-structure.md` - the "well-formed skill" conformance standard.
+- `references/validation-gates.md` - Definition of Ready and Definition of Done.
+- `references/workflow-routing.md` - deterministic task-signal to skill-subset routing.
+- `references/review-aggregation.md` - maps the review gate to domain Completion checklists.
+- `references/documentation-discipline.md` - shared documentation-source rule.
+
+---
+
 ## Workflow
 
+This skill is a lightweight, deterministic coordinator. It selects the minimal skill
+subset, enforces the two gates, and hands off.
+
 1. Classify the task: new component, refactor, bug fix, review, test, documentation, or optimization.
-2. Run discovery first unless the task is purely explanatory.
-3. Decide whether requirements, reuse, architecture, API, accessibility, motion, performance, testing, implementation, review, or documentation skills are needed.
-4. Keep the active path minimal for small changes.
-5. Route uncertain APIs, browser behaviour, hydration, gestures, accessibility, and testing details through `pulse-docs-research`.
-6. Before edits, confirm the planned files and behavioural surface.
-7. When coordinating more than one focused skill, emit a progress report per [Progress Report](rules/progress-report.md) at each phase handoff.
-8. After edits, run the smallest reliable verification commands.
-9. Report skipped checks explicitly.
+2. Read `references/workflow-routing.md` and select the minimal skill subset from the present signals (deterministic routing).
+3. Run discovery first (Phase 1) unless the task is purely explanatory. Mandatory Laravel Boost `search-docs` before any code change.
+4. Route each present design signal (Phase 2) to its single owner skill.
+5. Enforce Gate 1 (Definition of Ready) from `references/validation-gates.md` before implementation.
+6. Run test planning/authoring, implementation, then verification and documentation, each only when its signal is present.
+7. Enforce Gate 2 (Definition of Done) via `pulse-review-quality-gate`, which delegates to domain Completion checklists per `references/review-aggregation.md`.
+8. Keep the active path minimal; emit a progress report per [Progress Report](rules/progress-report.md) at each phase handoff for multi-skill runs.
+9. Report skipped phases and checks explicitly.
 
 ---
 
 ## Decision Points
+
+Routing is deterministic; `references/workflow-routing.md` is the source of truth.
 
 - If requirements are ambiguous, use `pulse-requirements-analysis`.
 - If local patterns are unknown, use `pulse-existing-audit`.
@@ -136,6 +154,19 @@ Optional:
 - If framework or library usage is uncertain, use `pulse-docs-research`.
 - If API shape is public or reusable, use `pulse-api-contract`.
 - If user-facing behaviour exists, use TDD and behaviour testing skills.
+- If existing component behaviour must be preserved during change, use `pulse-refactor-safety`.
+
+### Gates
+
+- Before implementation, enforce Gate 1 (Definition of Ready).
+- Before completion, enforce Gate 2 (Definition of Done) via `pulse-review-quality-gate`.
+
+### Failure and Escalation
+
+- Stop condition: do not advance past a gate with unmet items; route back to the owning skill.
+- Reporting: report skipped phases, unmet gate items, and unverifiable checks.
+- Escalate unknown framework or library behaviour to `pulse-docs-research`.
+- Escalate scope, dependency, or product decisions to the user before proceeding.
 
 ---
 

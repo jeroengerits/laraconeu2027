@@ -7,10 +7,61 @@
   "description": "Documents reusable React components in this Laravel app. Use when a component API, behaviour, accessibility model, variants, integration pattern, or limitation should be explained for future developers or AI agents.",
   "purpose": "Make component APIs and behaviour understandable for future maintainers and AI agents.",
   "scope": "Pulse Documentation DX",
-  "inputs": "Required: - Component API and usage. - Reusability scope. Optional: - Existing docs location. - Design-system conventions. - Source docs used.",
-  "outputs": "- Inline documentation or doc section. - Usage examples. - Accessibility and behaviour notes. - Known limitations.",
+  "single_responsibility": "Document the public API, behaviour, and limitations of reusable React components for future maintainers and AI agents.",
+  "deterministic": true,
+  "triggers": [
+    "A reusable component is created or significantly changed",
+    "Public API, variants, controlled/uncontrolled behaviour, accessibility, or integration details need explanation",
+    "User explicitly asks for documentation"
+  ],
+  "inputs": {
+    "required": [
+      "Component API and usage",
+      "Reusability scope"
+    ],
+    "optional": [
+      "Existing docs location",
+      "Design-system conventions",
+      "Source docs used"
+    ]
+  },
+  "outputs": [
+    "Inline documentation or doc section",
+    "Usage examples",
+    "Accessibility and behaviour notes",
+    "Known limitations"
+  ],
+  "completion_criteria": [
+    "Documentation target is chosen (inline, existing doc, or none) without creating new files unless requested",
+    "Public API, variants, callbacks, and defaults are explained with minimal realistic examples",
+    "Accessibility, keyboard, responsive, motion, and integration behaviour is noted where relevant",
+    "Known limitations and source-of-truth notes are recorded"
+  ],
+  "validation_criteria": [
+    "Documentation describes public behaviour",
+    "Limitations are explicit",
+    "No stale duplicate docs were added"
+  ],
+  "failure_handling": [
+    "If documentation would require a new file the user did not request, stop and ask instead of creating scattered docs.",
+    "Report any behaviour that could not be documented because the public API or source of truth was unclear."
+  ],
+  "escalation_path": [
+    "Route uncertain Inertia, React, Radix, Motion, Tailwind, or Testing Library behaviour through pulse-docs-research.",
+    "Escalate to the user when a new documentation file or location is needed.",
+    "Hand documented components to pulse-review-quality-gate."
+  ],
+  "upstream_skills": [
+    "pulse-api-contract",
+    "pulse-implementation"
+  ],
+  "downstream_skills": [
+    "pulse-review-quality-gate"
+  ],
   "related_skills": [
     "pulse-docs-research",
+    "pulse-api-contract",
+    "pulse-accessibility-wcag",
     "pulse-workflow-orchestrator"
   ],
   "rule_files": [
@@ -34,19 +85,5 @@
     "Creating new documentation files without an explicit user request.",
     "Repeating obvious implementation details.",
     "Replacing tests."
-  ],
-  "success_criteria": [
-    "The skill stays within its focused responsibility.",
-    "The workflow and decision points are followed.",
-    "Validation checklist items are satisfied or skipped checks are reported.",
-    "Cross-skill handoffs are explicit when another skill owns the next concern."
-  ],
-  "validation_criteria": [
-    "SKILL.md loads as the entry point.",
-    "README.md summarizes usage for humans.",
-    "AGENTS.md provides the compiled agent guide.",
-    "metadata.json exposes machine-readable discovery metadata.",
-    "rules/_sections.md indexes rule files.",
-    "rules/_template.md defines the rule-file standard."
   ]
 }

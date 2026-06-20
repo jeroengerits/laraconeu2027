@@ -7,10 +7,64 @@
   "description": "Researches current documentation for Laravel React component work. Use when implementation depends on Inertia React, Wayfinder, React 19, Motion React, Radix UI, Tailwind CSS 4, Jest, React Testing Library, Vite, or other library APIs that may change.",
   "purpose": "Provide current, version-aware documentation context for component implementation and review.",
   "scope": "Pulse Docs Research",
-  "inputs": "Required: - Library or API question. - Package or framework area. Optional: - Installed package versions. - Error message or failing code.",
-  "outputs": "- Documentation findings. - Source of truth used. - Version-specific caveats. - Implementation guidance.",
+  "single_responsibility": "Provide current, version-aware documentation context for the task using Boost, local code, Context7, and web search as a last-resort fallback.",
+  "deterministic": true,
+  "triggers": [
+    "About to make code changes in this project",
+    "Framework, library, or API detail is uncertain",
+    "Task touches Inertia, Wayfinder, React, Motion, Radix, Tailwind, Jest, React Testing Library, Vite, or lazy loading",
+    "Hydration, SSR, gestures, forms, or testing APIs are involved"
+  ],
+  "inputs": {
+    "required": [
+      "Library or API question",
+      "Package or framework area"
+    ],
+    "optional": [
+      "Installed package versions",
+      "Error message or failing code"
+    ]
+  },
+  "outputs": [
+    "Documentation findings",
+    "Source of truth used",
+    "Version-specific caveats",
+    "Implementation guidance"
+  ],
+  "completion_criteria": [
+    "Laravel Boost search-docs is run before code changes",
+    "Laravel ecosystem questions use Boost; non-Laravel frontend questions use Context7",
+    "Web search is used only as a documented fallback to primary sources",
+    "Findings are scoped to the current decision and not over-quoted",
+    "Source and version context are recorded"
+  ],
+  "validation_criteria": [
+    "Findings are actionable",
+    "Source and version context are clear",
+    "Next implementation decision is unblocked"
+  ],
+  "failure_handling": [
+    "If authoritative documentation cannot be found in Boost, local code, Context7, or official sources, stop and report the gap instead of inventing API behaviour.",
+    "Report which source answered the question and any unresolved version caveats."
+  ],
+  "escalation_path": [
+    "Return findings to the owning skill that raised the question.",
+    "Flag conflicts between local conventions and current docs to the owning skill.",
+    "Escalate to the user when documentation conflicts with required scope or dependencies."
+  ],
+  "upstream_skills": [
+    "pulse-requirements-analysis",
+    "pulse-existing-audit"
+  ],
+  "downstream_skills": [
+    "pulse-architecture-boundaries",
+    "pulse-api-contract",
+    "pulse-implementation",
+    "pulse-behavior-testing"
+  ],
   "related_skills": [
     "context7",
+    "pulse-existing-audit",
     "pulse-workflow-orchestrator"
   ],
   "rule_files": [
@@ -33,19 +87,5 @@
     "Replacing local code audit.",
     "Fetching broad unrelated docs.",
     "Making architecture decisions alone."
-  ],
-  "success_criteria": [
-    "The skill stays within its focused responsibility.",
-    "The workflow and decision points are followed.",
-    "Validation checklist items are satisfied or skipped checks are reported.",
-    "Cross-skill handoffs are explicit when another skill owns the next concern."
-  ],
-  "validation_criteria": [
-    "SKILL.md loads as the entry point.",
-    "README.md summarizes usage for humans.",
-    "AGENTS.md provides the compiled agent guide.",
-    "metadata.json exposes machine-readable discovery metadata.",
-    "rules/_sections.md indexes rule files.",
-    "rules/_template.md defines the rule-file standard."
   ]
 }

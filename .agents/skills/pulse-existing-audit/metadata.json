@@ -7,8 +7,64 @@
   "description": "Audits existing React components, hooks, utilities, tests, pages, styles, and conventions before Laravel Inertia component work. Use before creating new components, extracting hooks, adding variants, or changing shared UI.",
   "purpose": "Prevent duplicate components, inconsistent APIs, and design drift by checking local code and conventions first.",
   "scope": "Pulse Existing Audit",
-  "inputs": "Required: - Component goal or target file. - Project root. Optional: - Known component names. - Related routes, pages, or screenshots.",
-  "outputs": "- Relevant existing files. - Conventions to follow. - Similar APIs and patterns. - Gaps or duplication risks.",
+  "single_responsibility": "Survey existing local code and conventions (components, hooks, helpers, pages, styles, tests) relevant to the task before any new code is written.",
+  "deterministic": true,
+  "triggers": [
+    "About to write new code, to find reusable patterns first",
+    "Creating or refactoring a component",
+    "Adding variants or shared behaviour",
+    "Extracting hooks or helpers",
+    "Unsure where a component belongs"
+  ],
+  "inputs": {
+    "required": [
+      "Component goal or target file",
+      "Project root"
+    ],
+    "optional": [
+      "Known component names",
+      "Related routes, pages, or screenshots"
+    ]
+  },
+  "outputs": [
+    "Relevant existing files",
+    "Conventions to follow",
+    "Similar APIs and patterns",
+    "Gaps or duplication risks"
+  ],
+  "completion_criteria": [
+    "Relevant components, hooks, helpers, pages, styles, and tests are searched",
+    "Sibling file conventions (imports, naming, class merge, test utilities, browser-only guards) are captured",
+    "Reuse candidates are listed",
+    "Proposed new code location is informed by existing structure",
+    "Duplication risks are made visible"
+  ],
+  "validation_criteria": [
+    "Reuse candidates are listed",
+    "New code location is informed by existing structure",
+    "Duplication risks are visible"
+  ],
+  "failure_handling": [
+    "If local search cannot confirm whether similar code already exists, stop and report the uncertainty instead of assuming greenfield.",
+    "Report any area, directory, or convention that could not be searched or inspected."
+  ],
+  "escalation_path": [
+    "Hand close matches to pulse-reuse-decision.",
+    "Route unclear existing API behaviour to pulse-api-contract.",
+    "Route uncertain library or version behaviour to pulse-docs-research.",
+    "Surface conflicts between local code and docs to the user when a convention must change."
+  ],
+  "upstream_skills": [
+    "pulse-requirements-analysis",
+    "pulse-create-component"
+  ],
+  "downstream_skills": [
+    "pulse-reuse-decision",
+    "pulse-architecture-boundaries",
+    "pulse-api-contract",
+    "pulse-implementation",
+    "pulse-review-quality-gate"
+  ],
   "related_skills": [
     "pulse-api-contract",
     "pulse-docs-research",
@@ -34,19 +90,5 @@
     "Final reuse decision.",
     "Designing a new API.",
     "Running broad refactors."
-  ],
-  "success_criteria": [
-    "The skill stays within its focused responsibility.",
-    "The workflow and decision points are followed.",
-    "Validation checklist items are satisfied or skipped checks are reported.",
-    "Cross-skill handoffs are explicit when another skill owns the next concern."
-  ],
-  "validation_criteria": [
-    "SKILL.md loads as the entry point.",
-    "README.md summarizes usage for humans.",
-    "AGENTS.md provides the compiled agent guide.",
-    "metadata.json exposes machine-readable discovery metadata.",
-    "rules/_sections.md indexes rule files.",
-    "rules/_template.md defines the rule-file standard."
   ]
 }
