@@ -9,6 +9,7 @@ This rule catalog follows the `vercel-react-best-practices` convention: one focu
 | [Workflow](workflow.md)                                 | Step-by-step execution process.                    |
 | [Decision Points](decision-points.md)                   | Branching rules and handoff decisions.             |
 | [Checklists](checklists.md)                             | Pre-flight, execution, and completion checks.      |
+| [Progress Report](progress-report.md)                   | Inline run status: done, active, next, skipped.    |
 | [Documentation Discipline](documentation-discipline.md) | Shared documentation-source rule for code changes. |
 
 ## Required Rule Files
@@ -18,4 +19,5 @@ This rule catalog follows the `vercel-react-best-practices` convention: one focu
 - `workflow.md` defines execution order.
 - `decision-points.md` defines branch logic.
 - `checklists.md` defines validation gates.
+- `progress-report.md` defines the inline run status report.
 - `documentation-discipline.md` points to shared documentation-source rules.

@@ -7,8 +7,64 @@
   "description": "Orchestrates complete React component development in this Laravel Inertia app. Use whenever a user asks to create, refactor, review, test, document, or optimize a reusable React component or page section, especially when multiple component skills should be coordinated.",
   "purpose": "Turn a component task into a clear sequence of specialized skill work. Keep the process lightweight for small changes and explicit for reusable or risky components.",
   "scope": "Pulse Workflow Orchestrator",
-  "inputs": "Required: - User request. - Current codebase context. - Project constraints from `AGENTS.md`. Optional: - Existing design references. - Prior component decisions. - Test failures or browser logs.",
-  "outputs": "- Skill execution order. - Component lifecycle checklist. - Implementation sequence. - Verification plan. - Open questions only when needed.",
+  "single_responsibility": "Coordinate the component lifecycle: deterministically select the minimal skill subset, enforce the Definition of Ready and Definition of Done gates, and hand off. It owns routing, not domain logic.",
+  "deterministic": true,
+  "triggers": [
+    "A component task spans planning, architecture, implementation, testing, review, or documentation",
+    "Multiple focused skills apply and need ordering",
+    "The user asks for a reusable component workflow"
+  ],
+  "inputs": {
+    "required": [
+      "User request",
+      "Current codebase context",
+      "Project constraints from AGENTS.md"
+    ],
+    "optional": [
+      "Existing design references",
+      "Prior component decisions",
+      "Test failures or browser logs"
+    ]
+  },
+  "outputs": [
+    "Selected minimal skill subset and execution order",
+    "Component lifecycle checklist",
+    "Gate 1 and Gate 2 status",
+    "Verification plan",
+    "Progress report of done, skipped, and follow-up skills"
+  ],
+  "completion_criteria": [
+    "Task is classified and the minimal skill subset is selected from the routing matrix",
+    "Discovery preceded implementation",
+    "Gate 1 (Definition of Ready) was enforced before implementation",
+    "Gate 2 (Definition of Done) was enforced via pulse-review-quality-gate",
+    "Skipped phases are reported, not silently dropped"
+  ],
+  "validation_criteria": [
+    "Routing decisions match references/workflow-routing.md for the present signals",
+    "Both gates in references/validation-gates.md were checked",
+    "A final progress report lists done, skipped, and follow-up skills",
+    "Verification ran or was explicitly reported as skipped"
+  ],
+  "failure_handling": [
+    "Do not advance past a gate with unmet items; route back to the skill that owns the missing item.",
+    "If routing is ambiguous, prefer the smaller subset and report the assumption."
+  ],
+  "escalation_path": [
+    "Route unknown framework or library behaviour to pulse-docs-research.",
+    "Escalate scope, dependency, or product decisions to the user before proceeding."
+  ],
+  "upstream_skills": [
+    "pulse-create-component"
+  ],
+  "downstream_skills": [
+    "pulse-requirements-analysis",
+    "pulse-existing-audit",
+    "pulse-reuse-decision",
+    "pulse-docs-research",
+    "pulse-architecture-boundaries",
+    "pulse-review-quality-gate"
+  ],
   "related_skills": [
     "pulse-api-contract",
     "pulse-docs-research",
@@ -16,6 +72,14 @@
     "pulse-requirements-analysis",
     "pulse-reuse-decision",
     "pulse-review-quality-gate"
+  ],
+  "references": [
+    "references/skill-contract.md",
+    "references/skill-structure.md",
+    "references/validation-gates.md",
+    "references/workflow-routing.md",
+    "references/review-aggregation.md",
+    "references/documentation-discipline.md"
   ],
   "rule_files": [
     "rules/responsibilities.md",
@@ -30,25 +94,12 @@
     "Select the next relevant skill.",
     "Preserve phase outputs and decisions.",
     "Keep scope tied to the user request.",
-    "Ensure verification is planned before finalization."
+    "Ensure verification is planned before finalization.",
+    "Report run progress and the selected-skill status to the user."
   ],
   "non_responsibilities": [
     "Writing implementation details owned by focused skills.",
     "Replacing Laravel Boost, Context7, or project-specific documentation lookup.",
     "Creating documentation files unless the user explicitly requested them."
-  ],
-  "success_criteria": [
-    "The skill stays within its focused responsibility.",
-    "The workflow and decision points are followed.",
-    "Validation checklist items are satisfied or skipped checks are reported.",
-    "Cross-skill handoffs are explicit when another skill owns the next concern."
-  ],
-  "validation_criteria": [
-    "SKILL.md loads as the entry point.",
-    "README.md summarizes usage for humans.",
-    "AGENTS.md provides the compiled agent guide.",
-    "metadata.json exposes machine-readable discovery metadata.",
-    "rules/_sections.md indexes rule files.",
-    "rules/_template.md defines the rule-file standard."
   ]
 }

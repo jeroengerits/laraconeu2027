@@ -25,6 +25,7 @@ This skill follows the local `vercel-react-best-practices` architecture:
 | [Workflow](rules/workflow.md)                                 | Step-by-step execution process.                    |
 | [Decision Points](rules/decision-points.md)                   | Branching rules and handoff decisions.             |
 | [Checklists](rules/checklists.md)                             | Pre-flight, execution, and completion checks.      |
+| [Progress Report](rules/progress-report.md)                   | Inline run status: done, active, next, skipped.    |
 | [Documentation Discipline](rules/documentation-discipline.md) | Shared documentation-source rule for code changes. |
 
 ## Related Skills

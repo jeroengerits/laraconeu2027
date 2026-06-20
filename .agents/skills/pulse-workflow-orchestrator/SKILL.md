@@ -61,11 +61,26 @@ Read the relevant rule files in `rules/` before acting with this skill. Read all
 | [Workflow](rules/workflow.md)                                 | Step-by-step execution process.                    |
 | [Decision Points](rules/decision-points.md)                   | Branching rules and handoff decisions.             |
 | [Checklists](rules/checklists.md)                             | Pre-flight, execution, and completion checks.      |
+| [Progress Report](rules/progress-report.md)                   | Inline run status: done, active, next, skipped.    |
 | [Documentation Discipline](rules/documentation-discipline.md) | Shared documentation-source rule for code changes. |
+
+## Shared References
+
+This skill owns the shared assets that the whole Pulse ecosystem depends on. Read them
+when coordinating or when adding a new skill.
+
+| Reference                                                          | Purpose                                                       |
+| ------------------------------------------------------------------ | ------------------------------------------------------------- |
+| [Skill Contract](references/skill-contract.md)                     | The `metadata.json` contract every skill must satisfy.        |
+| [Skill Structure](references/skill-structure.md)                   | The "well-formed skill" conformance standard.                 |
+| [Validation Gates](references/validation-gates.md)                 | Definition of Ready and Definition of Done.                   |
+| [Workflow Routing](references/workflow-routing.md)                 | Deterministic task-signal to skill-subset routing matrix.     |
+| [Review Aggregation](references/review-aggregation.md)             | Maps the review gate to domain Completion checklists.         |
+| [Documentation Discipline](references/documentation-discipline.md) | Shared documentation-source rule.                             |
 
 ## Process
 
-Follow [Workflow](rules/workflow.md) first, then apply [Decision Points](rules/decision-points.md) and [Checklists](rules/checklists.md) before finalizing. Use [Responsibilities](rules/responsibilities.md) and [Non-Responsibilities](rules/non-responsibilities.md) to keep ownership narrow.
+Follow [Workflow](rules/workflow.md) first, then apply [Decision Points](rules/decision-points.md) and [Checklists](rules/checklists.md) before finalizing. Use [Responsibilities](rules/responsibilities.md) and [Non-Responsibilities](rules/non-responsibilities.md) to keep ownership narrow. Route with [Workflow Routing](references/workflow-routing.md) and enforce [Validation Gates](references/validation-gates.md).
 
 ## Decision Trees
 

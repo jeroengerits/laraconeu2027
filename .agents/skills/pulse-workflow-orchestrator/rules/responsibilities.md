@@ -5,3 +5,4 @@
 - Preserve phase outputs and decisions.
 - Keep scope tied to the user request.
 - Ensure verification is planned before finalization.
+- Report run progress and the selected-skill status to the user.

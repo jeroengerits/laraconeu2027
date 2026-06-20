@@ -28,7 +28,8 @@ Orchestrates complete React component development in this Laravel Inertia app. U
 10. [Workflow](#workflow)
 11. [Decision Points](#decision-points)
 12. [Checklists](#checklists)
-13. [Documentation Discipline](#documentation-discipline)
+13. [Progress Report](#progress-report)
+14. [Documentation Discipline](#documentation-discipline)
 
 ---
 
@@ -89,6 +90,7 @@ Optional:
 | [Workflow](rules/workflow.md)                                 | Step-by-step execution process.                    |
 | [Decision Points](rules/decision-points.md)                   | Branching rules and handoff decisions.             |
 | [Checklists](rules/checklists.md)                             | Pre-flight, execution, and completion checks.      |
+| [Progress Report](rules/progress-report.md)                   | Inline run status: done, active, next, skipped.    |
 | [Documentation Discipline](rules/documentation-discipline.md) | Shared documentation-source rule for code changes. |
 
 ---
@@ -100,6 +102,7 @@ Optional:
 - Preserve phase outputs and decisions.
 - Keep scope tied to the user request.
 - Ensure verification is planned before finalization.
+- Report run progress and the selected-skill status to the user.
 
 ---
 
@@ -119,8 +122,9 @@ Optional:
 4. Keep the active path minimal for small changes.
 5. Route uncertain APIs, browser behaviour, hydration, gestures, accessibility, and testing details through `pulse-docs-research`.
 6. Before edits, confirm the planned files and behavioural surface.
-7. After edits, run the smallest reliable verification commands.
-8. Report skipped checks explicitly.
+7. When coordinating more than one focused skill, emit a progress report per [Progress Report](rules/progress-report.md) at each phase handoff.
+8. After edits, run the smallest reliable verification commands.
+9. Report skipped checks explicitly.
 
 ---
 
@@ -148,12 +152,32 @@ Execution:
 - Discovery precedes implementation.
 - Docs research is done for uncertain APIs.
 - Architecture, API, accessibility, performance, and testing concerns are assigned.
+- A progress report is emitted at each phase handoff for multi-skill runs.
 
 Completion:
 
 - Verification ran or was explicitly skipped.
 - User-facing behaviour is summarized.
+- A final progress report lists done, skipped, and follow-up skills.
 - Follow-up risk is clear.
+
+---
+
+## Progress Report
+
+Emit an inline status report whenever this skill coordinates more than one focused Pulse skill. Anchor it to the recommended execution order in `../../PULSE-SKILL-DEPENDENCY-GRAPH.md`, and report only the skills selected for the current task unless the user asks for the full map.
+
+Update the report at each phase handoff, not on every minor step, and render it inline rather than in a new file.
+
+Suggested format:
+
+```text
+Pulse workflow: <task type>
+- Done: <skill> — <decision/output>
+- Active: <skill> — <current focus>
+- Next: <skill> — <reason>
+- Skipped: <skill> — <reason>
+```
 
 ---
 
