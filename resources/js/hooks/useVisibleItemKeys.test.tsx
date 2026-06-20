@@ -8,9 +8,13 @@ type TestItem = {
     id: string;
 };
 
-type ObserverEntry = Pick<IntersectionObserverEntry, 'isIntersecting' | 'target'>;
+type ObserverEntry = Pick<
+    IntersectionObserverEntry,
+    'isIntersecting' | 'target'
+>;
 
-let latestIntersectionObserverCallback: IntersectionObserverCallback | null = null;
+let latestIntersectionObserverCallback: IntersectionObserverCallback | null =
+    null;
 
 class IntersectionObserverHarnessMock implements IntersectionObserver {
     readonly root = null;
@@ -97,12 +101,16 @@ describe('useVisibleItemKeys', () => {
             ]);
         });
 
-        expect(screen.getByTestId('visible-item-keys')).toHaveTextContent('alpha');
+        expect(screen.getByTestId('visible-item-keys')).toHaveTextContent(
+            'alpha',
+        );
 
         rerender(<HookHarness items={[{ id: 'gamma' }, { id: 'delta' }]} />);
 
         await waitFor(() => {
-            expect(screen.getByTestId('visible-item-keys').textContent).toBe('');
+            expect(screen.getByTestId('visible-item-keys').textContent).toBe(
+                '',
+            );
         });
 
         act(() => {
@@ -114,6 +122,8 @@ describe('useVisibleItemKeys', () => {
             ]);
         });
 
-        expect(screen.getByTestId('visible-item-keys')).toHaveTextContent('gamma');
+        expect(screen.getByTestId('visible-item-keys')).toHaveTextContent(
+            'gamma',
+        );
     });
 });

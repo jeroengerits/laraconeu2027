@@ -1,6 +1,6 @@
 import { animate, useReducedMotion } from 'motion/react';
-import { useCallback, useEffect, useRef } from 'react';
 import type { MouseEvent } from 'react';
+import { useCallback, useEffect, useRef } from 'react';
 
 const anchorScrollTransition = {
     duration: 0.62,

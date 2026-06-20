@@ -1,9 +1,10 @@
 import { Cross2Icon } from '@radix-ui/react-icons';
-import { AnimatePresence, m, useReducedMotion } from 'motion/react';
 import type { Variants } from 'motion/react';
+import { AnimatePresence, m, useReducedMotion } from 'motion/react';
 import { Dialog, VisuallyHidden } from 'radix-ui';
-import { useCallback, useEffect, useRef, useState } from 'react';
 import type { ReactElement } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
+import type * as Three from 'three';
 import type {
     Mesh,
     MeshBasicMaterial,
@@ -12,14 +13,13 @@ import type {
     Vector2,
     Vector3,
 } from 'three';
-import type * as Three from 'three';
 
 import { Button } from '@/components/Button';
+import type { ResponsiveImageAsset } from '@/components/ResponsiveImage';
 import {
     createResponsiveImageAsset,
     ResponsiveImage,
 } from '@/components/ResponsiveImage';
-import type { ResponsiveImageAsset } from '@/components/ResponsiveImage';
 
 const impressionPhotoModules = import.meta.glob<string>(
     '../../../img/photos/resized/*-{tiny,small,medium,large,huge,mega,original}.jpg',

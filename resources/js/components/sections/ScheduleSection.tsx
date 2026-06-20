@@ -2,10 +2,7 @@ import type { ReactElement } from 'react';
 
 import { Schedule } from '@/components/Schedule';
 import { Section } from '@/components/sections/Section';
-import {
-    formatScheduleSpeakerName,
-    speakersById,
-} from '@/lib/speakerInitials';
+import { formatScheduleSpeakerName, speakersById } from '@/lib/speakerInitials';
 import type { ScheduleDay } from '@/types/schedule';
 import type { Speaker } from '@/types/speaker';
 

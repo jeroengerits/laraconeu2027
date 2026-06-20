@@ -1,5 +1,5 @@
-import { useCallback, useMemo } from 'react';
 import type { MutableRefObject, PointerEvent, RefObject } from 'react';
+import { useCallback, useMemo } from 'react';
 
 type UseHorizontalScrollPauseOptions = {
     isDraggingRef: MutableRefObject<boolean>;

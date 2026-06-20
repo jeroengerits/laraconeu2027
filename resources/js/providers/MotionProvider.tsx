@@ -1,5 +1,5 @@
 import type { Transition } from 'motion/react';
-import { LazyMotion, MotionConfig, domAnimation } from 'motion/react';
+import { domAnimation, LazyMotion, MotionConfig } from 'motion/react';
 import type { ReactElement, ReactNode } from 'react';
 
 type MotionProviderProps = {

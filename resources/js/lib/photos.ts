@@ -1,9 +1,9 @@
-import { createResponsiveImageAsset } from '@/components/ResponsiveImage';
 import type {
     ResponsiveImageAsset,
     ResponsiveImageSource,
     ResponsiveImageSources,
 } from '@/components/ResponsiveImage';
+import { createResponsiveImageAsset } from '@/components/ResponsiveImage';
 
 const defaultPhotoAssetPathPattern =
     /\/(?<baseName>.+)-(?<size>tiny|small|medium|large|huge|mega|original)\.jpg$/;

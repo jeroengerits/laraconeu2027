@@ -18,11 +18,7 @@ describe('Avatar', () => {
 
     it('falls back to initials when the photo fails to load', async () => {
         render(
-            <Avatar
-                name="Dan Harrin"
-                size="md"
-                src="/speakers/missing.jpg"
-            />,
+            <Avatar name="Dan Harrin" size="md" src="/speakers/missing.jpg" />,
         );
 
         await waitFor(() => {

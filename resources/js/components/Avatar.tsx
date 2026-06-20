@@ -85,10 +85,7 @@ function AvatarRoot({
     );
 }
 
-function AvatarImage({
-    className,
-    ...props
-}: AvatarImageProps): ReactElement {
+function AvatarImage({ className, ...props }: AvatarImageProps): ReactElement {
     return (
         <AvatarPrimitive.Image
             className={cn('aspect-square size-full object-cover', className)}

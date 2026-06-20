@@ -1,5 +1,5 @@
-import { useCallback } from 'react';
 import type { KeyboardEvent, RefObject } from 'react';
+import { useCallback } from 'react';
 
 type UseHorizontalKeyboardScrollOptions = {
     pause: () => void;

@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
-import { emptyNotification } from '@/lib/notifications';
 import type { Notification } from '@/lib/notifications';
+import { emptyNotification } from '@/lib/notifications';
 
 type NotificationState = {
     notification: Notification;

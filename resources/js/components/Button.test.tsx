@@ -8,7 +8,9 @@ describe('Button', () => {
     it('renders its children as the accessible name', () => {
         render(<Button>Save</Button>);
 
-        expect(screen.getByRole('button', { name: 'Save' })).toBeInTheDocument();
+        expect(
+            screen.getByRole('button', { name: 'Save' }),
+        ).toBeInTheDocument();
     });
 
     it('calls onClick when activated', async () => {

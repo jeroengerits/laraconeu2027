@@ -11,7 +11,8 @@ import {
     useRef,
 } from 'react';
 
-import { type AnimatedTabItem, AnimatedTabs } from '@/components/AnimatedTabs';
+import {  AnimatedTabs } from '@/components/AnimatedTabs';
+import type {AnimatedTabItem} from '@/components/AnimatedTabs';
 import { Avatar } from '@/components/Avatar';
 import { TimeRange } from '@/components/TimeRange';
 import { scheduleItemViewport, useStaggerMotion } from '@/lib/motionVariants';

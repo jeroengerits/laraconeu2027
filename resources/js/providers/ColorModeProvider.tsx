@@ -1,13 +1,13 @@
-import { useCallback, useMemo, useSyncExternalStore } from 'react';
 import type { ReactElement, ReactNode } from 'react';
+import { useCallback, useMemo, useSyncExternalStore } from 'react';
 
-import {
-    ColorModeDispatcherContext,
-    ColorModeStateContext,
-} from '@/providers/context/ColorModeContext';
 import type {
     ColorModeDispatcherContextValue,
     ColorModeStateContextValue,
+} from '@/providers/context/ColorModeContext';
+import {
+    ColorModeDispatcherContext,
+    ColorModeStateContext,
 } from '@/providers/context/ColorModeContext';
 import { useNotificationDispatcher } from '@/providers/context/NotificationContext';
 
