@@ -1,5 +1,6 @@
 import type { ReactElement } from 'react';
 
+import { Button } from '@/components/Button';
 import { cn } from '@/lib/utils';
 
 type SocialLink = {
@@ -37,23 +38,23 @@ export function SocialLinkBar({ className }: SocialLinkBarProps): ReactElement {
             className={cn('flex items-center justify-center gap-2', className)}
         >
             {socialLinks.map((link) => (
-                <a
-                    aria-label={link.label}
-                    className="inline-flex size-11 items-center justify-center rounded-md text-(--color-muted-foreground) transition-colors hover:text-(--welcome-fg) focus-visible:ring-2 focus-visible:ring-current focus-visible:outline-none"
-                    href={link.href}
-                    key={link.label}
-                    rel="noopener noreferrer"
-                    target="_blank"
-                >
-                    <svg
-                        aria-hidden="true"
-                        className="size-5"
-                        fill="currentColor"
-                        viewBox="0 0 24 24"
+                <Button asChild key={link.label} size="icon" variant="ghost">
+                    <a
+                        aria-label={link.label}
+                        href={link.href}
+                        rel="noopener noreferrer"
+                        target="_blank"
                     >
-                        <path d={link.path} />
-                    </svg>
-                </a>
+                        <svg
+                            aria-hidden="true"
+                            className="size-5"
+                            fill="currentColor"
+                            viewBox="0 0 24 24"
+                        >
+                            <path d={link.path} />
+                        </svg>
+                    </a>
+                </Button>
             ))}
         </nav>
     );

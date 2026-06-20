@@ -46,17 +46,10 @@ const buttonSizeClassNames: Record<ButtonSize, string> = {
     tiny: 'h-8 px-2 text-xs',
 };
 
-const buttonHoverState = {
-    y: -1,
-} as const;
-
-const buttonTapState = {
-    scale: 0.97,
-} as const;
-
-const buttonTransition = {
-    duration: 0.18,
-    ease: 'easeOut',
+const interactiveMotionProps = {
+    transition: { duration: 0.18, ease: 'easeOut' },
+    whileHover: { y: -1 },
+    whileTap: { scale: 0.97 },
 } as const;
 
 function ButtonComponent(
@@ -79,15 +72,14 @@ function ButtonComponent(
         focusVisibleClassName,
         className,
     );
+    const motionProps = shouldReduceMotion ? undefined : interactiveMotionProps;
 
     if (asChild) {
         return (
             <MotionSlot
                 className={buttonClassName}
                 ref={ref}
-                transition={shouldReduceMotion ? undefined : buttonTransition}
-                whileHover={shouldReduceMotion ? undefined : buttonHoverState}
-                whileTap={shouldReduceMotion ? undefined : buttonTapState}
+                {...motionProps}
                 {...props}
             >
                 {children}
@@ -99,10 +91,8 @@ function ButtonComponent(
         <m.button
             className={buttonClassName}
             ref={ref}
-            transition={shouldReduceMotion ? undefined : buttonTransition}
             type={type}
-            whileHover={shouldReduceMotion ? undefined : buttonHoverState}
-            whileTap={shouldReduceMotion ? undefined : buttonTapState}
+            {...motionProps}
             {...props}
         >
             {children}
@@ -111,3 +101,5 @@ function ButtonComponent(
 }
 
 export const Button = forwardRef(ButtonComponent);
+
+Button.displayName = 'Button';

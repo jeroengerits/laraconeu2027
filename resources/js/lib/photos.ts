@@ -27,12 +27,6 @@ export type PhotoAssetSize = ResponsiveImageSource;
 
 export type PhotoAssetSources = ResponsiveImageSources;
 
-export type PhotoAsset = {
-    alt: string;
-    image: ResponsiveImageAsset;
-    name: string;
-};
-
 export type LazyPhotoAsset = {
     alt: string;
     loadImage: () => Promise<ResponsiveImageAsset>;
@@ -58,36 +52,6 @@ type LoadResponsiveImageAssetOptions = Pick<
 type PhotoAssetLoader = () => Promise<string>;
 
 type PhotoAssetLoaders = Record<PhotoAssetSize, PhotoAssetLoader>;
-
-export function createPhotoAssets(
-    modules: Record<string, string>,
-    {
-        alt = (name) => name,
-        height,
-        originalWidth,
-        pathPattern = defaultPhotoAssetPathPattern,
-        requiredSizes = defaultPhotoAssetSizes,
-        width,
-    }: CreatePhotoAssetsOptions = {},
-): PhotoAsset[] {
-    return createPhotoAssetSourceGroups(
-        modules,
-        pathPattern,
-        requiredSizes,
-    ).map(({ baseName, sources }, index) => {
-        const altText = alt(baseName, index);
-
-        return {
-            alt: altText,
-            image: createResponsiveImageAsset(sources, {
-                height,
-                originalWidth,
-                width,
-            }),
-            name: baseName,
-        };
-    });
-}
 
 export function createLazyPhotoAssets(
     modules: Record<string, PhotoAssetLoader>,
@@ -134,50 +98,6 @@ export function createLazyPhotoAssets(
     });
 }
 
-function createPhotoAssetSourceGroups(
-    modules: Record<string, string>,
-    pathPattern: RegExp,
-    requiredSizes: readonly PhotoAssetSize[],
-): { baseName: string; sources: PhotoAssetSources }[] {
-    const groupedSources = new Map<
-        string,
-        Partial<Record<PhotoAssetSize, string>>
-    >();
-
-    for (const [path, src] of Object.entries(modules)) {
-        const match = pathPattern.exec(path);
-        const groups = match?.groups;
-
-        if (groups === undefined) {
-            continue;
-        }
-
-        const size = groups.size;
-
-        if (!isPhotoAssetSize(size)) {
-            continue;
-        }
-
-        const baseName = groups.baseName;
-        const sources = groupedSources.get(baseName) ?? {};
-
-        sources[size] = src;
-        groupedSources.set(baseName, sources);
-    }
-
-    return Array.from(groupedSources.entries())
-        .flatMap(([baseName, sources]) => {
-            if (!hasCompletePhotoAssetSources(sources, requiredSizes)) {
-                return [];
-            }
-
-            return [{ baseName, sources }];
-        })
-        .toSorted((firstGroup, secondGroup) =>
-            firstGroup.baseName.localeCompare(secondGroup.baseName),
-        );
-}
-
 function createLazyPhotoAssetLoaderGroups(
     modules: Record<string, PhotoAssetLoader>,
     pathPattern: RegExp,
@@ -220,13 +140,6 @@ function createLazyPhotoAssetLoaderGroups(
         .toSorted((firstGroup, secondGroup) =>
             firstGroup.baseName.localeCompare(secondGroup.baseName),
         );
-}
-
-function hasCompletePhotoAssetSources(
-    sources: Partial<Record<PhotoAssetSize, string>>,
-    requiredSizes: readonly PhotoAssetSize[],
-): sources is PhotoAssetSources {
-    return requiredSizes.every((size) => sources[size] !== undefined);
 }
 
 function hasCompletePhotoAssetLoaders(
