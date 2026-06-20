@@ -252,7 +252,9 @@ function ScheduleList({
     );
 }
 
-function ScheduleDay(_props: ScheduleDayProps): null {
+function ScheduleDay(props: ScheduleDayProps): null {
+    void props;
+
     return null;
 }
 

@@ -1,6 +1,6 @@
 import { AnimatePresence, m, useReducedMotion } from 'motion/react';
 import { Tabs } from 'radix-ui';
-import { useMemo, useRef, useState } from 'react';
+import { useMemo, useState } from 'react';
 import type { ComponentPropsWithoutRef, ReactElement, ReactNode } from 'react';
 
 import { focusVisibleClassName } from '@/lib/focusVisible';
@@ -25,12 +25,10 @@ type AnimatedTabsProps = Omit<
 };
 
 function DefaultTabTrigger({
-    isActive: _isActive,
     subtitle,
     tab,
     triggerClassName,
 }: {
-    isActive: boolean;
     subtitle?: ReactNode;
     tab: AnimatedTabItem;
     triggerClassName?: string;
@@ -87,13 +85,15 @@ export function AnimatedTabs({
         [shouldReduceMotion],
     );
     const isControlled = value !== undefined;
-    const hasAnimatedPanel = useRef(false);
+    const [enablePanelEnterAnimation, setEnablePanelEnterAnimation] =
+        useState(false);
 
     function handleValueChange(nextValue: string): void {
         if (!isControlled) {
             setActiveTab(nextValue);
         }
 
+        setEnablePanelEnterAnimation(true);
         onValueChange?.(nextValue);
     }
 
@@ -115,7 +115,6 @@ export function AnimatedTabs({
             >
                 {tabs.map((tab) => (
                     <DefaultTabTrigger
-                        isActive={resolvedActiveTab === tab.value}
                         key={tab.value}
                         subtitle={tab.subtitle}
                         tab={tab}
@@ -139,11 +138,8 @@ export function AnimatedTabs({
                                 className="grid outline-none focus-visible:outline-none"
                                 exit="hidden"
                                 initial={
-                                    hasAnimatedPanel.current ? 'hidden' : false
+                                    enablePanelEnterAnimation ? 'hidden' : false
                                 }
-                                onAnimationComplete={() => {
-                                    hasAnimatedPanel.current = true;
-                                }}
                                 variants={panelVariants}
                             >
                                 {tab.content}
