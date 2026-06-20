@@ -215,13 +215,8 @@ Pulse workflow: <task type>
 
 ## Documentation Discipline
 
-Use the shared Pulse documentation-source rule.
-
-Skill-specific application:
-
-- Start from this skill's owning scope and local project conventions.
-- Use Laravel Boost `search-docs` before code changes. Do not skip this step.
-- Use `pulse-docs-research` when framework, library, hydration, testing, browser, or accessibility details affect implementation.
+Use the shared Pulse documentation-source rule in
+`references/documentation-discipline.md`.
 
 ---
 

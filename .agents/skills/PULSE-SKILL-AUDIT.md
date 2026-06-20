@@ -99,14 +99,18 @@ pulse-skill-name/
 ├── metadata.json
 └── rules/
     ├── _sections.md
-    ├── _template.md
     ├── responsibilities.md
     ├── non-responsibilities.md
     ├── workflow.md
     ├── decision-points.md      (now includes Failure and Escalation)
     ├── checklists.md
-    └── documentation-discipline.md
+    └── documentation-discipline.md   (thin pointer to the shared rule)
 ```
+
+The rule-file template is shared once at
+`pulse-workflow-orchestrator/references/rule-template.md`; skills no longer keep a
+per-folder `rules/_template.md`. The `documentation-discipline.md` rule in each skill is a
+thin pointer to `pulse-workflow-orchestrator/references/documentation-discipline.md`.
 
 `pulse-workflow-orchestrator` additionally owns `references/` (shared assets) and
 `rules/progress-report.md`. `pulse-create-component` keeps `rules/intake-questions.md`,

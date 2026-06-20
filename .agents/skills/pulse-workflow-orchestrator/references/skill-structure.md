@@ -17,7 +17,6 @@ pulse-skill-name/
 ├── metadata.json   # machine-readable skill contract (see skill-contract.md)
 └── rules/
     ├── _sections.md              # rule index
-    ├── _template.md              # rule-file template
     ├── responsibilities.md       # what the skill owns
     ├── non-responsibilities.md   # what the skill does not own
     ├── workflow.md               # step-by-step execution
@@ -25,6 +24,9 @@ pulse-skill-name/
     ├── checklists.md             # Pre-flight / Execution / Completion gates
     └── documentation-discipline.md  # pointer to shared documentation-source rule
 ```
+
+The rule-file template is shared at `references/rule-template.md`; skills do not keep a
+per-folder `_template.md`. Copy the shared template when adding a new rule file.
 
 Skills may keep extra rule files when they own specialized guidance (for example
 `intake-questions.md`, `question-strategy.md`, `prompt-template.md`).

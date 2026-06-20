@@ -1,6 +1,8 @@
 # Rule Title
 
-Use this template when adding a new rule file to this Pulse skill.
+Shared template for adding a new rule file to any `pulse-*` skill. Copy this into the
+skill's `rules/` folder and rename it. This is the single source of truth; skills do not
+keep their own per-folder copy.
 
 ## Purpose
 
