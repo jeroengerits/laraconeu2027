@@ -35,10 +35,19 @@ export function SocialLinkBar({ className }: SocialLinkBarProps): ReactElement {
     return (
         <nav
             aria-label="Social media"
-            className={cn('flex items-center justify-center gap-2', className)}
+            className={cn(
+                'flex items-center justify-center gap-0 border-y-2 border-canvas-foreground',
+                className,
+            )}
         >
             {socialLinks.map((link) => (
-                <Button asChild key={link.label} size="icon" variant="ghost">
+                <Button
+                    asChild
+                    className="border-r border-canvas-foreground/15 last:border-r-0"
+                    key={link.label}
+                    size="icon"
+                    variant="ghost"
+                >
                     <a
                         aria-label={link.label}
                         href={link.href}

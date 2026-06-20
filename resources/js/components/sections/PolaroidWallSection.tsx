@@ -1,24 +1,35 @@
 import type { ReactElement } from 'react';
 
 import { PolaroidWall } from '@/components/PolaroidWall';
+import { SectionFrame, SectionIntro } from '@/components/sections/Section';
 
 export function PolaroidWallSection(): ReactElement {
     return (
         <section
             aria-label="Polaroid Wall"
-            className="transition-color-mode"
+            className="px-4 py-12 text-canvas-foreground transition-color-mode sm:px-6 lg:px-8"
             id="polaroid-wall"
         >
-            <div className="mx-auto mb-5 max-w-3xl px-5 text-center sm:mb-6 sm:px-8 section:mb-8">
-                <h2 className="font-display text-3xl leading-none font-bold text-balance text-canvas-foreground sm:text-4xl section:text-5xl">
-                    Last Year Memories
-                </h2>
-                <p className="mx-auto mt-3 max-w-2xl text-sm leading-6 text-balance text-muted-foreground sm:text-base section:text-lg">
+            <SectionFrame>
+                <SectionIntro
+                    eyebrow="Archive / atmosphere"
+                    meta={
+                        <>
+                            Last year
+                            <br />
+                            People
+                            <br />
+                            Moments
+                        </>
+                    }
+                    title="Memories"
+                />
+                <p className="max-w-2xl border-t border-canvas-foreground/15 pt-4 text-sm leading-6 text-balance text-muted-foreground">
                     A look back at the faces, talks, and hallway moments that
                     made last year's Laracon EU feel unforgettable.
                 </p>
-            </div>
-            <PolaroidWall />
+                <PolaroidWall />
+            </SectionFrame>
         </section>
     );
 }

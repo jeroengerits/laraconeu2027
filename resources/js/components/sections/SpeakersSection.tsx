@@ -3,7 +3,11 @@ import { memo } from 'react';
 
 import { AnimatedListItem } from '@/components/AnimatedListItem';
 import { Avatar } from '@/components/Avatar';
-import { Section } from '@/components/sections/Section';
+import {
+    Section,
+    SectionFrame,
+    SectionIntro,
+} from '@/components/sections/Section';
 import {
     createSpeakerItemEnterVariants,
     scheduleItemViewport,
@@ -47,30 +51,30 @@ export function SpeakersSection({
 }: SpeakersSectionProps): ReactElement {
     return (
         <Section id="speakers">
-            <div className="mx-auto mt-10 grid w-full max-w-7xl gap-10">
-                <div className="grid gap-6 border-t-4 border-canvas-foreground pt-5 lg:grid-cols-[minmax(0,1fr)_14rem] lg:items-start">
-                    <div className="grid gap-4">
-                        <p className="speakers-editorial-meta font-mono text-xs font-semibold tracking-[0.18em] text-muted-foreground uppercase">
+            <SectionFrame>
+                <SectionIntro
+                    eyebrow={
+                        <span className="speakers-editorial-meta">
                             Community voices
-                        </p>
-                        <h2 className="max-w-[8ch] font-display text-5xl leading-[0.9] font-bold text-canvas-foreground uppercase sm:text-6xl lg:text-7xl">
-                            Speakers
-                        </h2>
-                    </div>
-                    <p className="border-t border-canvas-foreground/15 pt-4 font-mono text-xs leading-6 tracking-[0.14em] text-muted-foreground uppercase lg:border-t-0 lg:pt-0 lg:text-right">
-                        Laravel
-                        <br />
-                        PHP
-                        <br />
-                        Frontend
-                    </p>
-                </div>
+                        </span>
+                    }
+                    meta={
+                        <>
+                            Laravel
+                            <br />
+                            PHP
+                            <br />
+                            Frontend
+                        </>
+                    }
+                    title="Speakers"
+                />
                 <ul className="speakers-editorial-grid grid list-none gap-x-8 gap-y-10 p-0 sm:grid-cols-2 lg:grid-cols-3">
                     {speakers.map((speaker) => (
                         <SpeakerCard key={speaker.id} speaker={speaker} />
                     ))}
                 </ul>
-            </div>
+            </SectionFrame>
         </Section>
     );
 }

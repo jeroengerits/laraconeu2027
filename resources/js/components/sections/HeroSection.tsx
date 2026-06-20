@@ -7,7 +7,7 @@ import tabletHeroImage from '../../../img/tablet-hero.png';
 export function HeroSection(): ReactElement {
     return (
         <section
-            className="relative grid aspect-2/3 scroll-mt-24 place-items-center overflow-hidden pair-canvas px-4 py-12 text-center transition-color-mode sm:px-6 md:aspect-4/3 lg:px-8 section:aspect-video"
+            className="relative grid aspect-2/3 scroll-mt-24 place-items-center overflow-hidden border-b-4 border-canvas-foreground pair-canvas px-4 py-12 text-center transition-color-mode sm:px-6 md:aspect-4/3 lg:px-8 section:aspect-video"
             id="hero"
         >
             <picture className="absolute inset-0">

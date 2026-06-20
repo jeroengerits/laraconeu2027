@@ -18,7 +18,7 @@ export type TopNavigationMenuButtonProps = Omit<
 export type TopNavigationMobileMenuProps = HTMLMotionProps<'nav'>;
 
 const mobileMenuButtonClassName =
-    'relative overflow-hidden hover:text-current/70 lg:hidden';
+    'relative overflow-hidden border border-current/20 hover:text-current/70 lg:hidden';
 
 const menuIconInitialState = {
     opacity: 0,
@@ -164,7 +164,7 @@ export function TopNavigationMobileMenu({
                     animate={mobileMenuVisibleState}
                     aria-label="Primary"
                     className={cn(
-                        'col-span-3 grid w-full grid-cols-1 gap-1 sm:grid-cols-2 lg:hidden',
+                        'col-span-3 grid w-full grid-cols-1 border-t-2 border-canvas-foreground pt-2 sm:grid-cols-2 lg:hidden',
                         className,
                     )}
                     exit={mobileMenuExitState}

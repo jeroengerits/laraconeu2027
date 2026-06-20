@@ -32,9 +32,9 @@ type AvatarComponent = {
 };
 
 const avatarSizeClassNames: Record<AvatarSize, string> = {
-    sm: 'size-8 text-xs',
-    md: 'size-12 text-sm',
-    lg: 'size-16 text-base',
+    sm: 'size-8 text-[0.6875rem]',
+    md: 'size-12 text-xs',
+    lg: 'size-16 text-sm',
 };
 
 const avatarIconSizeClassNames: Record<AvatarSize, string> = {
@@ -55,7 +55,7 @@ function AvatarRoot({
     return (
         <AvatarPrimitive.Root
             className={cn(
-                'relative inline-flex shrink-0 overflow-hidden rounded-full bg-muted',
+                'relative inline-flex shrink-0 overflow-hidden border border-canvas-foreground/15 bg-muted',
                 avatarSizeClassNames[size],
                 className,
             )}

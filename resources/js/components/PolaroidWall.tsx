@@ -29,9 +29,9 @@ const scrollResumeDelay = 300;
 const polaroidWallImageSizes =
     '(min-width: 72rem) 11rem, (min-width: 40rem) 9.5rem, 8rem';
 const polaroidWallImageClassName =
-    'aspect-[4/3] select-none rounded-[0.22rem] object-cover saturate-[1.04]';
+    'aspect-[4/3] select-none object-cover saturate-[1.04]';
 const polaroidWallImageContainerClassName =
-    'overflow-hidden rounded-[0.22rem] bg-canvas-foreground/10 ring-1 ring-canvas-foreground/10 shadow-[inset_0_0_0_1px_color-mix(in_oklch,var(--color-canvas-foreground)_4%,transparent)]';
+    'overflow-hidden bg-canvas-foreground/10 ring-1 ring-canvas-foreground/10 shadow-[inset_0_0_0_1px_color-mix(in_oklch,var(--color-canvas-foreground)_4%,transparent)]';
 
 const polaroidWallViewport = {
     amount: 0.22,
@@ -249,7 +249,7 @@ const PolaroidWallCard = memo(function PolaroidWallCard({
     return (
         <m.figure
             className={cn(
-                'group relative w-[8rem] shrink-0 rounded-[0.4rem] bg-surface/96 p-1 text-surface-foreground shadow-[0_10px_24px_-18px_color-mix(in_oklch,var(--color-canvas-foreground)_52%,transparent),0_2px_8px_-7px_color-mix(in_oklch,var(--color-canvas-foreground)_30%,transparent)] ring-1 ring-canvas-foreground/10 backdrop-blur-[2px] will-change-transform [backface-visibility:hidden] sm:w-[9.5rem] sm:p-1.5 section:w-[11rem] section:p-2',
+                'group relative w-[8rem] shrink-0 border border-canvas-foreground/15 bg-surface/96 p-1 text-surface-foreground shadow-[0_10px_24px_-18px_color-mix(in_oklch,var(--color-canvas-foreground)_52%,transparent),0_2px_8px_-7px_color-mix(in_oklch,var(--color-canvas-foreground)_30%,transparent)] backdrop-blur-[2px] will-change-transform [backface-visibility:hidden] sm:w-[9.5rem] sm:p-1.5 section:w-[11rem] section:p-2',
                 getPolaroidWallRotationClassName(index, rowIndex),
             )}
             data-polaroid-card-key={itemKey}
