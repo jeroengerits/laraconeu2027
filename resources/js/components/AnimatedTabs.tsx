@@ -1,13 +1,10 @@
 import { AnimatePresence, m, useReducedMotion } from 'motion/react';
 import { Tabs } from 'radix-ui';
-import { useMemo, useState } from 'react';
+import { useMemo, useRef, useState } from 'react';
 import type { ComponentPropsWithoutRef, ReactElement, ReactNode } from 'react';
 
 import { focusVisibleClassName } from '@/lib/focusVisible';
-import {
-    createPanelVariants,
-    tabTapTransition,
-} from '@/lib/motion/staggerVariants';
+import { createPanelVariants, tabTapTransition } from '@/lib/motionVariants';
 import { cn } from '@/lib/utils';
 
 export type AnimatedTabItem = {
@@ -82,8 +79,7 @@ export function AnimatedTabs({
     value,
     ...props
 }: AnimatedTabsProps): ReactElement {
-    const defaultActiveTab =
-        value ?? defaultValue ?? tabs[0]?.value ?? '';
+    const defaultActiveTab = value ?? defaultValue ?? tabs[0]?.value ?? '';
     const [activeTab, setActiveTab] = useState(defaultActiveTab);
     const shouldReduceMotion = useReducedMotion();
     const panelVariants = useMemo(
@@ -91,6 +87,7 @@ export function AnimatedTabs({
         [shouldReduceMotion],
     );
     const isControlled = value !== undefined;
+    const hasAnimatedPanel = useRef(false);
 
     function handleValueChange(nextValue: string): void {
         if (!isControlled) {
@@ -100,7 +97,7 @@ export function AnimatedTabs({
         onValueChange?.(nextValue);
     }
 
-    const resolvedActiveTab = isControlled ? value ?? '' : activeTab;
+    const resolvedActiveTab = isControlled ? (value ?? '') : activeTab;
 
     return (
         <Tabs.Root
@@ -141,7 +138,12 @@ export function AnimatedTabs({
                                 animate="visible"
                                 className="grid outline-none focus-visible:outline-none"
                                 exit="hidden"
-                                initial="hidden"
+                                initial={
+                                    hasAnimatedPanel.current ? 'hidden' : false
+                                }
+                                onAnimationComplete={() => {
+                                    hasAnimatedPanel.current = true;
+                                }}
                                 variants={panelVariants}
                             >
                                 {tab.content}

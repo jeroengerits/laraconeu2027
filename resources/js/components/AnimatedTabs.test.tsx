@@ -50,6 +50,24 @@ describe('AnimatedTabs', () => {
         expect(screen.queryByText('Day one content')).not.toBeInTheDocument();
     });
 
+    it('switches panels when a tab is focused and activated with the keyboard', async () => {
+        const user = userEvent.setup();
+
+        render(
+            <AnimatedTabs
+                aria-label="Example tabs"
+                defaultValue="day-1"
+                tabs={[...tabs]}
+            />,
+        );
+
+        await user.click(screen.getByRole('tab', { name: /DAY 1/i }));
+        await user.keyboard('{ArrowRight}');
+
+        expect(screen.getByText('Day two content')).toBeInTheDocument();
+        expect(screen.queryByText('Day one content')).not.toBeInTheDocument();
+    });
+
     it('exposes a labelled tablist', () => {
         render(
             <AnimatedTabs

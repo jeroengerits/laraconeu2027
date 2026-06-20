@@ -158,6 +158,34 @@ describe('Schedule', () => {
         expect(screen.getByText('DAN HARRIN')).toBeInTheDocument();
     });
 
+    it('renders a placeholder avatar when a session row has no speaker name', () => {
+        renderScheduleItem(sampleDays[0].items[1], {
+            speaker: 'DAN HARRIN',
+        });
+
+        expect(screen.getByText('DAN HARRIN')).toBeInTheDocument();
+        expect(screen.queryByText('DH')).not.toBeInTheDocument();
+        expect(document.querySelector('svg')).toBeInTheDocument();
+    });
+
+    it('switches days when a tab is activated with the keyboard', async () => {
+        const user = userEvent.setup();
+
+        renderSchedule();
+        await user.click(screen.getByRole('tab', { name: /DAY 1/i }));
+        await user.keyboard('{ArrowRight}');
+
+        expect(screen.getByText('SOCIAL_DRINKS')).toBeInTheDocument();
+        expect(screen.queryByText('Registration')).not.toBeInTheDocument();
+    });
+
+    it('renders non-session items without speaker attribution', () => {
+        renderSchedule();
+
+        expect(screen.getByText('break;')).toBeInTheDocument();
+        expect(screen.queryByText('break; //')).not.toBeInTheDocument();
+    });
+
     it('exposes a tablist labelled for assistive technology', () => {
         renderSchedule();
 
