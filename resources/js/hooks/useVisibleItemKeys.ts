@@ -33,10 +33,34 @@ export function useVisibleItemKeys<TItem>(
 
     useEffect(() => {
         const container = containerRef.current;
+        const nextItemKeySet = new Set(
+            items.map((item, index) => getItemKeyRef.current(item, index)),
+        );
 
         if (container === null) {
             return;
         }
+
+        setVisibleItemKeys((currentItemKeys) => {
+            let hasStaleItemKey = false;
+
+            for (const itemKey of currentItemKeys) {
+                if (!nextItemKeySet.has(itemKey)) {
+                    hasStaleItemKey = true;
+                    break;
+                }
+            }
+
+            if (!hasStaleItemKey) {
+                return currentItemKeys;
+            }
+
+            return new Set(
+                [...currentItemKeys].filter((itemKey) =>
+                    nextItemKeySet.has(itemKey),
+                ),
+            );
+        });
 
         if (typeof IntersectionObserver === 'undefined') {
             const fallbackTimeout = window.setTimeout(() => {

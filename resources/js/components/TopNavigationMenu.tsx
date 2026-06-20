@@ -5,7 +5,10 @@ import type { KeyboardEvent, ReactElement } from 'react';
 
 import { Button } from '@/components/Button';
 import { cn } from '@/lib/utils';
-import { useTopNavigation } from '@/providers/context/TopNavigationContext';
+import {
+    useTopNavigationActions,
+    useTopNavigationState,
+} from '@/providers/context/TopNavigationContext';
 
 export type TopNavigationMenuButtonProps = Omit<
     HTMLMotionProps<'button'>,
@@ -72,12 +75,9 @@ export function TopNavigationMenuButton({
     className,
     ...props
 }: TopNavigationMenuButtonProps): ReactElement {
-    const {
-        isMobileMenuOpen,
-        mobileMenuButtonRef,
-        mobileNavigationId,
-        toggleMobileMenu,
-    } = useTopNavigation();
+    const { isMobileMenuOpen, mobileMenuButtonRef, mobileNavigationId } =
+        useTopNavigationState();
+    const { toggleMobileMenu } = useTopNavigationActions();
     const shouldReduceMotion = useReducedMotion();
     const activeIconTransition = shouldReduceMotion
         ? reducedMotionMenuIconTransition
@@ -137,12 +137,11 @@ export function TopNavigationMobileMenu({
     onKeyDown,
     ...props
 }: TopNavigationMobileMenuProps): ReactElement | null {
+    const { isMobileMenuOpen, mobileNavigationId } = useTopNavigationState();
     const {
         closeMobileMenu,
         focusMobileMenuButton,
-        isMobileMenuOpen,
-        mobileNavigationId,
-    } = useTopNavigation();
+    } = useTopNavigationActions();
     const shouldReduceMotion = useReducedMotion();
     const activeMenuTransition = shouldReduceMotion
         ? reducedMotionMobileMenuTransition

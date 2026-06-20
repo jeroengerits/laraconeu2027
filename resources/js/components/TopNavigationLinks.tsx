@@ -4,7 +4,7 @@ import type { ReactElement } from 'react';
 import { Button } from '@/components/Button';
 import { useSmoothAnchorNavigation } from '@/hooks/useSmoothAnchorNavigation';
 import { cn } from '@/lib/utils';
-import { useTopNavigation } from '@/providers/context/TopNavigationContext';
+import { useTopNavigationActions } from '@/providers/context/TopNavigationContext';
 
 type TopNavigationLinkProps = ComponentPropsWithoutRef<'a'>;
 
@@ -51,7 +51,7 @@ function TopNavigationMobileLink({
     onClick,
     ...props
 }: TopNavigationLinkProps): ReactElement {
-    const { closeMobileMenu } = useTopNavigation();
+    const { closeMobileMenu } = useTopNavigationActions();
     const handleAnchorNavigation = useSmoothAnchorNavigation();
 
     return (

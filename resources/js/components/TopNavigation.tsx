@@ -1,5 +1,5 @@
 import type { ComponentPropsWithoutRef, ReactElement } from 'react';
-import { useId, useMemo, useRef } from 'react';
+import { useCallback, useId, useMemo, useRef } from 'react';
 
 import { TopNavigationBrand } from '@/components/TopNavigationBrand';
 import type { TopNavigationBrandProps } from '@/components/TopNavigationBrand';
@@ -27,8 +27,14 @@ import type {
 } from '@/components/TopNavigationMenu';
 import { useToggleState } from '@/hooks/useToggleState';
 import { cn } from '@/lib/utils';
-import { TopNavigationContext } from '@/providers/context/TopNavigationContext';
-import type { TopNavigationContextValue } from '@/providers/context/TopNavigationContext';
+import {
+    TopNavigationActionsContext,
+    TopNavigationStateContext,
+} from '@/providers/context/TopNavigationContext';
+import type {
+    TopNavigationActionsContextValue,
+    TopNavigationStateContextValue,
+} from '@/providers/context/TopNavigationContext';
 
 export type { TopNavigationItem } from '@/components/TopNavigationLinks';
 
@@ -57,37 +63,42 @@ function TopNavigationRoot({
     const generatedMobileNavigationId = useId();
     const mobileNavigationId = `top-navigation-mobile-menu-${generatedMobileNavigationId}`;
 
-    const contextValue = useMemo<TopNavigationContextValue>(
+    const focusMobileMenuButton = useCallback(() => {
+        mobileMenuButtonRef.current?.focus();
+    }, []);
+
+    const stateContextValue = useMemo<TopNavigationStateContextValue>(
         () => ({
-            closeMobileMenu: mobileMenu.close,
-            focusMobileMenuButton: () => {
-                mobileMenuButtonRef.current?.focus();
-            },
             isMobileMenuOpen: mobileMenu.isOpen,
             mobileMenuButtonRef,
             mobileNavigationId,
+        }),
+        [mobileMenu.isOpen, mobileNavigationId],
+    );
+
+    const actionsContextValue = useMemo<TopNavigationActionsContextValue>(
+        () => ({
+            closeMobileMenu: mobileMenu.close,
+            focusMobileMenuButton,
             toggleMobileMenu: mobileMenu.toggle,
         }),
-        [
-            mobileMenu.close,
-            mobileMenu.isOpen,
-            mobileMenu.toggle,
-            mobileNavigationId,
-        ],
+        [focusMobileMenuButton, mobileMenu.close, mobileMenu.toggle],
     );
 
     return (
-        <TopNavigationContext.Provider value={contextValue}>
-            <header
-                className={cn(
-                    'fixed inset-x-0 top-0 z-20 grid w-full max-w-full grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] items-center gap-x-4 gap-y-3 bg-[color-mix(in_oklch,var(--welcome-bg)_72%,transparent)] px-4 py-4 backdrop-blur-xl sm:px-6 lg:px-8',
-                    className,
-                )}
-                {...props}
-            >
-                {children}
-            </header>
-        </TopNavigationContext.Provider>
+        <TopNavigationActionsContext.Provider value={actionsContextValue}>
+            <TopNavigationStateContext.Provider value={stateContextValue}>
+                <header
+                    className={cn(
+                        'fixed inset-x-0 top-0 z-20 grid w-full max-w-full grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] items-center gap-x-4 gap-y-3 bg-[color-mix(in_oklch,var(--welcome-bg)_72%,transparent)] px-4 py-4 backdrop-blur-xl sm:px-6 lg:px-8',
+                        className,
+                    )}
+                    {...props}
+                >
+                    {children}
+                </header>
+            </TopNavigationStateContext.Provider>
+        </TopNavigationActionsContext.Provider>
     );
 }
 
