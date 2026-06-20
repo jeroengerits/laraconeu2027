@@ -13,12 +13,26 @@ const navigationLayoutTransition = {
     ease: 'easeOut',
 } as const;
 
+type NavigationLayoutMotion = {
+    layout: boolean;
+    transition: typeof navigationLayoutTransition | undefined;
+};
+
+function useNavigationLayoutMotion(): NavigationLayoutMotion {
+    const shouldReduceMotion = useReducedMotion();
+
+    return {
+        layout: !shouldReduceMotion,
+        transition: shouldReduceMotion ? undefined : navigationLayoutTransition,
+    };
+}
+
 export function TopNavigationStart({
     children,
     className,
     ...props
 }: TopNavigationSectionProps): ReactElement {
-    const shouldReduceMotion = useReducedMotion();
+    const layoutMotion = useNavigationLayoutMotion();
 
     return (
         <m.div
@@ -26,10 +40,7 @@ export function TopNavigationStart({
                 'col-start-1 flex min-w-0 items-center gap-2 justify-self-start',
                 className,
             )}
-            layout={!shouldReduceMotion}
-            transition={
-                shouldReduceMotion ? undefined : navigationLayoutTransition
-            }
+            {...layoutMotion}
             {...props}
         >
             {children}
@@ -42,7 +53,7 @@ export function TopNavigationPrimary({
     className,
     ...props
 }: TopNavigationPrimaryProps): ReactElement {
-    const shouldReduceMotion = useReducedMotion();
+    const layoutMotion = useNavigationLayoutMotion();
 
     return (
         <m.nav
@@ -51,10 +62,7 @@ export function TopNavigationPrimary({
                 'col-start-2 hidden items-center justify-center gap-x-2 justify-self-center lg:flex',
                 className,
             )}
-            layout={!shouldReduceMotion}
-            transition={
-                shouldReduceMotion ? undefined : navigationLayoutTransition
-            }
+            {...layoutMotion}
             {...props}
         >
             {children}
@@ -67,7 +75,7 @@ export function TopNavigationEnd({
     className,
     ...props
 }: TopNavigationSectionProps): ReactElement {
-    const shouldReduceMotion = useReducedMotion();
+    const layoutMotion = useNavigationLayoutMotion();
 
     return (
         <m.div
@@ -75,10 +83,7 @@ export function TopNavigationEnd({
                 'col-start-3 flex items-center gap-2 justify-self-end',
                 className,
             )}
-            layout={!shouldReduceMotion}
-            transition={
-                shouldReduceMotion ? undefined : navigationLayoutTransition
-            }
+            {...layoutMotion}
             {...props}
         >
             {children}
