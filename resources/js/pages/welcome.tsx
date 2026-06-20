@@ -12,6 +12,7 @@ import { SpeakersSection } from '@/components/sections/SpeakersSection';
 import { SponsorsSection } from '@/components/sections/SponsorsSection';
 import { TicketsSection } from '@/components/sections/TicketsSection';
 import { UpdatesSection } from '@/components/sections/UpdatesSection';
+import { SocialLinkBar } from '@/components/SocialLinkBar';
 import { TopNavigation } from '@/components/TopNavigation';
 import type { TopNavigationItem } from '@/components/TopNavigation';
 import { WordMark } from '@/components/WordMark';
@@ -79,6 +80,7 @@ function WelcomeContent(): ReactElement {
                 <SponsorsSection />
                 <UpdatesSection />
                 <TicketsSection />
+                <SocialLinkBar className="mt-auto pt-10" />
                 <LegalFooter />
             </main>
         </>
