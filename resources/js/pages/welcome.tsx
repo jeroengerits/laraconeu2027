@@ -8,6 +8,7 @@ import { ExperienceSection } from '@/components/sections/ExperienceSection';
 import { HeroSection } from '@/components/sections/HeroSection';
 import { LocationSection } from '@/components/sections/LocationSection';
 import { PolaroidWallSection } from '@/components/sections/PolaroidWallSection';
+import { ScheduleSection } from '@/components/sections/ScheduleSection';
 import { SpeakersSection } from '@/components/sections/SpeakersSection';
 import { SponsorsSection } from '@/components/sections/SponsorsSection';
 import { TicketsSection } from '@/components/sections/TicketsSection';
@@ -18,13 +19,21 @@ import type { TopNavigationItem } from '@/components/TopNavigation';
 import { WordMark } from '@/components/WordMark';
 import { useActiveHash } from '@/hooks/useActiveHash';
 import { useSmoothAnchorNavigation } from '@/hooks/useSmoothAnchorNavigation';
+import type { ScheduleData } from '@/types/schedule';
+import type { SpeakersData } from '@/types/speaker';
 
 const laraconNavigationItems: readonly TopNavigationItem[] = [
     { href: '#about', label: 'Experience' },
     { href: '#location', label: 'Location' },
     { href: '#speakers', label: 'Speakers' },
+    { href: '#schedule', label: 'Schedule' },
     { href: '#sponsors', label: 'Sponsors' },
 ] as const;
+
+type WelcomePageProps = {
+    schedule: ScheduleData;
+    speakers: SpeakersData;
+};
 
 function LaraconTopNavigation(): ReactElement {
     const activeHref = useActiveHash();
@@ -65,7 +74,10 @@ function LaraconTopNavigation(): ReactElement {
     );
 }
 
-function WelcomeContent(): ReactElement {
+function WelcomeContent({
+    schedule,
+    speakers,
+}: WelcomePageProps): ReactElement {
     return (
         <>
             <Head title="Welcome" />
@@ -76,7 +88,11 @@ function WelcomeContent(): ReactElement {
                 <ExperienceSection />
                 <PolaroidWallSection />
                 <LocationSection />
-                <SpeakersSection />
+                <SpeakersSection speakers={speakers.speakers} />
+                <ScheduleSection
+                    days={schedule.days}
+                    speakers={speakers.speakers}
+                />
                 <SponsorsSection />
                 <UpdatesSection />
                 <TicketsSection />
@@ -87,6 +103,9 @@ function WelcomeContent(): ReactElement {
     );
 }
 
-export default function Welcome(): ReactElement {
-    return <WelcomeContent />;
+export default function Welcome({
+    schedule,
+    speakers,
+}: WelcomePageProps): ReactElement {
+    return <WelcomeContent schedule={schedule} speakers={speakers} />;
 }
