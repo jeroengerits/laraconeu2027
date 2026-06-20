@@ -68,7 +68,7 @@ Useful optional context:
 - Component brief.
 - Known requirements and non-goals.
 - Missing information, if still blocking.
-- Suggested Pulse and supporting skill sequence.
+- Routing signals for the orchestrator to select the skill sequence.
 - Plan-first or implement-now recommendation.
 - Approval request before implementation when appropriate.
 

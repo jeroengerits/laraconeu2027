@@ -6,4 +6,4 @@
 - Recommend lazy imports for heavy optional features.
 - Reduce asset and data waterfalls.
 - Coordinate media loading with the media assets skill.
-- Keep animation loops, observers, and timers idle when components are offscreen or users are interacting directly.
+- Keep observers and timers cheap and idle when components are offscreen; animation-loop performance is owned by `pulse-motion-interactions`.

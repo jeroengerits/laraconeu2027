@@ -19,6 +19,6 @@ Execution:
 Completion:
 
 - Component brief is explicit.
-- Skill sequence is proposed.
+- Routing signals are captured for the orchestrator (the orchestrator selects the skill sequence).
 - Approval mode is clear.
 - Handoff to `pulse-workflow-orchestrator` is ready.

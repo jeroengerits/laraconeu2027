@@ -197,7 +197,7 @@ Completion:
 
 ## Progress Report
 
-Emit an inline status report whenever this skill coordinates more than one focused Pulse skill. Anchor it to the recommended execution order in `../../PULSE-SKILL-DEPENDENCY-GRAPH.md`, and report only the skills selected for the current task unless the user asks for the full map.
+Emit an inline status report whenever this skill coordinates more than one focused Pulse skill. Anchor it to the recommended execution order in `../PULSE-SKILL-DEPENDENCY-GRAPH.md`, and report only the skills selected for the current task unless the user asks for the full map.
 
 Update the report at each phase handoff, not on every minor step, and render it inline rather than in a new file.
 

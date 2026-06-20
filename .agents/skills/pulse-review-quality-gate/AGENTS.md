@@ -94,9 +94,8 @@ Optional:
 ## Responsibilities
 
 - Review against acceptance criteria.
-- Check architecture and API consistency.
-- Check accessibility and responsive behaviour.
-- Check design system, Motion, performance, media, tests, and documentation.
+- Confirm each touched concern (architecture, API, accessibility, responsive, design system, Motion, performance, media, tests, documentation) against its domain owner's Completion checklist.
+- Aggregate domain results rather than re-running or redefining domain checks owned by other skills.
 - Summarize residual risks.
 
 ---
@@ -170,7 +169,7 @@ Completion:
 ## Documentation Discipline
 
 Use the shared Pulse documentation-source rule in
-`pulse-workflow-orchestrator/references/documentation-discipline.md`.
+[`../pulse-workflow-orchestrator/references/documentation-discipline.md`](../pulse-workflow-orchestrator/references/documentation-discipline.md).
 
 ---
 

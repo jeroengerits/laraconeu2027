@@ -169,7 +169,7 @@ Completion:
 ## Documentation Discipline
 
 Use the shared Pulse documentation-source rule in
-`pulse-workflow-orchestrator/references/documentation-discipline.md`.
+[`../pulse-workflow-orchestrator/references/documentation-discipline.md`](../pulse-workflow-orchestrator/references/documentation-discipline.md).
 
 ---
 

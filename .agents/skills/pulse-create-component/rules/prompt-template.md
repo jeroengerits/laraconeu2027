@@ -7,8 +7,9 @@ Use `pulse-create-component`.
 
 I want to create a React component for [component/use case].
 
-Ask me the questions needed to gather a complete component brief. Then propose
-the Pulse skill sequence, audit existing components, decide whether to reuse or
-create, propose the API and architecture, define behaviour tests, and ask for
-approval before implementation.
+Ask me the questions needed to gather a complete component brief. Then capture
+routing signals and hand off to `pulse-workflow-orchestrator`, which audits
+existing components, decides whether to reuse or create, proposes the API and
+architecture, defines behaviour tests, and asks for approval before
+implementation.
 ```

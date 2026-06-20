@@ -101,7 +101,7 @@ Useful optional context:
 - Component brief.
 - Known requirements and non-goals.
 - Missing information, if still blocking.
-- Suggested Pulse and supporting skill sequence.
+- Routing signals for the orchestrator to select the skill sequence.
 - Plan-first or implement-now recommendation.
 - Approval request before implementation when appropriate.
 
@@ -128,7 +128,7 @@ Useful optional context:
 - Ask concise, grouped questions instead of a long interview.
 - Build a component brief from user answers and known project context.
 - Decide whether the task is ready for planning or implementation.
-- Select the relevant Pulse and supporting skills.
+- Capture routing signals (states, interactions, data, accessibility, motion, media) for `pulse-workflow-orchestrator` to select the skill sequence; do not enumerate the sequence here.
 - Ensure Laravel Boost `search-docs` is used before code changes.
 - Select additional documentation sources only for APIs and behaviours that affect the planned component.
 - Hand off to `pulse-workflow-orchestrator` with the gathered brief.
@@ -218,7 +218,7 @@ Execution:
 Completion:
 
 - Component brief is explicit.
-- Skill sequence is proposed.
+- Routing signals are captured for the orchestrator (the orchestrator selects the skill sequence).
 - Approval mode is clear.
 - Handoff to `pulse-workflow-orchestrator` is ready.
 
@@ -227,7 +227,7 @@ Completion:
 ## Documentation Discipline
 
 Use the shared Pulse documentation-source rule in
-`pulse-workflow-orchestrator/references/documentation-discipline.md`.
+[`../pulse-workflow-orchestrator/references/documentation-discipline.md`](../pulse-workflow-orchestrator/references/documentation-discipline.md).
 
 ---
 
@@ -302,10 +302,11 @@ Use `pulse-create-component`.
 
 I want to create a React component for [component/use case].
 
-Ask me the questions needed to gather a complete component brief. Then propose
-the Pulse skill sequence, audit existing components, decide whether to reuse or
-create, propose the API and architecture, define behaviour tests, and ask for
-approval before implementation.
+Ask me the questions needed to gather a complete component brief. Then capture
+routing signals and hand off to `pulse-workflow-orchestrator`, which audits
+existing components, decides whether to reuse or create, proposes the API and
+architecture, defines behaviour tests, and asks for approval before
+implementation.
 ```
 
 ---

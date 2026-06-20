@@ -21,7 +21,7 @@ Keep refactors surgical, verifiable, and respectful of existing consumers.
 - Refactoring component internals.
 - Extracting hooks, helpers, or subcomponents.
 - Reducing duplication.
-- Changing public API shape.
+- Preserving the public API while refactoring (route public API changes to `pulse-api-contract`).
 - Cleaning up performance or state issues.
 
 ## When Not to Apply
