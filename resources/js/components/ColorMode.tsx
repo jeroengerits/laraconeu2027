@@ -68,15 +68,13 @@ export function ColorModeTransition(): ReactElement {
     const { isDarkMode } = useColorMode();
     const shouldReduceMotion = useReducedMotion();
 
-    if (shouldReduceMotion) {
-        return <></>;
-    }
-
     return (
         <m.div
             aria-hidden="true"
-            animate={flashAnimationState}
-            className="pointer-events-none absolute inset-y-0 left-0 z-10 w-full skew-x-[-14deg] [background:var(--welcome-flash-bg)]"
+            animate={
+                shouldReduceMotion ? flashInitialState : flashAnimationState
+            }
+            className="pointer-events-none absolute inset-y-0 left-0 z-10 w-full skew-x-[-14deg] [background:var(--welcome-flash-bg)] motion-reduce:hidden"
             initial={flashInitialState}
             key={isDarkMode ? 'dark-flash' : 'light-flash'}
             transition={flashTransition}

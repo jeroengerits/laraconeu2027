@@ -110,6 +110,7 @@ function ButtonComponent(
             <MotionSlot
                 className={buttonClassName}
                 ref={ref}
+                tabIndex={0}
                 {...motionProps}
                 {...props}
             >
@@ -122,6 +123,7 @@ function ButtonComponent(
         <m.button
             className={buttonClassName}
             ref={ref}
+            tabIndex={0}
             type={type}
             {...motionProps}
             {...props}

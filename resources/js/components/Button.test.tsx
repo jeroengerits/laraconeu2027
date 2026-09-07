@@ -86,6 +86,26 @@ describe('Button', () => {
         expect(ref.current).toBeInstanceOf(HTMLButtonElement);
     });
 
+    it('preserves explicit tab order and skips disabled buttons', async () => {
+        const user = userEvent.setup();
+
+        render(
+            <>
+                <Button tabIndex={-1}>Programmatic focus only</Button>
+                <Button disabled>Unavailable</Button>
+                <Button asChild>
+                    <a href="#next" tabIndex={-1}>
+                        Skipped link
+                    </a>
+                </Button>
+                <Button>Continue</Button>
+            </>,
+        );
+        await user.tab();
+
+        expect(screen.getByRole('button', { name: 'Continue' })).toHaveFocus();
+    });
+
     it('merges a consumer className onto the rendered element', () => {
         render(<Button className="custom-class">Save</Button>);
 

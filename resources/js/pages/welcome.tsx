@@ -79,9 +79,16 @@ export default function Welcome(): ReactElement {
                     content="Join the Laracon EU 2027 community in Amsterdam for three days of Laravel, PHP, and frontend talks, workshops, and connection."
                 />
             </Head>
+            <a
+                className="sr-only fixed top-2 left-2 z-[100] bg-canvas p-4 text-canvas-foreground focus:not-sr-only"
+                href="#main-content"
+            >
+                Skip to main content
+            </a>
             <main className="relative flex min-h-screen flex-col bg-canvas text-canvas-foreground transition-color-mode">
                 <ColorModeTransition />
                 <LaraconTopNavigation />
+                <div id="main-content" tabIndex={-1} />
                 <HeroSection />
                 <ConferenceFactsSection />
                 <ExperienceSection />

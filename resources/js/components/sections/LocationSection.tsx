@@ -8,7 +8,7 @@ import {
 
 const locationDetails = [
     {
-        detail: 'Gedempt Hamerkanaal 126, 1021 KP Amsterdam, Netherlands.',
+        detail: 'Gedempt Hamerkanaal, Amsterdam Noord, Netherlands.',
         label: 'Venue',
         value: 'Kromhouthal',
     },
@@ -22,14 +22,13 @@ const locationDetails = [
 const travelNotes = [
     'Book accommodation near Amsterdam Centraal or the metro ring',
     'Expect public transport and cycling to be the easiest local options',
-    'The Kromhouthal is located at Gedempt Hamerkanaal 126',
+    'For navigation, the venue recommends Gedempt Hamerkanaal 231, opposite the Kromhouthal',
 ] as const;
 
 const nearbyFoodAndDrink = [
     {
         address: 'T.T. Neveritaweg 59',
         category: 'restaurant',
-        distance: '3.8 km',
         image: '/images/explore/pllek.jpg',
         name: 'Pllek',
         type: 'Restaurant / bar',
@@ -37,7 +36,6 @@ const nearbyFoodAndDrink = [
     {
         address: 'NDSM-Plein 102',
         category: 'bar',
-        distance: '3.8 km',
         image: '/images/explore/noorderlicht.jpg',
         name: 'Noorderlicht',
         type: 'Bar / café',
@@ -45,23 +43,13 @@ const nearbyFoodAndDrink = [
     {
         address: 'Scheepsbouwkade 72',
         category: 'restaurant',
-        distance: '3.5 km',
         image: '/images/explore/ijver.jpg',
         name: 'IJver',
         type: 'Restaurant / bar',
     },
     {
-        address: 'Buiksloterweg 3',
-        category: 'bar',
-        distance: '1.8 km',
-        image: '/images/explore/cafe-de-pont.jpg',
-        name: 'Café de Pont',
-        type: 'Café',
-    },
-    {
         address: 'Werfkade 14',
         category: 'restaurant',
-        distance: '4.0 km',
         image: '/images/explore/loetje-aan-het-ij.jpg',
         name: "Loetje aan 't IJ",
         type: 'Restaurant',
@@ -69,7 +57,6 @@ const nearbyFoodAndDrink = [
     {
         address: 'IJpromenade 2',
         category: 'bar',
-        distance: '2.2 km',
         image: '/images/explore/tolhuistuin.jpg',
         name: 'Tolhuistuin',
         type: 'Restaurant / bar',
@@ -77,23 +64,13 @@ const nearbyFoodAndDrink = [
     {
         address: 'Korte Papaverweg 4',
         category: 'restaurant',
-        distance: '1.8 km',
         image: '/images/explore/cafe-de-ceuvel.jpg',
         name: 'Café de Ceuvel',
         type: 'Restaurant / café',
     },
     {
-        address: 'Gedempt Hamerkanaal 42',
+        address: 'Schaafstraat 21',
         category: 'bar',
-        distance: '0.1 km',
-        image: '/images/explore/skatecafe.jpg',
-        name: 'Skatecafe',
-        type: 'Bar / skate venue',
-    },
-    {
-        address: 'Gedempt Hamerkanaal 85',
-        category: 'bar',
-        distance: '0.5 km',
         image: '/images/explore/oedipus-brewing.jpg',
         name: 'Oedipus Brewing',
         type: 'Brewery / taproom',
@@ -101,7 +78,6 @@ const nearbyFoodAndDrink = [
     {
         address: 'Aambeeldstraat 36',
         category: 'restaurant',
-        distance: '0.6 km',
         image: '/images/explore/hangar-amsterdam.jpg',
         name: 'Hangar Amsterdam',
         type: 'Restaurant / bar',
@@ -109,7 +85,6 @@ const nearbyFoodAndDrink = [
     {
         address: 'NDSM-Plein 1',
         category: 'venue',
-        distance: '3.4 km',
         image: '/images/explore/straat-museum.jpg',
         name: 'STRAAT Museum',
         type: 'Street art museum',
@@ -117,7 +92,6 @@ const nearbyFoodAndDrink = [
     {
         address: 'IJpromenade 1',
         category: 'venue',
-        distance: '2.2 km',
         image: '/images/explore/eye-filmmuseum.jpg',
         name: 'EYE Filmmuseum',
         type: 'Film museum / cinema',
@@ -128,15 +102,13 @@ const nearbyHotels = [
     {
         address: 'Asterweg 33',
         category: 'hotel',
-        distance: '2.2 km',
         image: '/images/explore/yotel-amsterdam.jpg',
         name: 'YOTEL Amsterdam',
         type: 'Accommodation',
     },
     {
-        address: 'Helling 1',
+        address: 'Hagedoornplein 2',
         category: 'hotel',
-        distance: '4.1 km',
         image: '/images/explore/bunk-amsterdam.jpg',
         name: 'BUNK Hotel Amsterdam',
         type: 'Accommodation',
@@ -144,7 +116,6 @@ const nearbyHotels = [
     {
         address: 'Termini 9',
         category: 'hotel',
-        distance: '2.7 km',
         image: '/images/explore/tribe-amsterdam-city.jpg',
         name: 'Tribe Amsterdam City',
         type: 'Accommodation',
@@ -206,9 +177,15 @@ export function LocationSection(): ReactElement {
                                     Swipe to explore
                                 </span>
                             </div>
+                            <p className="text-sm leading-6 text-muted-foreground">
+                                Plan your walk from the Kromhouthal in Google
+                                Maps. Check current routes and opening hours
+                                before visiting; walking distances are not
+                                verified here.
+                            </p>
                             <div
                                 aria-label="Explore the area recommendations"
-                                className="-mx-4 flex touch-pan-x snap-x snap-mandatory gap-4 overflow-x-auto overscroll-x-contain px-4 pb-4 outline-none focus-visible:ring-2 focus-visible:ring-canvas-foreground sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8"
+                                className="-mx-4 flex snap-x snap-mandatory gap-4 overflow-x-auto overscroll-x-contain px-4 pb-4 outline-none focus-visible:ring-2 focus-visible:ring-canvas-foreground sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8"
                                 role="region"
                                 tabIndex={0}
                             >
@@ -219,7 +196,7 @@ export function LocationSection(): ReactElement {
                                     >
                                         <div className="aspect-[4/3] overflow-hidden bg-canvas-foreground/10">
                                             <img
-                                                alt={`${place.name} exterior`}
+                                                alt=""
                                                 className="h-full w-full object-cover"
                                                 height="532"
                                                 loading="lazy"
@@ -238,16 +215,15 @@ export function LocationSection(): ReactElement {
                                                 {place.type}
                                                 <br />
                                                 {place.address}
-                                                <br />
-                                                {place.distance} from venue
                                             </p>
                                             <a
                                                 className="font-mono text-[0.625rem] font-semibold tracking-[0.12em] text-canvas-foreground uppercase underline underline-offset-4"
-                                                href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${place.name}, ${place.address}, Amsterdam`)}`}
+                                                aria-label={`Walking directions to ${place.name} from Kromhouthal (opens in a new tab)`}
+                                                href={`https://www.google.com/maps/dir/?api=1&origin=${encodeURIComponent('Kromhouthal, Gedempt Hamerkanaal, Amsterdam')}&destination=${encodeURIComponent(`${place.name}, ${place.address}, Amsterdam`)}&travelmode=walking`}
                                                 rel="noreferrer"
                                                 target="_blank"
                                             >
-                                                Open in maps
+                                                Walking directions
                                             </a>
                                         </div>
                                     </article>

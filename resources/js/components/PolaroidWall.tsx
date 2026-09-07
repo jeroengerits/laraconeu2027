@@ -1,10 +1,10 @@
-import { Cross1Icon } from '@radix-ui/react-icons';
 import { m, useReducedMotion } from 'motion/react';
 import type { Variants } from 'motion/react';
-import { memo, useEffect, useMemo, useRef, useState } from 'react';
+import { memo, useMemo, useRef, useState } from 'react';
 import type { ReactElement } from 'react';
 
 import { Button } from '@/components/Button';
+import { PolaroidWallLightbox } from '@/components/PolaroidWallLightbox';
 import { ResponsiveImage } from '@/components/ResponsiveImage';
 import type { ResponsiveImageAsset } from '@/components/ResponsiveImage';
 import { useHorizontalDragScroll } from '@/hooks/useHorizontalDragScroll';
@@ -128,6 +128,7 @@ type PolaroidWallPhoto = LazyPhotoAsset;
 
 type PolaroidWallRowProps = {
     direction: PolaroidWallDirection;
+    isPaused: boolean;
     onPhotoSelect: (photo: PolaroidWallPhoto) => void;
     photos: readonly PolaroidWallPhoto[];
     rowIndex: number;
@@ -158,6 +159,7 @@ export function PolaroidWall(): ReactElement {
     const rows = useMemo(() => createPolaroidWallRows(photos), [photos]);
     const [selectedPhoto, setSelectedPhoto] =
         useState<SelectedPolaroidPhoto | null>(null);
+    const [isPaused, setIsPaused] = useState(false);
     const lastFocusedElementRef = useRef<HTMLElement | null>(null);
 
     async function selectPhoto(photo: PolaroidWallPhoto): Promise<void> {
@@ -181,15 +183,37 @@ export function PolaroidWall(): ReactElement {
 
     function closePhoto(): void {
         setSelectedPhoto(null);
+    }
+
+    function restoreFocus(): void {
         lastFocusedElementRef.current?.focus();
         lastFocusedElementRef.current = null;
     }
 
     return (
         <>
+            <div className="flex items-center gap-4 py-4">
+                <Button
+                    aria-pressed={isPaused}
+                    onClick={() => setIsPaused(!isPaused)}
+                    variant="ghost"
+                >
+                    {isPaused ? 'Resume photo motion' : 'Pause photo motion'}
+                </Button>
+                <a
+                    className={cn(
+                        'font-mono text-xs underline underline-offset-4',
+                        focusVisibleClassName,
+                    )}
+                    href="#after-polaroid-wall"
+                >
+                    Skip photo wall
+                </a>
+            </div>
             <m.div
                 aria-label="Polaroid photo wall"
-                initial={shouldReduceMotion ? false : 'hidden'}
+                className="motion-reduce:transform-none! motion-reduce:opacity-100!"
+                initial="hidden"
                 variants={polaroidWallSectionVariants}
                 viewport={polaroidWallViewport}
                 whileInView={shouldReduceMotion ? undefined : 'visible'}
@@ -198,6 +222,7 @@ export function PolaroidWall(): ReactElement {
                     {rows.map((photos, rowIndex) => (
                         <PolaroidWallRow
                             direction={rowIndex % 2 === 0 ? 'left' : 'right'}
+                            isPaused={isPaused || selectedPhoto !== null}
                             key={rowIndex}
                             onPhotoSelect={selectPhoto}
                             photos={photos}
@@ -208,8 +233,10 @@ export function PolaroidWall(): ReactElement {
                     ))}
                 </div>
             </m.div>
+            <div id="after-polaroid-wall" tabIndex={-1} />
             <PolaroidWallLightbox
                 onClose={closePhoto}
+                onCloseAutoFocus={restoreFocus}
                 selectedPhoto={selectedPhoto}
             />
         </>
@@ -218,6 +245,7 @@ export function PolaroidWall(): ReactElement {
 
 const PolaroidWallRow = memo(function PolaroidWallRow({
     direction,
+    isPaused,
     onPhotoSelect,
     photos,
     rowIndex,
@@ -225,6 +253,7 @@ const PolaroidWallRow = memo(function PolaroidWallRow({
     speed,
 }: PolaroidWallRowProps): ReactElement {
     const rowRef = useRef<HTMLDivElement>(null);
+    const [hasFocus, setHasFocus] = useState(false);
     const isDraggingRef = useRef(false);
     const loopedPhotos = useMemo(() => [...photos, ...photos], [photos]);
     const visibleCardKeys = useVisibleItemKeys(rowRef, {
@@ -241,7 +270,7 @@ const PolaroidWallRow = memo(function PolaroidWallRow({
         scrollToPosition,
     } = useMarqueeScroll(rowRef, {
         direction,
-        reduceMotion: shouldReduceMotion,
+        reduceMotion: shouldReduceMotion || isPaused || hasFocus,
         resumeDelay: scrollResumeDelay,
         speed,
     });
@@ -266,7 +295,10 @@ const PolaroidWallRow = memo(function PolaroidWallRow({
     });
 
     return (
-        <m.div className="relative min-w-0" variants={polaroidWallRowVariants}>
+        <m.div
+            className="relative min-w-0 motion-reduce:transform-none! motion-reduce:opacity-100!"
+            variants={polaroidWallRowVariants}
+        >
             <div
                 aria-label={`Polaroid wall row ${rowIndex + 1}. Scroll horizontally to browse photos.`}
                 className={cn(
@@ -274,6 +306,12 @@ const PolaroidWallRow = memo(function PolaroidWallRow({
                     focusVisibleClassName,
                 )}
                 onKeyDown={scrollByKeyboard}
+                onFocus={() => setHasFocus(true)}
+                onBlur={(event) => {
+                    if (!event.currentTarget.contains(event.relatedTarget)) {
+                        setHasFocus(false);
+                    }
+                }}
                 {...scrollPauseHandlers}
                 {...dragHandlers}
                 ref={rowRef}
@@ -319,6 +357,7 @@ const PolaroidWallCard = memo(function PolaroidWallCard({
                 getPolaroidWallRotationClassName(index, rowIndex),
             )}
             data-polaroid-card-key={itemKey}
+            tabIndex={-1}
             transition={
                 shouldReduceMotion ? undefined : polaroidWallCardTransition
             }
@@ -363,123 +402,6 @@ const PolaroidWallCard = memo(function PolaroidWallCard({
     );
 });
 
-function PolaroidWallLightbox({
-    onClose,
-    selectedPhoto,
-}: {
-    onClose: () => void;
-    selectedPhoto: SelectedPolaroidPhoto | null;
-}): ReactElement {
-    const dialogRef = useRef<HTMLDivElement>(null);
-    const closeButtonRef = useRef<HTMLButtonElement>(null);
-
-    useEffect(() => {
-        if (selectedPhoto === null) {
-            return;
-        }
-
-        const handleKeyDown = (event: KeyboardEvent): void => {
-            if (event.key === 'Escape') {
-                event.preventDefault();
-                onClose();
-
-                return;
-            }
-
-            if (event.key !== 'Tab') {
-                return;
-            }
-
-            const focusableElements =
-                dialogRef.current?.querySelectorAll<HTMLElement>(
-                    'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])',
-                );
-
-            if (!focusableElements || focusableElements.length === 0) {
-                return;
-            }
-
-            const firstElement = focusableElements[0];
-            const lastElement = focusableElements[focusableElements.length - 1];
-
-            if (event.shiftKey && document.activeElement === firstElement) {
-                event.preventDefault();
-                lastElement.focus();
-            } else if (
-                !event.shiftKey &&
-                document.activeElement === lastElement
-            ) {
-                event.preventDefault();
-                firstElement.focus();
-            }
-        };
-
-        document.addEventListener('keydown', handleKeyDown);
-        closeButtonRef.current?.focus();
-
-        return () => {
-            document.removeEventListener('keydown', handleKeyDown);
-        };
-    }, [onClose, selectedPhoto]);
-
-    if (selectedPhoto === null) {
-        return <></>;
-    }
-
-    return (
-        <div
-            aria-label="Enlarged memory photo"
-            aria-modal="true"
-            aria-labelledby="polaroid-lightbox-title"
-            aria-busy={selectedPhoto.image === null}
-            className="fixed inset-0 z-50 flex h-dvh w-full items-center justify-center bg-black/80 p-4 text-canvas-foreground sm:p-8"
-            onClick={(event) => {
-                if (event.target === event.currentTarget) {
-                    onClose();
-                }
-            }}
-            role="dialog"
-            ref={dialogRef}
-        >
-            <div className="relative flex h-full w-full items-center justify-center">
-                <h2 className="sr-only" id="polaroid-lightbox-title">
-                    Enlarged memory photo: {selectedPhoto.photo.alt}
-                </h2>
-                {selectedPhoto.image !== null ? (
-                    <img
-                        alt={selectedPhoto.photo.alt}
-                        className="block max-h-[calc(100dvh-4rem)] max-w-full object-contain sm:max-h-[calc(100dvh-8rem)]"
-                        decoding="async"
-                        height={selectedPhoto.image.height}
-                        loading="eager"
-                        src={selectedPhoto.image.src}
-                        srcSet={selectedPhoto.image.srcSet}
-                        sizes="100vw"
-                        width={selectedPhoto.image.width}
-                    />
-                ) : (
-                    <p
-                        className="font-mono text-xs tracking-[0.12em] text-white uppercase"
-                        role="status"
-                    >
-                        Loading photo...
-                    </p>
-                )}
-                <Button
-                    aria-label="Close photo"
-                    className="absolute top-0 right-0 bg-canvas/90"
-                    onClick={onClose}
-                    ref={closeButtonRef}
-                    size="icon"
-                    variant="ghost"
-                >
-                    <Cross1Icon aria-hidden="true" />
-                </Button>
-            </div>
-        </div>
-    );
-}
-
 function createPolaroidWallRows(
     photos: readonly PolaroidWallPhoto[],
 ): PolaroidWallPhoto[][] {
@@ -523,14 +445,5 @@ function getPolaroidWallRotationClassName(
 }
 
 function getPolaroidWallAlt(index: number): string {
-    const altTexts = [
-        'Laracon EU attendees sharing a candid event moment',
-        'People connecting between conference sessions',
-        'Audience members watching a talk together',
-        'A speaker moment from the Laracon EU stage',
-        'Community members gathered on the event floor',
-        'Attendees moving through the conference venue',
-    ] as const;
-
-    return altTexts[index % altTexts.length];
+    return `Laracon EU archive photo ${index + 1}`;
 }
