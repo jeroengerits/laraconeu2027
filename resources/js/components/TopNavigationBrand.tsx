@@ -1,19 +1,15 @@
-import { Link } from '@inertiajs/react';
 import type { ComponentPropsWithoutRef, ReactElement } from 'react';
 
 import { Button } from '@/components/Button';
 import { cn } from '@/lib/utils';
 
-type InertiaLinkProps = ComponentPropsWithoutRef<typeof Link>;
-
-export type TopNavigationBrandProps = InertiaLinkProps & {
-    href?: InertiaLinkProps['href'];
-};
+export type TopNavigationBrandProps = ComponentPropsWithoutRef<'a'>;
 
 export function TopNavigationBrand({
     children,
     className,
     href = '/',
+    onClick,
     ...props
 }: TopNavigationBrandProps): ReactElement {
     return (
@@ -26,9 +22,16 @@ export function TopNavigationBrand({
             size="medium"
             variant="ghost"
         >
-            <Link href={href} {...props}>
+            <a
+                href={href}
+                onClick={(event) => {
+                    window.scrollTo(0, 0);
+                    onClick?.(event);
+                }}
+                {...props}
+            >
                 {children}
-            </Link>
+            </a>
         </Button>
     );
 }

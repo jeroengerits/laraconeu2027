@@ -1,4 +1,4 @@
-import { useSyncExternalStore } from 'react';
+import { useEffect, useState } from 'react';
 
 function readLocationHash(): string {
     if (typeof window === 'undefined') {
@@ -8,24 +8,49 @@ function readLocationHash(): string {
     return window.location.hash;
 }
 
-function subscribeToLocationHash(onStoreChange: () => void): () => void {
-    window.addEventListener('hashchange', onStoreChange);
-    window.addEventListener('popstate', onStoreChange);
+export function useActiveHash(sectionIds: readonly string[]): string {
+    const [activeHash, setActiveHash] = useState(readLocationHash);
 
-    return () => {
-        window.removeEventListener('hashchange', onStoreChange);
-        window.removeEventListener('popstate', onStoreChange);
-    };
-}
+    useEffect(() => {
+        function updateActiveHash(): void {
+            const marker = window.innerHeight * 0.28;
+            let nextHash = '';
 
-function getServerLocationHash(): string {
-    return '';
-}
+            for (const sectionId of sectionIds) {
+                const section = document.getElementById(sectionId);
 
-export function useActiveHash(): string {
-    return useSyncExternalStore(
-        subscribeToLocationHash,
-        readLocationHash,
-        getServerLocationHash,
-    );
+                if (section === null) {
+                    continue;
+                }
+
+                const bounds = section.getBoundingClientRect();
+
+                if (bounds.top <= marker && bounds.bottom > marker) {
+                    nextHash = `#${sectionId}`;
+                    break;
+                }
+
+                if (bounds.top <= marker) {
+                    nextHash = `#${sectionId}`;
+                }
+            }
+
+            setActiveHash(nextHash);
+        }
+
+        updateActiveHash();
+        window.addEventListener('hashchange', updateActiveHash);
+        window.addEventListener('popstate', updateActiveHash);
+        window.addEventListener('resize', updateActiveHash);
+        window.addEventListener('scroll', updateActiveHash, { passive: true });
+
+        return () => {
+            window.removeEventListener('hashchange', updateActiveHash);
+            window.removeEventListener('popstate', updateActiveHash);
+            window.removeEventListener('resize', updateActiveHash);
+            window.removeEventListener('scroll', updateActiveHash);
+        };
+    }, [sectionIds]);
+
+    return activeHash;
 }

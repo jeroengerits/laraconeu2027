@@ -1,9 +1,12 @@
+import { Cross1Icon } from '@radix-ui/react-icons';
 import { m, useReducedMotion } from 'motion/react';
 import type { Variants } from 'motion/react';
-import { memo, useMemo, useRef } from 'react';
+import { memo, useEffect, useMemo, useRef, useState } from 'react';
 import type { ReactElement } from 'react';
 
+import { Button } from '@/components/Button';
 import { ResponsiveImage } from '@/components/ResponsiveImage';
+import type { ResponsiveImageAsset } from '@/components/ResponsiveImage';
 import { useHorizontalDragScroll } from '@/hooks/useHorizontalDragScroll';
 import { useHorizontalKeyboardScroll } from '@/hooks/useHorizontalKeyboardScroll';
 import { useHorizontalScrollPause } from '@/hooks/useHorizontalScrollPause';
@@ -18,6 +21,12 @@ import { cn } from '@/lib/utils';
 
 const polaroidWallPhotoModules = import.meta.glob<string>(
     '../../img/photos/resized/*-{tiny,small}.jpg',
+    {
+        import: 'default',
+    },
+);
+const polaroidWallEnlargedPhotoModules = import.meta.glob<string>(
+    '../../img/photos/resized/*-{tiny,small,medium,large,huge,mega,original}.jpg',
     {
         import: 'default',
     },
@@ -102,11 +111,24 @@ const polaroidWallPhotos = createLazyPhotoAssets(polaroidWallPhotoModules, {
     requiredSizes: polaroidWallPhotoSizes,
     width: 1536,
 });
+const polaroidWallEnlargedPhotos = createLazyPhotoAssets(
+    polaroidWallEnlargedPhotoModules,
+    {
+        alt: (_, index) => getPolaroidWallAlt(index),
+        height: 1024,
+        requiredSizes: polaroidWallPhotoSizes,
+        width: 1536,
+    },
+);
+const polaroidWallEnlargedPhotosByName = new Map(
+    polaroidWallEnlargedPhotos.map((photo) => [photo.name, photo]),
+);
 
 type PolaroidWallPhoto = LazyPhotoAsset;
 
 type PolaroidWallRowProps = {
     direction: PolaroidWallDirection;
+    onPhotoSelect: (photo: PolaroidWallPhoto) => void;
     photos: readonly PolaroidWallPhoto[];
     rowIndex: number;
     shouldReduceMotion: boolean;
@@ -117,6 +139,7 @@ type PolaroidWallCardProps = {
     index: number;
     isImageInViewport: boolean;
     itemKey: string;
+    onPhotoSelect: (photo: PolaroidWallPhoto) => void;
     photo: PolaroidWallPhoto;
     rowIndex: number;
     shouldReduceMotion: boolean;
@@ -124,37 +147,78 @@ type PolaroidWallCardProps = {
 
 type PolaroidWallDirection = 'left' | 'right';
 
+type SelectedPolaroidPhoto = {
+    image: ResponsiveImageAsset | null;
+    photo: PolaroidWallPhoto;
+};
+
 export function PolaroidWall(): ReactElement {
     const shouldReduceMotion = useReducedMotion() ?? false;
     const photos = useRandomizedPhotos(polaroidWallPhotos);
     const rows = useMemo(() => createPolaroidWallRows(photos), [photos]);
+    const [selectedPhoto, setSelectedPhoto] =
+        useState<SelectedPolaroidPhoto | null>(null);
+    const lastFocusedElementRef = useRef<HTMLElement | null>(null);
+
+    async function selectPhoto(photo: PolaroidWallPhoto): Promise<void> {
+        lastFocusedElementRef.current =
+            document.activeElement instanceof HTMLElement
+                ? document.activeElement
+                : null;
+
+        setSelectedPhoto({ image: null, photo });
+
+        const enlargedPhoto =
+            polaroidWallEnlargedPhotosByName.get(photo.name) ?? photo;
+        const loadedImage = await enlargedPhoto.loadImage();
+
+        setSelectedPhoto((currentPhoto) =>
+            currentPhoto?.photo === photo
+                ? { image: loadedImage, photo }
+                : currentPhoto,
+        );
+    }
+
+    function closePhoto(): void {
+        setSelectedPhoto(null);
+        lastFocusedElementRef.current?.focus();
+        lastFocusedElementRef.current = null;
+    }
 
     return (
-        <m.div
-            aria-label="Polaroid photo wall"
-            initial={shouldReduceMotion ? false : 'hidden'}
-            variants={polaroidWallSectionVariants}
-            viewport={polaroidWallViewport}
-            whileInView={shouldReduceMotion ? undefined : 'visible'}
-        >
-            <div className="grid gap-1">
-                {rows.map((photos, rowIndex) => (
-                    <PolaroidWallRow
-                        direction={rowIndex % 2 === 0 ? 'left' : 'right'}
-                        key={rowIndex}
-                        photos={photos}
-                        rowIndex={rowIndex}
-                        shouldReduceMotion={shouldReduceMotion}
-                        speed={0.016 + rowIndex * 0.003}
-                    />
-                ))}
-            </div>
-        </m.div>
+        <>
+            <m.div
+                aria-label="Polaroid photo wall"
+                initial={shouldReduceMotion ? false : 'hidden'}
+                variants={polaroidWallSectionVariants}
+                viewport={polaroidWallViewport}
+                whileInView={shouldReduceMotion ? undefined : 'visible'}
+            >
+                <div className="grid gap-1">
+                    {rows.map((photos, rowIndex) => (
+                        <PolaroidWallRow
+                            direction={rowIndex % 2 === 0 ? 'left' : 'right'}
+                            key={rowIndex}
+                            onPhotoSelect={selectPhoto}
+                            photos={photos}
+                            rowIndex={rowIndex}
+                            shouldReduceMotion={shouldReduceMotion}
+                            speed={0.016 + rowIndex * 0.003}
+                        />
+                    ))}
+                </div>
+            </m.div>
+            <PolaroidWallLightbox
+                onClose={closePhoto}
+                selectedPhoto={selectedPhoto}
+            />
+        </>
     );
 }
 
 const PolaroidWallRow = memo(function PolaroidWallRow({
     direction,
+    onPhotoSelect,
     photos,
     rowIndex,
     shouldReduceMotion,
@@ -225,6 +289,7 @@ const PolaroidWallRow = memo(function PolaroidWallRow({
                             isImageInViewport={visibleCardKeys.has(itemKey)}
                             itemKey={itemKey}
                             key={itemKey}
+                            onPhotoSelect={onPhotoSelect}
                             photo={photo}
                             rowIndex={rowIndex}
                             shouldReduceMotion={shouldReduceMotion}
@@ -240,6 +305,7 @@ const PolaroidWallCard = memo(function PolaroidWallCard({
     index,
     isImageInViewport,
     itemKey,
+    onPhotoSelect,
     photo,
     rowIndex,
     shouldReduceMotion,
@@ -264,30 +330,111 @@ const PolaroidWallCard = memo(function PolaroidWallCard({
             }
             whileTap={shouldReduceMotion ? undefined : polaroidWallCardTapState}
         >
-            {image !== null ? (
-                <ResponsiveImage
-                    alt={photo.alt}
-                    className={polaroidWallImageClassName}
-                    containerClassName={polaroidWallImageContainerClassName}
-                    draggable={false}
-                    image={image}
-                    loading="lazy"
-                    reveal={false}
-                    sizes={polaroidWallImageSizes}
-                />
-            ) : (
-                <div
-                    aria-hidden="true"
-                    className={cn(
-                        '@container',
-                        polaroidWallImageContainerClassName,
-                        'aspect-[4/3]',
-                    )}
-                />
-            )}
+            <button
+                aria-label={`Enlarge photo: ${photo.alt}`}
+                className="block w-full cursor-zoom-in rounded-none text-left focus-visible:outline-none"
+                onClick={() => onPhotoSelect(photo)}
+                onPointerDown={(event) => event.stopPropagation()}
+                type="button"
+            >
+                {image !== null ? (
+                    <ResponsiveImage
+                        alt={photo.alt}
+                        className={polaroidWallImageClassName}
+                        containerClassName={polaroidWallImageContainerClassName}
+                        draggable={false}
+                        image={image}
+                        loading="lazy"
+                        reveal={false}
+                        sizes={polaroidWallImageSizes}
+                    />
+                ) : (
+                    <div
+                        aria-hidden="true"
+                        className={cn(
+                            '@container',
+                            polaroidWallImageContainerClassName,
+                            'aspect-[4/3]',
+                        )}
+                    />
+                )}
+            </button>
         </m.figure>
     );
 });
+
+function PolaroidWallLightbox({
+    onClose,
+    selectedPhoto,
+}: {
+    onClose: () => void;
+    selectedPhoto: SelectedPolaroidPhoto | null;
+}): ReactElement {
+    useEffect(() => {
+        if (selectedPhoto === null) {
+            return;
+        }
+
+        const handleKeyDown = (event: KeyboardEvent): void => {
+            if (event.key === 'Escape') {
+                onClose();
+            }
+        };
+
+        document.addEventListener('keydown', handleKeyDown);
+
+        return () => {
+            document.removeEventListener('keydown', handleKeyDown);
+        };
+    }, [onClose, selectedPhoto]);
+
+    if (selectedPhoto === null) {
+        return <></>;
+    }
+
+    return (
+        <div
+            aria-label="Enlarged memory photo"
+            aria-modal="true"
+            className="fixed inset-0 z-50 flex h-dvh w-full items-center justify-center bg-black/80 p-4 text-canvas-foreground sm:p-8"
+            onClick={(event) => {
+                if (event.target === event.currentTarget) {
+                    onClose();
+                }
+            }}
+            role="dialog"
+        >
+            <div className="relative flex h-full w-full items-center justify-center">
+                {selectedPhoto.image !== null ? (
+                    <img
+                        alt={selectedPhoto.photo.alt}
+                        className="block max-h-[calc(100dvh-4rem)] max-w-full object-contain sm:max-h-[calc(100dvh-8rem)]"
+                        decoding="async"
+                        height={selectedPhoto.image.height}
+                        loading="eager"
+                        src={selectedPhoto.image.src}
+                        srcSet={selectedPhoto.image.srcSet}
+                        sizes="100vw"
+                        width={selectedPhoto.image.width}
+                    />
+                ) : (
+                    <p className="font-mono text-xs tracking-[0.12em] text-white uppercase">
+                        Loading photo...
+                    </p>
+                )}
+                <Button
+                    aria-label="Close photo"
+                    className="absolute top-0 right-0 bg-canvas/90"
+                    onClick={onClose}
+                    size="icon"
+                    variant="ghost"
+                >
+                    <Cross1Icon aria-hidden="true" />
+                </Button>
+            </div>
+        </div>
+    );
+}
 
 function createPolaroidWallRows(
     photos: readonly PolaroidWallPhoto[],

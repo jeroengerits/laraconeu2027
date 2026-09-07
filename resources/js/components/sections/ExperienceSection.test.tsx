@@ -3,7 +3,7 @@ import { render, screen } from '@testing-library/react';
 import { ExperienceSection } from '@/components/sections/ExperienceSection';
 
 describe('ExperienceSection', () => {
-    it('renders experience highlights and the schedule call to action', () => {
+    it('renders experience highlights without a schedule call to action', () => {
         render(<ExperienceSection />);
 
         expect(
@@ -11,20 +11,29 @@ describe('ExperienceSection', () => {
         ).toBeInTheDocument();
         expect(document.getElementById('about')).toBeInTheDocument();
         expect(screen.getByText('Main stage')).toBeInTheDocument();
-        expect(screen.getByText('Hallway track')).toBeInTheDocument();
+        expect(screen.getByText('Round tables')).toBeInTheDocument();
         expect(screen.getByText('Workshops')).toBeInTheDocument();
+        expect(screen.getByText('After party')).toBeInTheDocument();
+        expect(screen.getAllByText('Requires a separate ticket')).toHaveLength(
+            2,
+        );
+        expect(screen.queryByText('01')).not.toBeInTheDocument();
+        expect(screen.queryByText('02')).not.toBeInTheDocument();
+        expect(screen.queryByText('03')).not.toBeInTheDocument();
+        expect(screen.queryByText('04')).not.toBeInTheDocument();
+        expect(screen.getByText('5 April 2027')).toBeInTheDocument();
+        expect(screen.getAllByText('6–7 April 2027')).toHaveLength(2);
+        expect(screen.getByText('7 April 2027')).toBeInTheDocument();
         expect(
-            screen.getByRole('link', { name: 'View schedule' }),
-        ).toHaveAttribute('href', '#schedule');
+            screen.queryByRole('link', { name: 'View schedule' }),
+        ).not.toBeInTheDocument();
     });
 
-    it('renders the daily experience rhythm', () => {
+    it('does not render the removed rhythm sidebar', () => {
         render(<ExperienceSection />);
 
-        expect(screen.getByLabelText('Experience rhythm')).toBeInTheDocument();
-        expect(screen.getByText('Morning talks')).toBeInTheDocument();
-        expect(screen.getByText('Shared lunch')).toBeInTheDocument();
-        expect(screen.getByText('Afternoon sessions')).toBeInTheDocument();
-        expect(screen.getByText('Evening community')).toBeInTheDocument();
+        expect(
+            screen.queryByLabelText('Experience rhythm'),
+        ).not.toBeInTheDocument();
     });
 });

@@ -80,7 +80,7 @@ export function TopNavigationEnd({
     return (
         <m.div
             className={cn(
-                'col-start-3 flex items-stretch gap-0 justify-self-end',
+                'col-start-3 flex items-center gap-0 justify-self-end',
                 className,
             )}
             {...layoutMotion}

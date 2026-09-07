@@ -4,13 +4,12 @@ import type { ReactElement } from 'react';
 import { Button } from '@/components/Button';
 import { ColorModeToggle, ColorModeTransition } from '@/components/ColorMode';
 import { LegalFooter } from '@/components/LegalFooter';
+import { CallForSpeakersSection } from '@/components/sections/CallForSpeakersSection';
 import { ConferenceFactsSection } from '@/components/sections/ConferenceFactsSection';
 import { ExperienceSection } from '@/components/sections/ExperienceSection';
 import { HeroSection } from '@/components/sections/HeroSection';
 import { LocationSection } from '@/components/sections/LocationSection';
 import { PolaroidWallSection } from '@/components/sections/PolaroidWallSection';
-import { ScheduleSection } from '@/components/sections/ScheduleSection';
-import { SpeakersSection } from '@/components/sections/SpeakersSection';
 import { SponsorsSection } from '@/components/sections/SponsorsSection';
 import { TicketsSection } from '@/components/sections/TicketsSection';
 import { SocialLinkBar } from '@/components/SocialLinkBar';
@@ -19,24 +18,19 @@ import { TopNavigation } from '@/components/TopNavigation';
 import { WordMark } from '@/components/WordMark';
 import { useActiveHash } from '@/hooks/useActiveHash';
 import { useSmoothAnchorNavigation } from '@/hooks/useSmoothAnchorNavigation';
-import type { ScheduleData } from '@/types/schedule';
-import type { SpeakersData } from '@/types/speaker';
-
 const laraconNavigationItems: readonly TopNavigationItem[] = [
     { href: '#about', label: 'Experience' },
     { href: '#location', label: 'Location' },
-    { href: '#speakers', label: 'Speakers' },
-    { href: '#schedule', label: 'Schedule' },
+    { href: '#polaroid-wall', label: 'Memories' },
+    { href: '#call-for-speakers', label: 'Speakers' },
     { href: '#sponsors', label: 'Sponsors' },
 ] as const;
-
-type WelcomePageProps = {
-    schedule: ScheduleData;
-    speakers: SpeakersData;
-};
+const laraconNavigationSectionIds = laraconNavigationItems.map((item) =>
+    item.href.slice(1),
+);
 
 function LaraconTopNavigation(): ReactElement {
-    const activeHref = useActiveHash();
+    const activeHref = useActiveHash(laraconNavigationSectionIds);
     const handleAnchorNavigation = useSmoothAnchorNavigation();
 
     return (
@@ -74,10 +68,7 @@ function LaraconTopNavigation(): ReactElement {
     );
 }
 
-function WelcomeContent({
-    schedule,
-    speakers,
-}: WelcomePageProps): ReactElement {
+function WelcomeContent(): ReactElement {
     return (
         <>
             <Head title="Welcome" />
@@ -88,15 +79,11 @@ function WelcomeContent({
                 <ConferenceFactsSection />
                 <ExperienceSection />
                 <LocationSection />
-                <SpeakersSection speakers={speakers.speakers} />
-                <ScheduleSection
-                    days={schedule.days}
-                    speakers={speakers.speakers}
-                />
                 <PolaroidWallSection />
+                <TicketsSection />
+                <CallForSpeakersSection />
                 <SponsorsSection />
                 {/*<UpdatesSection />*/}
-                <TicketsSection />
                 <SocialLinkBar className="mt-auto pt-10" />
                 <LegalFooter />
             </main>
@@ -104,9 +91,6 @@ function WelcomeContent({
     );
 }
 
-export default function Welcome({
-    schedule,
-    speakers,
-}: WelcomePageProps): ReactElement {
-    return <WelcomeContent schedule={schedule} speakers={speakers} />;
+export default function Welcome(): ReactElement {
+    return <WelcomeContent />;
 }

@@ -10,21 +10,23 @@ describe('TicketsSection', () => {
             screen.getByRole('heading', { level: 2, name: 'Tickets' }),
         ).toBeInTheDocument();
         expect(document.getElementById('tickets')).toBeInTheDocument();
-        expect(screen.getByText('Individual')).toBeInTheDocument();
-        expect(screen.getByText('Team')).toBeInTheDocument();
-        expect(screen.getByText('Community')).toBeInTheDocument();
-        expect(
-            screen.getByRole('link', { name: 'Join ticket list' }),
-        ).toHaveAttribute('href', 'mailto:tickets@laracon.eu');
+        expect(screen.getByText('Blind Bird')).toBeInTheDocument();
+        expect(screen.getByText('Early Bird')).toBeInTheDocument();
+        expect(screen.getByText('Regular')).toBeInTheDocument();
+        expect(screen.getByText('Workshops')).toBeInTheDocument();
+        expect(screen.getByText('€699')).toBeInTheDocument();
+        expect(screen.getByText('€799')).toBeInTheDocument();
+        expect(screen.getByText('€899')).toBeInTheDocument();
+        expect(screen.getAllByText('Coming soon')).toHaveLength(2);
+        expect(screen.getByText('Available')).toBeInTheDocument();
+        expect(screen.getAllByText('To be announced')).toHaveLength(2);
     });
 
-    it('renders ticket inclusion details', () => {
+    it('does not render a separate ticket details column', () => {
         render(<TicketsSection />);
 
-        expect(screen.getByLabelText('Ticket details')).toBeInTheDocument();
-        expect(screen.getByText('Three conference days')).toBeInTheDocument();
-        expect(screen.getByText('Main-stage talks')).toBeInTheDocument();
-        expect(screen.getByText('Community events')).toBeInTheDocument();
-        expect(screen.getByText('Coffee and lunch')).toBeInTheDocument();
+        expect(
+            screen.queryByLabelText('Ticket details'),
+        ).not.toBeInTheDocument();
     });
 });

@@ -30,15 +30,10 @@ export function ConferenceFactsSection(): ReactElement {
             className="border-b-2 border-canvas-foreground bg-canvas text-canvas-foreground transition-color-mode"
             id="conference-facts"
         >
-            <div className="mx-auto grid w-full max-w-7xl border-canvas-foreground/15 md:grid-cols-[12rem_minmax(0,1fr)] md:border-x">
-                <div className="border-b border-canvas-foreground/15 px-4 py-4 sm:px-6 md:border-r md:border-b-0 lg:px-8">
-                    <h2
-                        className="font-mono text-[0.6875rem] leading-5 font-semibold tracking-[0.16em] text-muted-foreground uppercase"
-                        id="conference-facts-heading"
-                    >
-                        Conference facts
-                    </h2>
-                </div>
+            <div className="mx-auto w-full max-w-7xl border-canvas-foreground/15 md:border-x">
+                <h2 className="sr-only" id="conference-facts-heading">
+                    Conference facts
+                </h2>
                 <dl className="grid sm:grid-cols-2 lg:grid-cols-4">
                     {conferenceFacts.map((fact) => (
                         <div

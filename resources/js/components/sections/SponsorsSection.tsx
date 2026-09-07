@@ -7,32 +7,23 @@ import {
     SectionIntro,
 } from '@/components/sections/Section';
 
-const sponsorTiers = [
+const sponsorFacts = [
     {
-        detail: 'Top placement across the event, stage presence, and attendee touchpoints.',
-        label: 'Principal',
-        slots: '2 slots',
-        status: 'Open',
+        label: 'Attendees',
+        value: '750+',
     },
     {
-        detail: 'Visible support for hallway track, community moments, and developer hospitality.',
-        label: 'Community',
-        slots: '4 slots',
-        status: 'Open',
+        label: 'International speakers',
+        value: '30+',
     },
     {
-        detail: 'Focused visibility for teams, products, and tools serving the Laravel ecosystem.',
-        label: 'Supporter',
-        slots: '8 slots',
-        status: 'Open',
+        label: 'Online impressions',
+        value: '1.2M+',
     },
-] as const;
-
-const sponsorSignals = [
-    'Laravel ecosystem',
-    'European audience',
-    'Senior developers',
-    'Product builders',
+    {
+        label: 'Expo participants',
+        value: '30+',
+    },
 ] as const;
 
 export function SponsorsSection(): ReactElement {
@@ -43,76 +34,59 @@ export function SponsorsSection(): ReactElement {
                     eyebrow="Partners / ecosystem"
                     meta={
                         <>
-                            Support
+                            Amsterdam
                             <br />
-                            Visibility
+                            6-7 April
                             <br />
-                            Community
+                            Kromhouthal
                         </>
                     }
                     title="Sponsors"
                 />
-                <div className="sponsors-editorial-grid grid gap-10 lg:grid-cols-[minmax(0,1fr)_18rem]">
-                    <div className="grid border-t-2 border-canvas-foreground">
-                        {sponsorTiers.map((tier) => (
-                            <article
-                                className="sponsor-editorial-tier grid gap-4 border-b border-canvas-foreground/15 py-5 sm:grid-cols-[8rem_minmax(0,1fr)_6rem] sm:gap-6"
-                                key={tier.label}
+                <div className="grid gap-10">
+                    <p className="max-w-3xl border-t-2 border-canvas-foreground pt-5 text-xl leading-8 text-muted-foreground sm:text-2xl sm:leading-9">
+                        Put your brand in front of the Laravel community at
+                        Laracon EU 2027. Sponsorship packages and tailored
+                        opportunities are available for Amsterdam.
+                    </p>
+                    <dl className="grid border-t-2 border-canvas-foreground sm:grid-cols-2 lg:grid-cols-4">
+                        {sponsorFacts.map((fact) => (
+                            <div
+                                className="grid min-h-32 content-between gap-5 border-b border-canvas-foreground/15 px-4 py-4 sm:border-r sm:px-5 lg:border-b-0 lg:last:border-r-0"
+                                key={fact.label}
                             >
-                                <div className="font-mono text-[0.6875rem] leading-5 font-semibold tracking-[0.16em] text-muted-foreground uppercase">
-                                    {tier.slots}
-                                </div>
-                                <div className="grid gap-2">
-                                    <h3 className="font-display text-2xl leading-none font-bold text-canvas-foreground uppercase sm:text-3xl">
-                                        {tier.label}
-                                    </h3>
-                                    <p className="max-w-2xl text-sm leading-6 text-muted-foreground">
-                                        {tier.detail}
-                                    </p>
-                                </div>
-                                <p className="font-mono text-[0.6875rem] leading-5 font-semibold tracking-[0.16em] text-canvas-foreground uppercase sm:text-right">
-                                    {tier.status}
-                                </p>
-                            </article>
+                                <dt className="font-mono text-[0.6875rem] leading-5 font-semibold tracking-[0.16em] text-muted-foreground uppercase">
+                                    {fact.label}
+                                </dt>
+                                <dd className="font-display text-4xl leading-none font-bold text-canvas-foreground uppercase">
+                                    {fact.value}
+                                </dd>
+                            </div>
                         ))}
-                    </div>
-                    <aside
-                        aria-label="Sponsor audience"
-                        className="grid content-start gap-6 border-t-2 border-canvas-foreground pt-5"
-                    >
-                        <div className="grid gap-3">
-                            <p className="font-mono text-[0.6875rem] leading-5 font-semibold tracking-[0.16em] text-muted-foreground uppercase">
-                                Audience
-                            </p>
-                            <ul className="grid list-none gap-2 p-0">
-                                {sponsorSignals.map((signal) => (
-                                    <li
-                                        className="border-t border-canvas-foreground/15 pt-2 font-mono text-xs leading-5 tracking-[0.12em] text-canvas-foreground uppercase"
-                                        key={signal}
-                                    >
-                                        {signal}
-                                    </li>
-                                ))}
-                            </ul>
-                        </div>
-                        <div className="grid gap-4 border-t border-canvas-foreground/15 pt-5">
-                            <p className="text-sm leading-6 text-muted-foreground">
-                                Partner with Laracon EU to meet the developers,
-                                teams, and companies building with Laravel every
-                                day.
-                            </p>
-                            <Button
-                                asChild
-                                className="justify-self-start rounded-none font-mono text-xs tracking-[0.12em] uppercase"
-                                size="small"
-                                variant="highlight"
+                    </dl>
+                    <div className="flex flex-wrap gap-3 border-t border-canvas-foreground/15 pt-5">
+                        <Button
+                            asChild
+                            className="rounded-none font-mono text-xs tracking-[0.12em] uppercase"
+                            size="small"
+                            variant="highlight"
+                        >
+                            <a
+                                download
+                                href="/laracon-eu-2027-sponsorship-opportunities.pdf"
                             >
-                                <a href="mailto:sponsors@laracon.eu">
-                                    Sponsor the event
-                                </a>
-                            </Button>
-                        </div>
-                    </aside>
+                                Download sponsor prospectus
+                            </a>
+                        </Button>
+                        <Button
+                            asChild
+                            className="rounded-none font-mono text-xs tracking-[0.12em] uppercase"
+                            size="small"
+                            variant="outline"
+                        >
+                            <a href="mailto:sales@laracon.eu">Contact sales</a>
+                        </Button>
+                    </div>
                 </div>
             </SectionFrame>
         </Section>

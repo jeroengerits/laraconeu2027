@@ -51,7 +51,7 @@ type LoadResponsiveImageAssetOptions = Pick<
 
 type PhotoAssetLoader = () => Promise<string>;
 
-type PhotoAssetLoaders = Record<PhotoAssetSize, PhotoAssetLoader>;
+type PhotoAssetLoaders = Partial<Record<PhotoAssetSize, PhotoAssetLoader>>;
 
 export function createLazyPhotoAssets(
     modules: Record<string, PhotoAssetLoader>,
@@ -151,16 +151,14 @@ function hasCompletePhotoAssetLoaders(
 
 async function loadResponsiveImageAsset(
     loaders: PhotoAssetLoaders,
-    {
-        height,
-        originalWidth,
-        requiredSizes,
-        width,
-    }: LoadResponsiveImageAssetOptions,
+    { height, originalWidth, width }: LoadResponsiveImageAssetOptions,
 ): Promise<ResponsiveImageAsset> {
+    const sourceSizes = photoAssetSizes.filter(
+        (size) => loaders[size] !== undefined,
+    );
     const sourceEntries = await Promise.all(
-        requiredSizes.map(
-            async (size) => [size, await loaders[size]()] as const,
+        sourceSizes.map(
+            async (size) => [size, await loaders[size]!()] as const,
         ),
     );
     const sources = Object.fromEntries(sourceEntries) as PhotoAssetSources;
