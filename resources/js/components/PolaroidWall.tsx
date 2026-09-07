@@ -332,7 +332,7 @@ const PolaroidWallCard = memo(function PolaroidWallCard({
         >
             <button
                 aria-label={`Enlarge photo: ${photo.alt}`}
-                className="block w-full cursor-zoom-in rounded-none text-left focus-visible:outline-none"
+                className="block w-full cursor-zoom-in rounded-none text-left focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-current"
                 onClick={() => onPhotoSelect(photo)}
                 onPointerDown={(event) => event.stopPropagation()}
                 type="button"
@@ -370,6 +370,9 @@ function PolaroidWallLightbox({
     onClose: () => void;
     selectedPhoto: SelectedPolaroidPhoto | null;
 }): ReactElement {
+    const dialogRef = useRef<HTMLDivElement>(null);
+    const closeButtonRef = useRef<HTMLButtonElement>(null);
+
     useEffect(() => {
         if (selectedPhoto === null) {
             return;
@@ -377,11 +380,42 @@ function PolaroidWallLightbox({
 
         const handleKeyDown = (event: KeyboardEvent): void => {
             if (event.key === 'Escape') {
+                event.preventDefault();
                 onClose();
+
+                return;
+            }
+
+            if (event.key !== 'Tab') {
+                return;
+            }
+
+            const focusableElements =
+                dialogRef.current?.querySelectorAll<HTMLElement>(
+                    'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])',
+                );
+
+            if (!focusableElements || focusableElements.length === 0) {
+                return;
+            }
+
+            const firstElement = focusableElements[0];
+            const lastElement = focusableElements[focusableElements.length - 1];
+
+            if (event.shiftKey && document.activeElement === firstElement) {
+                event.preventDefault();
+                lastElement.focus();
+            } else if (
+                !event.shiftKey &&
+                document.activeElement === lastElement
+            ) {
+                event.preventDefault();
+                firstElement.focus();
             }
         };
 
         document.addEventListener('keydown', handleKeyDown);
+        closeButtonRef.current?.focus();
 
         return () => {
             document.removeEventListener('keydown', handleKeyDown);
@@ -396,6 +430,8 @@ function PolaroidWallLightbox({
         <div
             aria-label="Enlarged memory photo"
             aria-modal="true"
+            aria-labelledby="polaroid-lightbox-title"
+            aria-busy={selectedPhoto.image === null}
             className="fixed inset-0 z-50 flex h-dvh w-full items-center justify-center bg-black/80 p-4 text-canvas-foreground sm:p-8"
             onClick={(event) => {
                 if (event.target === event.currentTarget) {
@@ -403,8 +439,12 @@ function PolaroidWallLightbox({
                 }
             }}
             role="dialog"
+            ref={dialogRef}
         >
             <div className="relative flex h-full w-full items-center justify-center">
+                <h2 className="sr-only" id="polaroid-lightbox-title">
+                    Enlarged memory photo: {selectedPhoto.photo.alt}
+                </h2>
                 {selectedPhoto.image !== null ? (
                     <img
                         alt={selectedPhoto.photo.alt}
@@ -418,7 +458,10 @@ function PolaroidWallLightbox({
                         width={selectedPhoto.image.width}
                     />
                 ) : (
-                    <p className="font-mono text-xs tracking-[0.12em] text-white uppercase">
+                    <p
+                        className="font-mono text-xs tracking-[0.12em] text-white uppercase"
+                        role="status"
+                    >
                         Loading photo...
                     </p>
                 )}
@@ -426,6 +469,7 @@ function PolaroidWallLightbox({
                     aria-label="Close photo"
                     className="absolute top-0 right-0 bg-canvas/90"
                     onClick={onClose}
+                    ref={closeButtonRef}
                     size="icon"
                     variant="ghost"
                 >

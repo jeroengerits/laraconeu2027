@@ -74,6 +74,7 @@ export function ColorModeTransition(): ReactElement {
 
     return (
         <m.div
+            aria-hidden="true"
             animate={flashAnimationState}
             className="pointer-events-none absolute inset-y-0 left-0 z-10 w-full skew-x-[-14deg] [background:var(--welcome-flash-bg)]"
             initial={flashInitialState}

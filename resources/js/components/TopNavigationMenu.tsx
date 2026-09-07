@@ -2,6 +2,7 @@ import { Cross2Icon, HamburgerMenuIcon } from '@radix-ui/react-icons';
 import { AnimatePresence, m, useReducedMotion } from 'motion/react';
 import type { HTMLMotionProps } from 'motion/react';
 import type { KeyboardEvent, ReactElement } from 'react';
+import { useEffect, useRef } from 'react';
 
 import { Button } from '@/components/Button';
 import { cn } from '@/lib/utils';
@@ -141,9 +142,22 @@ export function TopNavigationMobileMenu({
     const { closeMobileMenu, focusMobileMenuButton } =
         useTopNavigationActions();
     const shouldReduceMotion = useReducedMotion();
+    const mobileMenuRef = useRef<HTMLElement>(null);
     const activeMenuTransition = shouldReduceMotion
         ? reducedMotionMobileMenuTransition
         : mobileMenuTransition;
+
+    useEffect(() => {
+        if (!isMobileMenuOpen) {
+            return;
+        }
+
+        mobileMenuRef.current
+            ?.querySelector<HTMLElement>(
+                'a, button, [tabindex]:not([tabindex="-1"])',
+            )
+            ?.focus();
+    }, [isMobileMenuOpen]);
 
     const handleKeyDown = (event: KeyboardEvent<HTMLElement>) => {
         onKeyDown?.(event);
@@ -172,6 +186,7 @@ export function TopNavigationMobileMenu({
                     initial={mobileMenuInitialState}
                     key={mobileNavigationId}
                     onKeyDown={handleKeyDown}
+                    ref={mobileMenuRef}
                     transition={activeMenuTransition}
                     {...props}
                 >

@@ -33,7 +33,11 @@
         @viteReactRefresh
         @vite(['resources/css/app.css', 'resources/js/app.tsx', "resources/js/pages/{$page['component']}.tsx"])
         <x-inertia::head>
-            <title>{{ config('app.name', 'Laravel') }}</title>
+            <title>Laracon EU 2027 | Amsterdam PHP Conference</title>
+            <meta
+                name="description"
+                content="Join the Laracon EU 2027 community in Amsterdam for three days of Laravel, PHP, and frontend talks, workshops, and connection."
+            >
         </x-inertia::head>
     </head>
     <body class="font-sans antialiased">

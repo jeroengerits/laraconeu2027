@@ -71,7 +71,13 @@ function LaraconTopNavigation(): ReactElement {
 function WelcomeContent(): ReactElement {
     return (
         <>
-            <Head title="Welcome" />
+            <Head title="Laracon EU 2027 | Amsterdam PHP Conference">
+                <meta
+                    head-key="description"
+                    name="description"
+                    content="Join the Laracon EU 2027 community in Amsterdam for three days of Laravel, PHP, and frontend talks, workshops, and connection."
+                />
+            </Head>
             <main className="relative flex min-h-screen flex-col bg-canvas text-canvas-foreground transition-color-mode">
                 <ColorModeTransition />
                 <LaraconTopNavigation />
@@ -79,8 +85,8 @@ function WelcomeContent(): ReactElement {
                 <ConferenceFactsSection />
                 <ExperienceSection />
                 <LocationSection />
-                <PolaroidWallSection />
                 <TicketsSection />
+                <PolaroidWallSection />
                 <CallForSpeakersSection />
                 <SponsorsSection />
                 {/*<UpdatesSection />*/}
