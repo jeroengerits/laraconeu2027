@@ -36,7 +36,7 @@ export function SocialLinkBar({ className }: SocialLinkBarProps): ReactElement {
         <nav
             aria-label="Social media"
             className={cn(
-                'flex items-center justify-center gap-0 border-y-2 border-canvas-foreground',
+                'flex items-center justify-center gap-0 border-t-2 border-canvas-foreground',
                 className,
             )}
         >

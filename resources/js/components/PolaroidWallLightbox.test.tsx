@@ -4,7 +4,7 @@ import { useRef, useState } from 'react';
 
 import { PolaroidWallLightbox } from '@/components/PolaroidWallLightbox';
 
-function LightboxExample() {
+function LightboxExample({ loaded = false }: { loaded?: boolean }) {
     const [open, setOpen] = useState(false);
     const triggerRef = useRef<HTMLButtonElement>(null);
 
@@ -19,7 +19,16 @@ function LightboxExample() {
                 onCloseAutoFocus={() => triggerRef.current?.focus()}
                 selectedPhoto={
                     open
-                        ? { image: null, photo: { alt: 'Archive photo 1' } }
+                        ? {
+                              image: loaded
+                                  ? {
+                                        src: '/archive.jpg',
+                                        width: 1536,
+                                        height: 1024,
+                                    }
+                                  : null,
+                              photo: { alt: 'Archive photo 1' },
+                          }
                         : null
                 }
             />
@@ -94,3 +103,26 @@ it('shows the loaded image without remounting the dialog or moving focus', () =>
     expect(screen.queryByRole('status')).not.toBeInTheDocument();
     expect(close).toHaveFocus();
 });
+
+it.each(['backdrop', 'empty dialog space'])(
+    'closes on %s clicks but not image clicks and restores focus',
+    async (target) => {
+        const user = userEvent.setup();
+        render(<LightboxExample loaded />);
+        const trigger = screen.getByRole('button', {
+            name: 'Enlarge archive photo',
+        });
+        await user.click(trigger);
+        const dialog = screen.getByRole('dialog');
+
+        await user.click(screen.getByRole('img', { name: 'Archive photo 1' }));
+        expect(dialog).toBeVisible();
+
+        await user.click(
+            target === 'backdrop' ? dialog.parentElement! : dialog,
+        );
+
+        expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
+        await waitFor(() => expect(trigger).toHaveFocus());
+    },
+);

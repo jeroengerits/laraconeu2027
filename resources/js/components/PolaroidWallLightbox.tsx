@@ -31,6 +31,11 @@ export function PolaroidWallLightbox({
                     <Dialog.Content
                         aria-describedby={undefined}
                         className="relative flex max-h-full max-w-full items-center justify-center text-canvas-foreground"
+                        onClick={(event) => {
+                            if (event.target === event.currentTarget) {
+                                onClose();
+                            }
+                        }}
                         onCloseAutoFocus={(event) => {
                             event.preventDefault();
                             onCloseAutoFocus();
