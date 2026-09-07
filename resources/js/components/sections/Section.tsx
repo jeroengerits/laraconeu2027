@@ -9,10 +9,6 @@ type SectionProps = {
     id: string;
 };
 
-type SectionHeadingProps = {
-    children: ReactNode;
-};
-
 type SectionIntroProps = {
     eyebrow: ReactNode;
     meta?: ReactNode;
@@ -54,16 +50,6 @@ export function SectionFrame({
         <div className="mx-auto mt-8 grid w-full max-w-7xl gap-8 sm:mt-10 sm:gap-10">
             {children}
         </div>
-    );
-}
-
-export function SectionHeading({
-    children,
-}: SectionHeadingProps): ReactElement {
-    return (
-        <h2 className="mx-auto text-center font-display text-3xl leading-none font-bold text-balance text-canvas-foreground">
-            {children}
-        </h2>
     );
 }
 
