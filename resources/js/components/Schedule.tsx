@@ -57,13 +57,6 @@ type ScheduleItemProps = {
     start: string;
 };
 
-type ParsedScheduleDay = {
-    children: ReactNode;
-    date: string;
-    label: string;
-    value: string;
-};
-
 type ScheduleComponent = {
     (props: ScheduleRootProps): ReactElement;
     Day: (props: ScheduleDayProps) => ReactElement | null;
@@ -106,10 +99,6 @@ const ScheduleRootContext = createContext<
     Omit<ScheduleRootProps, 'children' | 'className'>
 >({});
 
-function scheduleTimeClassName(): string {
-    return SCHEDULE_ITEM_TIME_CLASS;
-}
-
 function scheduleItemTitle(children: ReactNode): string {
     return typeof children === 'string' ? children : String(children ?? '');
 }
@@ -124,7 +113,7 @@ function isScheduleDayElement(
     );
 }
 
-function parseScheduleDays(children: ReactNode): ParsedScheduleDay[] {
+function parseScheduleDays(children: ReactNode): ScheduleDayProps[] {
     return Children.toArray(children).flatMap((child) => {
         if (!isScheduleDayElement(child)) {
             return [];
@@ -293,7 +282,7 @@ function ScheduleItem({
     const content = (
         <>
             <TimeRange
-                className={scheduleTimeClassName()}
+                className={SCHEDULE_ITEM_TIME_CLASS}
                 end={end}
                 start={start}
             />

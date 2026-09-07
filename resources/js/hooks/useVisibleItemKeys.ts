@@ -64,13 +64,7 @@ export function useVisibleItemKeys<TItem>(
 
         if (typeof IntersectionObserver === 'undefined') {
             const fallbackTimeout = window.setTimeout(() => {
-                setVisibleItemKeys(
-                    new Set(
-                        items.map((item, index) =>
-                            getItemKeyRef.current(item, index),
-                        ),
-                    ),
-                );
+                setVisibleItemKeys(nextItemKeySet);
             }, 0);
 
             return () => {

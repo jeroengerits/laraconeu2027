@@ -9,28 +9,36 @@ test('returns a successful response', function () {
     $response->assertOk();
 });
 
-test('shares the conference schedule with the welcome page', function () {
+test('omits the unused conference schedule from the welcome page', function () {
     $response = $this->get(route('home'));
 
     $response->assertInertia(fn ($page) => $page
         ->component('welcome')
-        ->has('schedule.days', 3)
-        ->where('schedule.days.0.id', 'day-1')
-        ->where('schedule.days.1.id', 'day-2')
-        ->where('schedule.days.2.id', 'day-3')
+        ->missing('schedule')
     );
 
-    expect(Schedule::data()['days'])->toHaveCount(3);
+    expect(Schedule::data()['days'])->toHaveCount(3)
+        ->sequence(
+            fn ($day) => $day->id->toBe('day-1'),
+            fn ($day) => $day->id->toBe('day-2'),
+            fn ($day) => $day->id->toBe('day-3'),
+        );
 });
 
-test('shares the conference speakers with the welcome page', function () {
+test('omits the unused conference speakers from the welcome page', function () {
     $response = $this->get(route('home'));
 
     $response->assertInertia(fn ($page) => $page
         ->component('welcome')
-        ->has('speakers.speakers', 18)
-        ->where('speakers.speakers.0.id', 'taylor-otwell')
+        ->missing('speakers')
     );
 
     expect(Speakers::data()['speakers'])->toHaveCount(18);
+    expect(Speakers::data()['speakers'][0]['id'])->toBe('taylor-otwell');
+});
+
+test('renders the styleguide', function () {
+    $this->get(route('styleguide'))->assertInertia(fn ($page) => $page
+        ->component('styleguide')
+    );
 });

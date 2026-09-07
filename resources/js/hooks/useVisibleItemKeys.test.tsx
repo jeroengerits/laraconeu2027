@@ -87,6 +87,28 @@ describe('useVisibleItemKeys', () => {
         global.IntersectionObserver = originalIntersectionObserver;
     });
 
+    it('makes the current items visible without IntersectionObserver', async () => {
+        Reflect.deleteProperty(global, 'IntersectionObserver');
+
+        const { rerender } = render(
+            <HookHarness items={[{ id: 'alpha' }, { id: 'beta' }]} />,
+        );
+
+        await waitFor(() => {
+            expect(screen.getByTestId('visible-item-keys')).toHaveTextContent(
+                'alpha,beta',
+            );
+        });
+
+        rerender(<HookHarness items={[{ id: 'gamma' }]} />);
+
+        await waitFor(() => {
+            expect(screen.getByTestId('visible-item-keys').textContent).toBe(
+                'gamma',
+            );
+        });
+    });
+
     it('removes stale visible keys when the observed item set changes', async () => {
         const { rerender } = render(
             <HookHarness items={[{ id: 'alpha' }, { id: 'beta' }]} />,

@@ -50,7 +50,6 @@ function AvatarRoot({
     src,
 }: AvatarRootProps): ReactElement {
     const initials = name ? speakerInitials(name) : undefined;
-    const alt = name ? `${name}` : '';
 
     return (
         <AvatarPrimitive.Root
@@ -60,18 +59,8 @@ function AvatarRoot({
                 className,
             )}
         >
-            {src ? (
-                <AvatarPrimitive.Image
-                    alt={alt}
-                    className="aspect-square size-full object-cover"
-                    loading="lazy"
-                    src={src}
-                />
-            ) : null}
-            <AvatarPrimitive.Fallback
-                className="flex size-full items-center justify-center bg-muted font-semibold text-muted-foreground uppercase"
-                delayMs={src ? 600 : undefined}
-            >
+            {src ? <AvatarImage alt={name ?? ''} src={src} /> : null}
+            <AvatarFallback delayMs={src ? 600 : undefined}>
                 {initials ? (
                     initials
                 ) : (
@@ -80,7 +69,7 @@ function AvatarRoot({
                         className={avatarIconSizeClassNames[size]}
                     />
                 )}
-            </AvatarPrimitive.Fallback>
+            </AvatarFallback>
         </AvatarPrimitive.Root>
     );
 }

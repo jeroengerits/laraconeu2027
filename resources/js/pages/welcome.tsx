@@ -18,6 +18,7 @@ import { TopNavigation } from '@/components/TopNavigation';
 import { WordMark } from '@/components/WordMark';
 import { useActiveHash } from '@/hooks/useActiveHash';
 import { useSmoothAnchorNavigation } from '@/hooks/useSmoothAnchorNavigation';
+
 const laraconNavigationItems: readonly TopNavigationItem[] = [
     { href: '#about', label: 'Experience' },
     { href: '#location', label: 'Location' },
@@ -68,7 +69,7 @@ function LaraconTopNavigation(): ReactElement {
     );
 }
 
-function WelcomeContent(): ReactElement {
+export default function Welcome(): ReactElement {
     return (
         <>
             <Head title="Laracon EU 2027 | Amsterdam PHP Conference">
@@ -89,14 +90,9 @@ function WelcomeContent(): ReactElement {
                 <PolaroidWallSection />
                 <CallForSpeakersSection />
                 <SponsorsSection />
-                {/*<UpdatesSection />*/}
                 <SocialLinkBar className="mt-auto pt-10" />
                 <LegalFooter />
             </main>
         </>
     );
-}
-
-export default function Welcome(): ReactElement {
-    return <WelcomeContent />;
 }
