@@ -11,7 +11,9 @@ describe('SponsorsSection', () => {
         ).toBeInTheDocument();
         expect(document.getElementById('sponsors')).toBeInTheDocument();
         expect(screen.getByText('750+')).toBeInTheDocument();
-        expect(screen.getAllByText('30+')).toHaveLength(2);
+        expect(screen.getByText('Speakers')).toBeInTheDocument();
+        expect(screen.getByText('20+')).toBeInTheDocument();
+        expect(screen.getByText('30+')).toBeInTheDocument();
         expect(screen.getByText('1.2M+')).toBeInTheDocument();
         expect(
             screen.getByRole('link', { name: 'Download sponsor prospectus' }),

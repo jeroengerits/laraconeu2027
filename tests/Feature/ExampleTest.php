@@ -37,8 +37,6 @@ test('omits the unused conference speakers from the welcome page', function () {
     expect(Speakers::data()['speakers'][0]['id'])->toBe('taylor-otwell');
 });
 
-test('renders the styleguide', function () {
-    $this->get(route('styleguide'))->assertInertia(fn ($page) => $page
-        ->component('styleguide')
-    );
+test('the removed styleguide returns not found', function () {
+    $this->get('/styleguide')->assertNotFound();
 });

@@ -13,8 +13,8 @@ const sponsorFacts = [
         value: '750+',
     },
     {
-        label: 'International speakers',
-        value: '30+',
+        label: 'Speakers',
+        value: '20+',
     },
     {
         label: 'Online impressions',
