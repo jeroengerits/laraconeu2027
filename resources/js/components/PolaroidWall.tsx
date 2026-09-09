@@ -3,7 +3,6 @@ import type { Variants } from 'motion/react';
 import { memo, useMemo, useRef, useState } from 'react';
 import type { ReactElement } from 'react';
 
-import { Button } from '@/components/Button';
 import { PolaroidWallLightbox } from '@/components/PolaroidWallLightbox';
 import { ResponsiveImage } from '@/components/ResponsiveImage';
 import type { ResponsiveImageAsset } from '@/components/ResponsiveImage';
@@ -159,7 +158,6 @@ export function PolaroidWall(): ReactElement {
     const rows = useMemo(() => createPolaroidWallRows(photos), [photos]);
     const [selectedPhoto, setSelectedPhoto] =
         useState<SelectedPolaroidPhoto | null>(null);
-    const [isPaused, setIsPaused] = useState(false);
     const lastFocusedElementRef = useRef<HTMLElement | null>(null);
 
     async function selectPhoto(photo: PolaroidWallPhoto): Promise<void> {
@@ -192,24 +190,6 @@ export function PolaroidWall(): ReactElement {
 
     return (
         <>
-            <div className="flex items-center gap-4 py-4">
-                <Button
-                    aria-pressed={isPaused}
-                    onClick={() => setIsPaused(!isPaused)}
-                    variant="ghost"
-                >
-                    {isPaused ? 'Resume photo motion' : 'Pause photo motion'}
-                </Button>
-                <a
-                    className={cn(
-                        'font-mono text-xs underline underline-offset-4',
-                        focusVisibleClassName,
-                    )}
-                    href="#after-polaroid-wall"
-                >
-                    Skip photo wall
-                </a>
-            </div>
             <m.div
                 aria-label="Polaroid photo wall"
                 className="motion-reduce:transform-none! motion-reduce:opacity-100!"
@@ -222,7 +202,7 @@ export function PolaroidWall(): ReactElement {
                     {rows.map((photos, rowIndex) => (
                         <PolaroidWallRow
                             direction={rowIndex % 2 === 0 ? 'left' : 'right'}
-                            isPaused={isPaused || selectedPhoto !== null}
+                            isPaused={selectedPhoto !== null}
                             key={rowIndex}
                             onPhotoSelect={selectPhoto}
                             photos={photos}
@@ -233,7 +213,6 @@ export function PolaroidWall(): ReactElement {
                     ))}
                 </div>
             </m.div>
-            <div id="after-polaroid-wall" tabIndex={-1} />
             <PolaroidWallLightbox
                 onClose={closePhoto}
                 onCloseAutoFocus={restoreFocus}
