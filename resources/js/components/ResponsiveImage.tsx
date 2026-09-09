@@ -2,38 +2,18 @@ import { m, useReducedMotion } from 'motion/react';
 import { useEffect, useRef } from 'react';
 import type { ComponentPropsWithoutRef, ReactElement } from 'react';
 
+import type { ResponsiveImageAsset } from '@/lib/responsiveImage';
 import { cn } from '@/lib/utils';
 
+export { createResponsiveImageAsset } from '@/lib/responsiveImage';
+export type {
+    ResponsiveImageAsset,
+    ResponsiveImageSize,
+    ResponsiveImageSource,
+    ResponsiveImageSources,
+} from '@/lib/responsiveImage';
+
 const defaultResponsiveImageSizes = '100cqw';
-
-const responsiveImageWidthsBySize = {
-    tiny: 480,
-    small: 768,
-    medium: 1024,
-    large: 1536,
-    huge: 2048,
-    mega: 2880,
-} as const;
-
-const responsiveImageSourceOrder = [
-    'small',
-    'tiny',
-    'medium',
-    'large',
-    'huge',
-    'mega',
-    'original',
-] as const satisfies readonly ResponsiveImageSource[];
-
-const responsiveImageSourceSetOrder = [
-    'tiny',
-    'small',
-    'medium',
-    'large',
-    'huge',
-    'mega',
-    'original',
-] as const satisfies readonly ResponsiveImageSource[];
 
 const responsiveImageRevealVariants = {
     hidden: {
@@ -52,31 +32,6 @@ const responsiveImageRevealViewport = {
     once: true,
 } as const;
 
-type AtLeastOne<T> = {
-    [Key in keyof T]-?: Required<Pick<T, Key>> & Partial<Omit<T, Key>>;
-}[keyof T];
-
-export type ResponsiveImageSize = keyof typeof responsiveImageWidthsBySize;
-
-export type ResponsiveImageSource = ResponsiveImageSize | 'original';
-
-export type ResponsiveImageSources = AtLeastOne<
-    Record<ResponsiveImageSource, string>
->;
-
-export type ResponsiveImageAsset = {
-    height?: number;
-    src: string;
-    srcSet?: string;
-    width?: number;
-};
-
-type ResponsiveImageAssetOptions = {
-    height?: number;
-    originalWidth?: number;
-    width?: number;
-};
-
 type ResponsiveImageProps = Omit<
     ComponentPropsWithoutRef<'img'>,
     'alt' | 'sizes' | 'src' | 'srcSet'
@@ -88,32 +43,6 @@ type ResponsiveImageProps = Omit<
     reveal?: boolean;
     sizes?: string;
 };
-
-export function createResponsiveImageAsset(
-    sources: ResponsiveImageSources,
-    options: ResponsiveImageAssetOptions = {},
-): ResponsiveImageAsset {
-    const sourceSetParts: string[] = [];
-
-    for (const sourceName of responsiveImageSourceSetOrder) {
-        const source = sources[sourceName];
-        const width =
-            sourceName === 'original'
-                ? options.originalWidth
-                : responsiveImageWidthsBySize[sourceName];
-
-        if (source !== undefined && width !== undefined) {
-            sourceSetParts.push(`${source} ${width}w`);
-        }
-    }
-
-    return {
-        height: options.height,
-        src: getFallbackSource(sources),
-        srcSet: getOptionalSourceSet(sourceSetParts),
-        width: options.width,
-    };
-}
 
 export function ResponsiveImage({
     alt,
@@ -176,26 +105,4 @@ export function ResponsiveImage({
             />
         </m.div>
     );
-}
-
-function getOptionalSourceSet(
-    sourceSetParts: readonly string[],
-): string | undefined {
-    if (sourceSetParts.length === 0) {
-        return undefined;
-    }
-
-    return sourceSetParts.join(', ');
-}
-
-function getFallbackSource(sources: ResponsiveImageSources): string {
-    for (const source of responsiveImageSourceOrder) {
-        const fallbackSource = sources[source];
-
-        if (fallbackSource !== undefined) {
-            return fallbackSource;
-        }
-    }
-
-    throw new Error('ResponsiveImage requires at least one source.');
 }

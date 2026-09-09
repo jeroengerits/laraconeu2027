@@ -1,21 +1,16 @@
 import type {
     ResponsiveImageAsset,
+    ResponsiveImageAssetOptions,
     ResponsiveImageSource,
     ResponsiveImageSources,
-} from '@/components/ResponsiveImage';
-import { createResponsiveImageAsset } from '@/components/ResponsiveImage';
+} from '@/lib/responsiveImage';
+import {
+    createResponsiveImageAsset,
+    responsiveImageSourceSizes,
+} from '@/lib/responsiveImage';
 
 const defaultPhotoAssetPathPattern =
     /\/(?<baseName>.+)-(?<size>tiny|small|medium|large|huge|mega|original)\.jpg$/;
-const photoAssetSizes = [
-    'tiny',
-    'small',
-    'medium',
-    'large',
-    'huge',
-    'mega',
-    'original',
-] as const satisfies readonly ResponsiveImageSource[];
 const defaultPhotoAssetSizes = [
     'tiny',
     'small',
@@ -33,20 +28,10 @@ export type LazyPhotoAsset = {
     name: string;
 };
 
-type CreatePhotoAssetsOptions = {
+type CreatePhotoAssetsOptions = ResponsiveImageAssetOptions & {
     alt?: (name: string, index: number) => string;
-    height?: number;
-    originalWidth?: number;
     pathPattern?: RegExp;
     requiredSizes?: readonly PhotoAssetSize[];
-    width?: number;
-};
-
-type LoadResponsiveImageAssetOptions = Pick<
-    CreatePhotoAssetsOptions,
-    'height' | 'originalWidth' | 'width'
-> & {
-    requiredSizes: readonly PhotoAssetSize[];
 };
 
 type PhotoAssetLoader = () => Promise<string>;
@@ -83,7 +68,6 @@ export function createLazyPhotoAssets(
                 imagePromise ??= loadResponsiveImageAsset(loaders, {
                     height,
                     originalWidth,
-                    requiredSizes,
                     width,
                 }).then((loadedImage) => {
                     image = loadedImage;
@@ -103,10 +87,7 @@ function createLazyPhotoAssetLoaderGroups(
     pathPattern: RegExp,
     requiredSizes: readonly PhotoAssetSize[],
 ): { baseName: string; loaders: PhotoAssetLoaders }[] {
-    const groupedLoaders = new Map<
-        string,
-        Partial<Record<PhotoAssetSize, PhotoAssetLoader>>
-    >();
+    const groupedLoaders = new Map<string, PhotoAssetLoaders>();
 
     for (const [path, loader] of Object.entries(modules)) {
         const match = pathPattern.exec(path);
@@ -143,17 +124,17 @@ function createLazyPhotoAssetLoaderGroups(
 }
 
 function hasCompletePhotoAssetLoaders(
-    loaders: Partial<Record<PhotoAssetSize, PhotoAssetLoader>>,
+    loaders: PhotoAssetLoaders,
     requiredSizes: readonly PhotoAssetSize[],
-): loaders is PhotoAssetLoaders {
+): boolean {
     return requiredSizes.every((size) => loaders[size] !== undefined);
 }
 
 async function loadResponsiveImageAsset(
     loaders: PhotoAssetLoaders,
-    { height, originalWidth, width }: LoadResponsiveImageAssetOptions,
+    options: ResponsiveImageAssetOptions,
 ): Promise<ResponsiveImageAsset> {
-    const sourceSizes = photoAssetSizes.filter(
+    const sourceSizes = responsiveImageSourceSizes.filter(
         (size) => loaders[size] !== undefined,
     );
     const sourceEntries = await Promise.all(
@@ -163,15 +144,12 @@ async function loadResponsiveImageAsset(
     );
     const sources = Object.fromEntries(sourceEntries) as PhotoAssetSources;
 
-    return createResponsiveImageAsset(sources, {
-        height,
-        originalWidth,
-        width,
-    });
+    return createResponsiveImageAsset(sources, options);
 }
 
 function isPhotoAssetSize(size: string | undefined): size is PhotoAssetSize {
     return (
-        size !== undefined && photoAssetSizes.includes(size as PhotoAssetSize)
+        size !== undefined &&
+        responsiveImageSourceSizes.includes(size as PhotoAssetSize)
     );
 }
